@@ -1,7 +1,7 @@
 package go.alarm.domain.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,13 +18,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class WakeupDate extends BaseEntity{
+public class WakeupDate extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
 
@@ -41,4 +41,13 @@ public class WakeupDate extends BaseEntity{
     private Boolean sat;
 
     private Boolean sun;
+
+    public void setGroup(Group group) {
+        if (this.group != null) {
+            Group previousGroup = this.group;
+            this.group = null;
+            previousGroup.setWakeupDate(null); // 1:1 관계에서 반대쪽 객체의 참조 해제, setGroup, setWakeupDate 다시 봐야할듯.
+        }
+        this.group = group;
+    }
 }

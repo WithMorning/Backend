@@ -38,4 +38,11 @@ public class UserGroup extends BaseEntity{
 
     private Boolean isWakeup;
 
+    public void setGroup(Group group){
+        if (this.group != null)
+            group.getUserGroupList().remove(this);
+        this.group = group;
+        group.getUserGroupList().add(this);
+    }
+
 }

@@ -19,6 +19,19 @@ public class GroupConverter {
     }
 
     public static Group toGroup(CreateDTO request){
+
+
+        int codeLength = 6;
+
+        String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789";
+
+        StringBuilder sb = new StringBuilder(codeLength);
+
+        for (int i = 0; i < codeLength; i++) {
+            int index = (int)(AlphaNumericString.length() * Math.random());
+            sb.append(AlphaNumericString.charAt(index));
+        }
+
         return Group.builder()
             .name(request.getName()) // 여기서 get~~은 DTO에 있는 친구들만 가져올 수 있음.
             .wakeupTime(request.getWakeupTime())
@@ -29,6 +42,7 @@ public class GroupConverter {
             // Group을 생성할 때 이 유저 리스트를 생성하는 부분을 생략했었음. 이후 userGroup의 setGroup에서
             // group.getUserGroupList()의 반환값이 null이 되는 것. 여기에 .add를 해버리니까 (null에 add를 하니까)
             // userGroupList에 NullPointerException이 일어남
+            .participationCode(sb.toString())
             .build();
     }
 }

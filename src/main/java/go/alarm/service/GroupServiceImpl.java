@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional//@Transactional(readOnly = true) 여기 readOnly=true가 되니까 권한이 읽기 권한만 존재함.
-public class GroupCommandServiceImpl implements GroupCommandService{
+public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
@@ -29,7 +29,7 @@ public class GroupCommandServiceImpl implements GroupCommandService{
         WakeupDate wakeupDate = WakeupDateConverter.toWakeupDate(group, request.getWakeupDateList()); // 기상 요일 설정
         group.setWakeupDate(wakeupDate);
 
-        UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get()); // 유저 그룹 생성
+        UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree()); // 유저 그룹 생성
         System.out.println("group = " + group.getUserGroupList());
         userGroup.setGroup(group); // userGroup을 userGroupRepository.save로 저장해야 하나..?
         // 아니다. setGroup을 들어가보면 group.~~.add로 userGroup객체를 넣어준다.
@@ -53,5 +53,18 @@ public class GroupCommandServiceImpl implements GroupCommandService{
         group.setMemo(request.getMemo());
         System.out.println(request.getMemo());
         return group;
+    }
+
+    @Override
+    public UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request) {
+        Group group = groupRepository.findByParticipationCode(request.getParticipationCode()); // 참여 코드로 그룹 찾기
+        // 참여 코드가 없을 시 예외 처리도 해줘야 함.
+        // 유저가 존재하는 지 예외 처리 해줘야 함.
+
+        UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get(),request.getIsAgree()); // 유저 그룹 생성(그룹에 유저 넣기)
+        userGroup.setGroup(group);
+        // 그룹에 인원수가 다 찼다면 참여가 불가능한 예외 처리도 해줘야 함.
+
+        return userGroup;
     }
 }

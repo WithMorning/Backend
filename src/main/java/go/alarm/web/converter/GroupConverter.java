@@ -1,6 +1,7 @@
 package go.alarm.web.converter;
 
 import go.alarm.domain.entity.Group;
+import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.WakeupDate;
 import go.alarm.web.dto.GroupRequestDTO;
 import go.alarm.web.dto.GroupRequestDTO.CreateDTO;
@@ -11,17 +12,16 @@ import java.util.List;
 
 public class GroupConverter {
 
-    public static GroupResponseDTO.CreateResultDto toCreateResultDTO(Group Group){
+    public static GroupResponseDTO.CreateResultDto toCreateResultDTO(Group group){
         return GroupResponseDTO.CreateResultDto.builder()
-            .groupId(Group.getId())
+            .groupId(group.getId())
             .createdAt(LocalDateTime.now())
             .build();
     }
 
     public static Group toGroup(CreateDTO request){
 
-
-        int codeLength = 6;
+        int codeLength = 8;
 
         String AlphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789";
 
@@ -43,6 +43,14 @@ public class GroupConverter {
             // group.getUserGroupList()의 반환값이 null이 되는 것. 여기에 .add를 해버리니까 (null에 add를 하니까)
             // userGroupList에 NullPointerException이 일어남
             .participationCode(sb.toString())
+            .build();
+    }
+
+    public static GroupResponseDTO.JoinResultDto toJoinResultDTO(Group group, User user){
+        return GroupResponseDTO.JoinResultDto.builder()
+            .groupId(group.getId())
+            .joinUserNickname(user.getNickname())
+            .createdAt(LocalDateTime.now())
             .build();
     }
 }

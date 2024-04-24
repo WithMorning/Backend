@@ -28,8 +28,7 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
 
-      # 4) Gradle 사용. arguments 를 붙이면 뒤에 그대로 실행된다고 생각하면 됨
-      # 이 워크플로우는 gradle clean build 를 수행함
+      # 4) .build시작 >> 리눅스 명령어다. 6,7번 내용은 어지간해서 바뀌지 않는다.
       - name: Build with Gradle
         run: ./gradlew clean build -x test
         shell: bash

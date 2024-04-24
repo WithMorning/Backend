@@ -17,4 +17,14 @@ public class GroupResponseDTO {
         LocalDateTime createdAt;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JoinResultDto{
+        Long groupId;
+        String joinUserNickname;
+        LocalDateTime createdAt;
+    }
+
 }

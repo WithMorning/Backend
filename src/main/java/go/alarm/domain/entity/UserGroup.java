@@ -38,6 +38,8 @@ public class UserGroup extends BaseEntity{
 
     private Boolean isWakeup;
 
+    private Boolean isAgree; // 전화번호 사용 동의 여부
+
     public void setGroup(Group group){
         if (this.group != null)
             group.getUserGroupList().remove(this);

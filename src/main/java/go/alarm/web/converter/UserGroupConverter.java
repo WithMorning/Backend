@@ -6,11 +6,12 @@ import go.alarm.domain.entity.UserGroup;
 
 public class UserGroupConverter {
 
-    public static UserGroup toUserGroup(User user){
+    public static UserGroup toUserGroup(User user, Boolean isAgree){
 
         return UserGroup.builder()
             .user(user)
             .phone(user.getPhone())
+            .isAgree(isAgree)
             .build();
     }
 

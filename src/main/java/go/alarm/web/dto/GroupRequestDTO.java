@@ -18,10 +18,20 @@ public class GroupRequestDTO {
         String memo;
         @NotNull
         List<String> wakeupDateList;
+        @NotNull
+        Boolean isAgree;
     }
 
     @Getter
     public static class CreateMemoDTO{
         String memo;
+    }
+
+    @Getter
+    public static class JoinGroupDTO{
+        @NotNull
+        String participationCode;
+        @NotNull
+        Boolean isAgree;
     }
 }

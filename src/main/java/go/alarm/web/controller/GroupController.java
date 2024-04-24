@@ -2,8 +2,10 @@ package go.alarm.web.controller;
 
 
 import go.alarm.domain.entity.Group;
+import go.alarm.domain.entity.User;
+import go.alarm.domain.entity.UserGroup;
 import go.alarm.response.BaseResponse;
-import go.alarm.service.GroupCommandService;
+import go.alarm.service.GroupService;
 import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.dto.GroupRequestDTO;
 import go.alarm.web.dto.GroupResponseDTO;
@@ -25,25 +27,35 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class GroupController {
 
-    private final GroupCommandService groupCommandService;
+    private final GroupService groupService;
 
-    @PostMapping
+    @PostMapping// 그룹 생성 (= 알람 생성)
     public BaseResponse<GroupResponseDTO.CreateResultDto> CreateGroup
         (@RequestHeader(name = "userId") Long userId,
             @RequestBody @Valid GroupRequestDTO.CreateDTO request) {
 
-        Group group = groupCommandService.createGroup(userId, request);
+        Group group = groupService.createGroup(userId, request);
         return new BaseResponse<>(GroupConverter.toCreateResultDTO(group));
     }
 
-    @PostMapping("/{groupId}/memo")
+    @PostMapping("/{groupId}/memo") // 메모 생성
     public BaseResponse<GroupResponseDTO.CreateResultDto> CreateMemo
         (@RequestHeader(name = "userId") Long userId,
             @PathVariable(name = "groupId") Long groupId,
             @RequestBody @Valid GroupRequestDTO.CreateMemoDTO request) {
 
-        Group group = groupCommandService.createMemo(userId, groupId, request);
+        Group group = groupService.createMemo(userId, groupId, request);
         return new BaseResponse<>(GroupConverter.toCreateResultDTO(group));
+    }
+
+    @PostMapping("/{groupId}/join")// 참여 코드로 참여
+    public BaseResponse<GroupResponseDTO.JoinResultDto> JoinGroup
+        (@RequestHeader(name = "userId") Long userId,
+            @RequestBody @Valid GroupRequestDTO.JoinGroupDTO request) {
+
+        UserGroup userGroup = groupService.joinGroup(userId, request);
+
+        return new BaseResponse<>(GroupConverter.toJoinResultDTO(userGroup.getGroup(), userGroup.getUser()));
     }
 
 }

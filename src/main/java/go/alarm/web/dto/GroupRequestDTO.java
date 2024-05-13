@@ -15,22 +15,27 @@ public class GroupRequestDTO {
         String name;
         @NotNull
         LocalTime wakeupTime;
-        String memo;
         @NotNull
         List<String> wakeupDateList;
         @NotNull
         Boolean isAgree;
-    }
 
-    @Getter
-    public static class CreateMemoDTO{
         String memo;
     }
+
 
     @Getter
     public static class JoinGroupDTO{
         @NotNull
         String participationCode;
+        @NotNull
+        Boolean isAgree;
+    }
+
+    @Getter
+    public static class InviteGroupDTO{
+        @NotNull
+        String phone;
         @NotNull
         Boolean isAgree;
     }

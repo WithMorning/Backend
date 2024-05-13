@@ -38,16 +38,6 @@ public class GroupController {
         return new BaseResponse<>(GroupConverter.toCreateResultDTO(group));
     }
 
-    @PostMapping("/{groupId}/memo") // 메모 생성
-    public BaseResponse<GroupResponseDTO.CreateResultDto> CreateMemo
-        (@RequestHeader(name = "userId") Long userId,
-            @PathVariable(name = "groupId") Long groupId,
-            @RequestBody @Valid GroupRequestDTO.CreateMemoDTO request) {
-
-        Group group = groupService.createMemo(userId, groupId, request);
-        return new BaseResponse<>(GroupConverter.toCreateResultDTO(group));
-    }
-
     @PostMapping("/{groupId}/join")// 참여 코드로 참여
     public BaseResponse<GroupResponseDTO.JoinResultDto> JoinGroup
         (@RequestHeader(name = "userId") Long userId,
@@ -56,6 +46,18 @@ public class GroupController {
         UserGroup userGroup = groupService.joinGroup(userId, request);
 
         return new BaseResponse<>(GroupConverter.toJoinResultDTO(userGroup.getGroup(), userGroup.getUser()));
+    }
+
+    @PostMapping("/{groupId}/invite")// 전화번호로 유저 초대
+    public BaseResponse<GroupResponseDTO.InviteResultDto> InviteGroup
+        (@RequestHeader(name = "userId") Long userId,
+            @PathVariable(name = "groupId") Long groupId,
+            @RequestBody @Valid GroupRequestDTO.InviteGroupDTO request) {
+
+        UserGroup userGroup = groupService.inviteGroup(userId, groupId, request);
+
+       // return new BaseResponse<>(GroupConverter.toInviteResultDTO(userGroup.getGroup(), userGroup.getUser()));
+        return null; // 일단 보류
     }
 
 }

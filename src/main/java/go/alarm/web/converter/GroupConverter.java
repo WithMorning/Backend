@@ -43,6 +43,7 @@ public class GroupConverter {
             // group.getUserGroupList()의 반환값이 null이 되는 것. 여기에 .add를 해버리니까 (null에 add를 하니까)
             // userGroupList에 NullPointerException이 일어남
             .participationCode(sb.toString())
+            .memo(request.getMemo())
             .build();
     }
 

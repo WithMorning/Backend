@@ -1,6 +1,7 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
+import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.domain.entity.WakeupDate;
 import go.alarm.domain.repository.GroupRepository;
@@ -9,6 +10,7 @@ import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.converter.UserGroupConverter;
 import go.alarm.web.converter.WakeupDateConverter;
 import go.alarm.web.dto.GroupRequestDTO;
+import go.alarm.web.dto.GroupRequestDTO.InviteGroupDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,26 +47,28 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Group createMemo(Long userId, Long groupId, GroupRequestDTO.CreateMemoDTO request) {
-
-        // userId를 통해 해당 유저가 이 그룹에 속해있는지 예외 처리를 이 서비스 단에서 하냐? 컨트롤러에서 하냐?
-        // 아니면 umc 워크북처럼 따로 예외처리 어노테이션을 만들어서 컨트롤러에서 하냐?는 나중에 정해야 할듯.
-        Group group = groupRepository.findById(groupId).get();
-        group.setMemo(request.getMemo());
-        System.out.println(request.getMemo());
-        return group;
-    }
-
-    @Override
     public UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request) {
         Group group = groupRepository.findByParticipationCode(request.getParticipationCode()); // 참여 코드로 그룹 찾기
+        // 위에서 굳이 참여 코드로 그룹을 찾을 필요가 있나? Path Variable로 넘어온 그룹 Id를 통해서 하면 안됨?
+        // 참여 코드가 Path Variable로 넘어온 그룹 Id의 참여 코드인지 검증도 해줘야 함.
         // 참여 코드가 없을 시 예외 처리도 해줘야 함.
         // 유저가 존재하는 지 예외 처리 해줘야 함.
 
-        UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get(),request.getIsAgree()); // 유저 그룹 생성(그룹에 유저 넣기)
+        UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree()); // 유저 그룹 생성(그룹에 유저 넣기)
         userGroup.setGroup(group);
         // 그룹에 인원수가 다 찼다면 참여가 불가능한 예외 처리도 해줘야 함.
 
         return userGroup;
+    }
+
+    @Override
+    public UserGroup inviteGroup(Long userId, Long groupId, InviteGroupDTO request) {
+        Group group = groupRepository.findById(groupId).get(); // 그룹Id로 그룹 찾기
+        User sender = userRepository.findById(userId).get(); // 초대한 유저 찾기
+        User receiver = userRepository.findByPhone(request.getPhone()); // 전화번호로 초대받은 유저 찾기
+
+        // request.getPhone이 존재하는지 점검해야 함.
+
+        return null;
     }
 }

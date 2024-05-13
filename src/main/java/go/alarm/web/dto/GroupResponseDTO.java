@@ -27,4 +27,15 @@ public class GroupResponseDTO {
         LocalDateTime createdAt;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class InviteResultDto{
+        Long groupId;
+        String sender; // 초대한 사람
+        String receiver; // 초대받은 사람
+        LocalDateTime createdAt;
+    }
+
 }

@@ -8,8 +8,8 @@ public interface GroupService {
 
     Group createGroup(Long userId, GroupRequestDTO.CreateDTO request);
 
-    Group createMemo(Long userId, Long storeId, GroupRequestDTO.CreateMemoDTO request);
-
     UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request);
+
+    UserGroup inviteGroup(Long userId, Long groupId,GroupRequestDTO.InviteGroupDTO request);
 
 }

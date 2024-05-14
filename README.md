@@ -40,9 +40,9 @@ master(main) ── develop ── feature
 #### feature
 
 - [ ] 개별 개발자가 맡은 작업을 개발하는 브랜치입니다.
-- [ ] feature/(feature-name) 과 같이 머릿말을 feature, 꼬릿말을 개발하는 기능으로 명명합니다.
-- [ ] feature-name의 경우 cabab-case를 따릅니다.
-- [ ] ex) feature/login-validation-#23
+- [ ] feat/(feat-name) 과 같이 머릿말을 feat, 꼬릿말을 개발하는 기능으로 명명합니다.
+- [ ] feat-name의 경우 cabab-case를 따릅니다.
+- [ ] ex) feat/login-validation-#23
 
 #### hotfix
 

@@ -10,6 +10,5 @@ public interface GroupService {
 
     UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request);
 
-    UserGroup inviteGroup(Long userId, Long groupId,GroupRequestDTO.InviteGroupDTO request);
 
 }

@@ -1,7 +1,6 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
-import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.domain.entity.WakeupDate;
 import go.alarm.domain.repository.GroupRepository;
@@ -10,7 +9,6 @@ import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.converter.UserGroupConverter;
 import go.alarm.web.converter.WakeupDateConverter;
 import go.alarm.web.dto.GroupRequestDTO;
-import go.alarm.web.dto.GroupRequestDTO.InviteGroupDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,14 +59,4 @@ public class GroupServiceImpl implements GroupService {
         return userGroup;
     }
 
-    @Override
-    public UserGroup inviteGroup(Long userId, Long groupId, InviteGroupDTO request) {
-        Group group = groupRepository.findById(groupId).get(); // 그룹Id로 그룹 찾기
-        User sender = userRepository.findById(userId).get(); // 초대한 유저 찾기
-        User receiver = userRepository.findByPhone(request.getPhone()); // 전화번호로 초대받은 유저 찾기
-
-        // request.getPhone이 존재하는지 점검해야 함.
-
-        return null;
-    }
 }

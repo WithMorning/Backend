@@ -9,10 +9,17 @@ import go.alarm.service.GroupService;
 import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.dto.GroupRequestDTO;
 import go.alarm.web.dto.GroupResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +36,15 @@ public class GroupController {
 
     private final GroupService groupService;
 
-    @PostMapping// 그룹 생성 (= 알람 생성)
+
+    @PostMapping
+    @Operation(summary = "그룹 생성(알람 생성) API", description = "그룹(알람)을 생성합니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공입니다.")
+    })
+    @Parameters({
+        @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
+    })
     public BaseResponse<GroupResponseDTO.CreateResultDto> CreateGroup
         (@RequestHeader(name = "userId") Long userId,
             @RequestBody @Valid GroupRequestDTO.CreateDTO request) {
@@ -38,7 +53,15 @@ public class GroupController {
         return new BaseResponse<>(GroupConverter.toCreateResultDTO(group));
     }
 
-    @PostMapping("/{groupId}/join")// 참여 코드로 참여
+    @PostMapping("/{groupId}/join")
+    @Operation(summary = "참여코드로 그룹에 참가하는 API", description = "참여 코드를 입력하여 그룹에 참가합니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공입니다.")
+    })
+    @Parameters({
+        @Parameter(name = "groupId", description = "그룹의 아이디, path variable입니다."),
+        @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
+    })
     public BaseResponse<GroupResponseDTO.JoinResultDto> JoinGroup
         (@RequestHeader(name = "userId") Long userId,
             @RequestBody @Valid GroupRequestDTO.JoinGroupDTO request) {
@@ -46,18 +69,6 @@ public class GroupController {
         UserGroup userGroup = groupService.joinGroup(userId, request);
 
         return new BaseResponse<>(GroupConverter.toJoinResultDTO(userGroup.getGroup(), userGroup.getUser()));
-    }
-
-    @PostMapping("/{groupId}/invite")// 전화번호로 유저 초대
-    public BaseResponse<GroupResponseDTO.InviteResultDto> InviteGroup
-        (@RequestHeader(name = "userId") Long userId,
-            @PathVariable(name = "groupId") Long groupId,
-            @RequestBody @Valid GroupRequestDTO.InviteGroupDTO request) {
-
-        UserGroup userGroup = groupService.inviteGroup(userId, groupId, request);
-
-       // return new BaseResponse<>(GroupConverter.toInviteResultDTO(userGroup.getGroup(), userGroup.getUser()));
-        return null; // 일단 보류
     }
 
 }

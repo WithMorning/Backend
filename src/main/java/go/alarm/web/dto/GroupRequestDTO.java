@@ -32,11 +32,5 @@ public class GroupRequestDTO {
         Boolean isAgree;
     }
 
-    @Getter
-    public static class InviteGroupDTO{
-        @NotNull
-        String phone;
-        @NotNull
-        Boolean isAgree;
-    }
+
 }

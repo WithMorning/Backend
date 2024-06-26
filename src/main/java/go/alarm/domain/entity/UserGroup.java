@@ -40,6 +40,8 @@ public class UserGroup extends BaseEntity{
 
     private Boolean isAgree; // 전화번호 사용 동의 여부
 
+    private Boolean isDisturbBanMode; // 방해금지모드 여부 >> True:방해금지모드 on, False:방해금지모드 off
+
     public void setGroup(Group group){
         if (this.group != null)
             group.getUserGroupList().remove(this);

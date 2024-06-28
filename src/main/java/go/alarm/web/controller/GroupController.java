@@ -36,18 +36,16 @@ public class GroupController {
 
     private final GroupService groupService;
 
-
     @PostMapping
     @Operation(summary = "그룹 생성(알람 생성) API", description = "그룹(알람)을 생성합니다.")
     @ApiResponses({
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공입니다.")
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201",description = "OK, 성공입니다.")
     })
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<GroupResponseDTO.CreateResultDto> CreateGroup
-        (@RequestHeader(name = "userId") Long userId,
-            @RequestBody @Valid GroupRequestDTO.CreateDTO request) {
+    public BaseResponse<GroupResponseDTO.CreateResultDto> createGroup(@RequestHeader(name = "userId") Long userId,
+                                                                        @RequestBody @Valid GroupRequestDTO.CreateDTO request) {
 
         Group group = groupService.createGroup(userId, request);
         return new BaseResponse<>(GroupConverter.toCreateResultDTO(group));
@@ -56,15 +54,14 @@ public class GroupController {
     @PostMapping("/{groupId}/join")
     @Operation(summary = "참여코드로 그룹에 참가하는 API", description = "참여 코드를 입력하여 그룹에 참가합니다.")
     @ApiResponses({
-        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공입니다.")
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201",description = "OK, 성공입니다.")
     })
     @Parameters({
         @Parameter(name = "groupId", description = "그룹의 아이디, path variable입니다."),
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<GroupResponseDTO.JoinResultDto> JoinGroup
-        (@RequestHeader(name = "userId") Long userId,
-            @RequestBody @Valid GroupRequestDTO.JoinGroupDTO request) {
+    public BaseResponse<GroupResponseDTO.JoinResultDto> joinGroup(@RequestHeader(name = "userId") Long userId,
+                                                                    @RequestBody @Valid GroupRequestDTO.JoinGroupDTO request) {
 
         UserGroup userGroup = groupService.joinGroup(userId, request);
 

@@ -1,7 +1,6 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
-import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.domain.entity.WakeupDate;
 import go.alarm.domain.repository.GroupRepository;
@@ -10,7 +9,7 @@ import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.converter.UserGroupConverter;
 import go.alarm.web.converter.WakeupDateConverter;
 import go.alarm.web.dto.GroupRequestDTO;
-import go.alarm.web.dto.GroupRequestDTO.InviteGroupDTO;
+import go.alarm.web.dto.GroupRequestDTO.UpdateGroupDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,7 @@ public class GroupServiceImpl implements GroupService {
     private final UserRepository userRepository;
 
     @Override
-    public Group createGroup(Long userId, GroupRequestDTO.CreateDTO request) {
+    public Group createGroup(Long userId, GroupRequestDTO.CreateGroupDTO request) {
 
         Group group = GroupConverter.toGroup(request); // 그룹 생성
         WakeupDate wakeupDate = WakeupDateConverter.toWakeupDate(group, request.getWakeupDateList()); // 기상 요일 설정
@@ -47,6 +46,27 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public Group updateGroup(Long userId, Long groupId, UpdateGroupDTO request) {
+
+        Group group = groupRepository.findById(groupId).get();
+
+        group.setWakeupTime(request.getWakeupTime());
+        group.setWakeupDate(group.getWakeupDate()); // 이 부분을 고쳐야 함.
+        group.setName(request.getName());
+        group.setMemo(request.getMemo());
+
+        return group;
+    }
+
+    @Override
+    public void deleteGroup(Long userId, Long groupId) {
+
+        //Group group = groupRepository.findById(groupId).get(); 해당 그룹이 존재하는지 예외 처리도 들어가야 함
+        groupRepository.deleteById(groupId);
+
+    }
+
+    @Override
     public UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request) {
         Group group = groupRepository.findByParticipationCode(request.getParticipationCode()); // 참여 코드로 그룹 찾기
         // 위에서 굳이 참여 코드로 그룹을 찾을 필요가 있나? Path Variable로 넘어온 그룹 Id를 통해서 하면 안됨?
@@ -61,14 +81,5 @@ public class GroupServiceImpl implements GroupService {
         return userGroup;
     }
 
-    @Override
-    public UserGroup inviteGroup(Long userId, Long groupId, InviteGroupDTO request) {
-        Group group = groupRepository.findById(groupId).get(); // 그룹Id로 그룹 찾기
-        User sender = userRepository.findById(userId).get(); // 초대한 유저 찾기
-        User receiver = userRepository.findByPhone(request.getPhone()); // 전화번호로 초대받은 유저 찾기
 
-        // request.getPhone이 존재하는지 점검해야 함.
-
-        return null;
-    }
 }

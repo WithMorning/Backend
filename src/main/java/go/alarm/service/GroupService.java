@@ -6,10 +6,12 @@ import go.alarm.web.dto.GroupRequestDTO;
 
 public interface GroupService {
 
-    Group createGroup(Long userId, GroupRequestDTO.CreateDTO request);
+    Group createGroup(Long userId, GroupRequestDTO.CreateGroupDTO request);
+
+    Group updateGroup(Long userId, Long groupId, GroupRequestDTO.UpdateGroupDTO request);
+
+    void deleteGroup(Long userId, Long groupId);
 
     UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request);
-
-    UserGroup inviteGroup(Long userId, Long groupId,GroupRequestDTO.InviteGroupDTO request);
 
 }

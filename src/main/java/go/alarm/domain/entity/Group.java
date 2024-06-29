@@ -32,6 +32,7 @@ public class Group extends BaseEntity{
     @Column(columnDefinition = "VARCHAR(30)")
     private String name;
 
+    @Column
     private LocalTime wakeupTime;
 
     @Column(columnDefinition = "VARCHAR(50)")
@@ -46,6 +47,10 @@ public class Group extends BaseEntity{
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
 
+    public void setWakeupTime(LocalTime wakeupTime){
+        this.wakeupTime = wakeupTime;
+    }
+
     public void setWakeupDate(WakeupDate wakeupDate) {
         if (this.wakeupDate != null) {
             WakeupDate previousWakeupDate = this.wakeupDate;
@@ -53,6 +58,10 @@ public class Group extends BaseEntity{
             previousWakeupDate.setGroup(null); // 1:1 관계에서 반대쪽 객체의 참조 해제
         }
         this.wakeupDate = wakeupDate;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 
     public void setMemo(String memo){

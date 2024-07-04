@@ -18,7 +18,7 @@ public class MainResponseDTO {
     @AllArgsConstructor
     public static class MainDTO{
         String connectorProfileURL; // 접속자의 프로필 이미지 URL
-        List<GroupDTO> groupDTOList;
+        List<GroupDTO> groupList;
         Integer listSize;
     }
 
@@ -31,7 +31,7 @@ public class MainResponseDTO {
         String name;
         LocalTime wakeupTime;
         List<String> wakeupDateList;
-        List<UserDTO> userDTOList;
+        List<UserDTO> userList;
         String memo;
     }
 

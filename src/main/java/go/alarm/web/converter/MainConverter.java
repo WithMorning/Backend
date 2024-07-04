@@ -14,7 +14,7 @@ public class MainConverter {
     public static MainResponseDTO.MainDTO mainDTO(String connectorProfileURL, List<MainResponseDTO.GroupDTO> groupDTOList) {
         return MainResponseDTO.MainDTO.builder()
             .connectorProfileURL(connectorProfileURL)
-            .groupDTOList(groupDTOList)
+            .groupList(groupDTOList)
             .listSize(groupDTOList.size())
             .build();
     }
@@ -27,7 +27,7 @@ public class MainConverter {
             .name(group.getName())
             .wakeupTime(group.getWakeupTime())
             .wakeupDateList(wakeupDateList)
-            .userDTOList(userDTOList)
+            .userList(userDTOList)
             .memo(group.getMemo())
             .build();
     }

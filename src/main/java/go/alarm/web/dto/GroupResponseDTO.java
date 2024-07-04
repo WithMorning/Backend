@@ -12,7 +12,7 @@ public class GroupResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateResultDto{
+    public static class CreateGroupDto{
         Long groupId;
         LocalDateTime createdAt;
     }
@@ -21,20 +21,26 @@ public class GroupResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class JoinResultDto{
+    public static class UpdateGroupDto{
+        Long groupId;
+        LocalDateTime updatedAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteGroupDto{
+        LocalDateTime deletedAt;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JoinGroupDto{
         Long groupId;
         String joinUserNickname;
-        LocalDateTime createdAt;
-    }
-
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class InviteResultDto{
-        Long groupId;
-        String sender; // 초대한 사람
-        String receiver; // 초대받은 사람
         LocalDateTime createdAt;
     }
 

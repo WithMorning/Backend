@@ -2,24 +2,21 @@ package go.alarm.web.converter;
 
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;
-import go.alarm.domain.entity.WakeupDate;
-import go.alarm.web.dto.GroupRequestDTO;
-import go.alarm.web.dto.GroupRequestDTO.CreateDTO;
+import go.alarm.web.dto.GroupRequestDTO.CreateGroupDTO;
 import go.alarm.web.dto.GroupResponseDTO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GroupConverter {
 
-    public static GroupResponseDTO.CreateResultDto toCreateResultDTO(Group group){
-        return GroupResponseDTO.CreateResultDto.builder()
+    public static GroupResponseDTO.CreateGroupDto toCreateGroupDTO(Group group){
+        return GroupResponseDTO.CreateGroupDto.builder()
             .groupId(group.getId())
             .createdAt(LocalDateTime.now())
             .build();
     }
 
-    public static Group toGroup(CreateDTO request){
+    public static Group toGroup(CreateGroupDTO request){
 
         int codeLength = 8;
 
@@ -47,8 +44,21 @@ public class GroupConverter {
             .build();
     }
 
-    public static GroupResponseDTO.JoinResultDto toJoinResultDTO(Group group, User user){
-        return GroupResponseDTO.JoinResultDto.builder()
+    public static GroupResponseDTO.UpdateGroupDto toUpdateGroupDTO(Group group){
+        return GroupResponseDTO.UpdateGroupDto.builder()
+            .groupId(group.getId())
+            .updatedAt(LocalDateTime.now())
+            .build();
+    }
+
+    public static GroupResponseDTO.DeleteGroupDto toDeleteGroupDTO(){
+        return GroupResponseDTO.DeleteGroupDto.builder()
+            .deletedAt(LocalDateTime.now())
+            .build();
+    }
+
+    public static GroupResponseDTO.JoinGroupDto toJoinGroupDTO(Group group, User user){
+        return GroupResponseDTO.JoinGroupDto.builder()
             .groupId(group.getId())
             .joinUserNickname(user.getNickname())
             .createdAt(LocalDateTime.now())

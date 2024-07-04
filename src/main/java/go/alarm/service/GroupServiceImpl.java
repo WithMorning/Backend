@@ -1,14 +1,19 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
+import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.domain.entity.WakeupDate;
 import go.alarm.domain.repository.GroupRepository;
+import go.alarm.domain.repository.UserGroupRepository;
 import go.alarm.domain.repository.UserRepository;
 import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.converter.UserGroupConverter;
 import go.alarm.web.converter.WakeupDateConverter;
 import go.alarm.web.dto.GroupRequestDTO;
+import go.alarm.web.dto.GroupRequestDTO.UpdateGroupDTO;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +26,10 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
 
     @Override
-    public Group createGroup(Long userId, GroupRequestDTO.CreateDTO request) {
+    public Group createGroup(Long userId, GroupRequestDTO.CreateGroupDTO request) {
 
         Group group = GroupConverter.toGroup(request); // 그룹 생성
         WakeupDate wakeupDate = WakeupDateConverter.toWakeupDate(group, request.getWakeupDateList()); // 기상 요일 설정
@@ -43,6 +49,29 @@ public class GroupServiceImpl implements GroupService {
         
         return groupRepository.save(group);
     }
+
+    @Override
+    public Group updateGroup(Long userId, Long groupId, UpdateGroupDTO request) {
+
+        Group group = groupRepository.findById(groupId).get();
+
+        group.setWakeupTime(request.getWakeupTime());
+        group.setWakeupDate(group.getWakeupDate()); // 이 부분을 고쳐야 함.
+        group.setName(request.getName());
+        group.setMemo(request.getMemo());
+
+        return group;
+    }
+
+    @Override
+    public void deleteGroup(Long userId, Long groupId) {
+
+        //Group group = groupRepository.findById(groupId).get(); 해당 그룹이 존재하는지 예외 처리도 들어가야 함
+        groupRepository.deleteById(groupId);
+
+    }
+
+
 
     @Override
     public UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request) {

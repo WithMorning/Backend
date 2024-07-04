@@ -1,6 +1,5 @@
 package go.alarm.web.dto;
 
-import go.alarm.domain.entity.WakeupDate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalTime;
@@ -10,7 +9,7 @@ import lombok.Getter;
 public class GroupRequestDTO {
 
     @Getter
-    public static class CreateDTO{
+    public static class CreateGroupDTO{ // 여기 DTO UI대로 데이터 순서 바꿔야 함. UI에는 시간, 반복 요일이 맨 위에 있음
         @NotBlank
         String name;
         @NotNull
@@ -19,7 +18,14 @@ public class GroupRequestDTO {
         List<String> wakeupDateList;
         @NotNull
         Boolean isAgree;
+        String memo;
+    }
 
+    @Getter
+    public static class UpdateGroupDTO{
+        LocalTime wakeupTime;
+        List<String> wakeupDateList;
+        String name;
         String memo;
     }
 
@@ -31,6 +37,4 @@ public class GroupRequestDTO {
         @NotNull
         Boolean isAgree;
     }
-
-
 }

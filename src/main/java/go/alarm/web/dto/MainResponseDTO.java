@@ -1,6 +1,9 @@
 package go.alarm.web.dto;
 
+import go.alarm.domain.entity.Group;
+import go.alarm.domain.entity.User;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +18,7 @@ public class MainResponseDTO {
     @AllArgsConstructor
     public static class MainDTO{
         String connectorProfileURL; // 접속자의 프로필 이미지 URL
-        List<AlarmDTO> alarmList;
+        List<GroupDTO> groupDTOList;
         Integer listSize;
     }
 
@@ -23,12 +26,12 @@ public class MainResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class AlarmDTO{
+    public static class GroupDTO {
+        Long groupId;
         String name;
         LocalTime wakeupTime;
         List<String> wakeupDateList;
-        Boolean isDisturbBanMode; // 메인페이지의 알람 허용 바
-        List<UserDTO> userList;
+        List<UserDTO> userDTOList;
         String memo;
     }
 
@@ -36,10 +39,12 @@ public class MainResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class UserDTO{
+    public static class UserDTO {
+        Long userId;
         String imageURL;
         String nickname;
         Boolean isWakeup;
         Boolean isDisturbBanMode;
+        String phone;
     }
 }

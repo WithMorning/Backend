@@ -36,6 +36,9 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(30)")
     private String phone;
 
+    @Column(columnDefinition = "TEXT")
+    private String imageURL;
+
     private Boolean isCertify;
 
     @OneToOne(mappedBy = "sender", cascade = CascadeType.ALL)

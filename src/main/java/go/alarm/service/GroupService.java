@@ -3,6 +3,7 @@ package go.alarm.service;
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.web.dto.GroupRequestDTO;
+import java.util.List;
 
 public interface GroupService {
 
@@ -13,5 +14,4 @@ public interface GroupService {
     void deleteGroup(Long userId, Long groupId);
 
     UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request);
-
 }

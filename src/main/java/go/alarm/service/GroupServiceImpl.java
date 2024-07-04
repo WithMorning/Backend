@@ -1,15 +1,19 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
+import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.domain.entity.WakeupDate;
 import go.alarm.domain.repository.GroupRepository;
+import go.alarm.domain.repository.UserGroupRepository;
 import go.alarm.domain.repository.UserRepository;
 import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.converter.UserGroupConverter;
 import go.alarm.web.converter.WakeupDateConverter;
 import go.alarm.web.dto.GroupRequestDTO;
 import go.alarm.web.dto.GroupRequestDTO.UpdateGroupDTO;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +26,7 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
 
     @Override
     public Group createGroup(Long userId, GroupRequestDTO.CreateGroupDTO request) {
@@ -66,6 +71,8 @@ public class GroupServiceImpl implements GroupService {
 
     }
 
+
+
     @Override
     public UserGroup joinGroup(Long userId, GroupRequestDTO.JoinGroupDTO request) {
         Group group = groupRepository.findByParticipationCode(request.getParticipationCode()); // 참여 코드로 그룹 찾기
@@ -80,6 +87,5 @@ public class GroupServiceImpl implements GroupService {
 
         return userGroup;
     }
-
 
 }

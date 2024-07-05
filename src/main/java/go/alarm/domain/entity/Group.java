@@ -52,11 +52,6 @@ public class Group extends BaseEntity{
     }
 
     public void setWakeupDate(WakeupDate wakeupDate) {
-        if (this.wakeupDate != null) {
-            WakeupDate previousWakeupDate = this.wakeupDate;
-            this.wakeupDate = null;
-            previousWakeupDate.setGroup(null); // 1:1 관계에서 반대쪽 객체의 참조 해제
-        }
         this.wakeupDate = wakeupDate;
     }
 

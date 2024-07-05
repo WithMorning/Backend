@@ -1,7 +1,6 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
-import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.domain.entity.WakeupDate;
 import go.alarm.domain.repository.GroupRepository;
@@ -13,7 +12,6 @@ import go.alarm.web.converter.WakeupDateConverter;
 import go.alarm.web.dto.GroupRequestDTO;
 import go.alarm.web.dto.GroupRequestDTO.UpdateGroupDTO;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,11 +54,35 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findById(groupId).get();
 
         group.setWakeupTime(request.getWakeupTime());
-        group.setWakeupDate(group.getWakeupDate()); // 이 부분을 고쳐야 함.
+        updateWakeupDate(group.getWakeupDate(), request.getWakeupDateList());
         group.setName(request.getName());
         group.setMemo(request.getMemo());
 
         return group;
+    }
+
+    public WakeupDate updateWakeupDate(WakeupDate wakeupDate, List<String> wakeupDateList){
+        
+        wakeupDate.resetWakeupDate(); // 기존 기상 요일 리셋
+
+        for (String dayOfWeek : wakeupDateList) {
+            if (dayOfWeek.equals("mon")) {
+                wakeupDate.setMon(Boolean.TRUE);
+            } else if (dayOfWeek.equals("tue")) {
+                wakeupDate.setTue(Boolean.TRUE);
+            } else if (dayOfWeek.equals("wed")) {
+                wakeupDate.setWed(Boolean.TRUE);
+            } else if (dayOfWeek.equals("thu")) {
+                wakeupDate.setThu(Boolean.TRUE);
+            } else if (dayOfWeek.equals("fri")) {
+                wakeupDate.setFri(Boolean.TRUE);
+            } else if (dayOfWeek.equals("sat")) {
+                wakeupDate.setSat(Boolean.TRUE);
+            } else if (dayOfWeek.equals("sun")) {
+                wakeupDate.setSun(Boolean.TRUE);
+            }
+        }
+        return wakeupDate;
     }
 
     @Override

@@ -50,4 +50,43 @@ public class WakeupDate extends BaseEntity {
         }
         this.group = group;
     }
+
+    public void resetWakeupDate(){
+        this.mon = Boolean.FALSE;
+        this.tue = Boolean.FALSE;
+        this.wed = Boolean.FALSE;
+        this.thu = Boolean.FALSE;
+        this.fri = Boolean.FALSE;
+        this.sat = Boolean.FALSE;
+        this.sun = Boolean.FALSE;
+    }
+
+    // 아래처럼 하는 것이 맞으려나......?
+    public void setMon(Boolean mon) {
+        this.mon = mon;
+    }
+
+    public void setTue(Boolean tue) {
+        this.tue = tue;
+    }
+
+    public void setWed(Boolean wed) {
+        this.wed = wed;
+    }
+
+    public void setThu(Boolean thu) {
+        this.thu = thu;
+    }
+
+    public void setFri(Boolean fri) {
+        this.fri = fri;
+    }
+
+    public void setSat(Boolean sat) {
+        this.sat = sat;
+    }
+
+    public void setSun(Boolean sun) {
+        this.sun = sun;
+    }
 }

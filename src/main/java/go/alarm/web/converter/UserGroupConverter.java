@@ -12,6 +12,8 @@ public class UserGroupConverter {
             .user(user)
             .phone(user.getPhone())
             .isAgree(isAgree)
+            .isWakeup(Boolean.FALSE)
+            .isDisturbBanMode(Boolean.FALSE)
             .build();
     }
 

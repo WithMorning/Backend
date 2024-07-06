@@ -34,7 +34,6 @@ public class GroupServiceImpl implements GroupService {
         group.setWakeupDate(wakeupDate);
 
         UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree()); // 유저 그룹 생성
-        System.out.println("group = " + group.getUserGroupList());
         userGroup.setGroup(group); // userGroup을 userGroupRepository.save로 저장해야 하나..?
         // 아니다. setGroup을 들어가보면 group.~~.add로 userGroup객체를 넣어준다.
 

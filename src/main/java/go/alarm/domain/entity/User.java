@@ -27,6 +27,10 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
+    @Column(unique = true)
+    private String fcmToken;
+
     @Column(columnDefinition = "VARCHAR(30)")
     private String nickname;
 
@@ -46,4 +50,5 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
+
 }

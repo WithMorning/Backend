@@ -14,9 +14,4 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
     List<UserGroup> findAllByUser(User user);
     List<UserGroup> findAllByGroup(Group group);
 
-    @Query("SELECT ug.user FROM UserGroup ug WHERE ug.group = :group")
-    List<User> findUserListByGroup(@Param("group") Group group);
-
-    UserGroup findByUserAndGroup(User user, Group group);
-
 }

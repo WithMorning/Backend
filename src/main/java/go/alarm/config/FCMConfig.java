@@ -5,22 +5,29 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import java.io.IOException;
+import java.io.InputStream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 @Configuration
 public class FCMConfig {
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        GoogleCredentials credentials = GoogleCredentials.fromStream(
-            new ClassPathResource("firebase-service-account.json").getInputStream());
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        Resource resource = resourceLoader.getResource("classpath:firebase-service-account.json");
+        InputStream serviceAccount = resource.getInputStream();
+
         FirebaseOptions options = FirebaseOptions.builder()
-            .setCredentials(credentials)
+            .setCredentials(GoogleCredentials.fromStream(serviceAccount))
             .build();
+
         return FirebaseApp.initializeApp(options);
     }
+
     @Bean
     public FirebaseMessaging firebaseMessaging(FirebaseApp firebaseApp) {
         return FirebaseMessaging.getInstance(firebaseApp);

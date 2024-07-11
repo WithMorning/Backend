@@ -18,3 +18,6 @@ spring:
           auto: update
         default_batch_fetch_size: 1000
 
+fcm:
+  service-account-file: classpath:firebase-service-account.json
+

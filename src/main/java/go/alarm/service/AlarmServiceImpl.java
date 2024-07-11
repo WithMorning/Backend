@@ -27,7 +27,6 @@ public class AlarmServiceImpl implements AlarmService{
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
     private final FCMService fcmService;
-    //private final FCMService fcmService; 일단 1단계는 FCM없이 알림을 콘솔로 찍어보자.
 
     /*
     * 알람을 보내는 메소드
@@ -59,6 +58,30 @@ public class AlarmServiceImpl implements AlarmService{
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void sendAlarmsTest() {
+        // DB에 groupId가 존재하는지 꼭 확인해줘야 함.(여기선 groupId = 10)
+        Group group = groupRepository.findById(Long.valueOf(10)).get();
+
+        List<UserGroup> userGroups = userGroupRepository.findAllByGroup(group);
+        for (UserGroup userGroup : userGroups) {
+            if (!userGroup.getIsDisturbBanMode()) {
+                User user = userGroup.getUser();
+                try {
+                    fcmService.sendNotification(
+                        user.getFcmToken(),
+                        "Test Alarm",
+                        "It's just Test. Don't Worry"
+                    );
+                } catch (FirebaseMessagingException e) {
+                    // 로그 기록 또는 에러 처리
+                    System.err.println("Failed to send notification to user: " + user.getNickname());
+                    e.printStackTrace();
                 }
             }
         }

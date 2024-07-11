@@ -11,4 +11,5 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     Group findByParticipationCode(String participationCode);
 
     List<Group> findAllByWakeupTime(LocalTime now);
+
 }

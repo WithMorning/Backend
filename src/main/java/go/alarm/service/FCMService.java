@@ -18,6 +18,7 @@ public class FCMService {
     }
 
     public void sendNotification(String token, String title, String body) throws FirebaseMessagingException {
+        // 이 메시지 부분을 DTO로 따로 빼서 형식을 정할 수도 있을듯. 나중에 리펙토링하면서 고치자.
         Message message = Message.builder()
             .setToken(token)
             .setNotification(Notification.builder()

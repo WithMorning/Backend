@@ -22,6 +22,7 @@ public class SchedulerConfig {
 
     @Scheduled(cron = "0 * * * * *") // 매분 실행
     public void scheduleAlarms() {
-        alarmService.sendAlarms();
+        //alarmService.sendAlarms();
+        alarmService.sendAlarmsTest(); // groupId = 10인 그룹 유저들에게 알람을 보내는 테스트
     }
 }

@@ -1,5 +1,6 @@
 package go.alarm.service;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
@@ -25,6 +26,7 @@ public class AlarmServiceImpl implements AlarmService{
 
     private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
+    private final FCMService fcmService;
     //private final FCMService fcmService; 일단 1단계는 FCM없이 알림을 콘솔로 찍어보자.
 
     /*
@@ -35,19 +37,26 @@ public class AlarmServiceImpl implements AlarmService{
     public void sendAlarms() {
         LocalTime now = LocalTime.now().withNano(0);
         DayOfWeek dayOfToday = LocalDate.now().getDayOfWeek();
-
         List<Group> groups = groupRepository.findAllByWakeupTime(now);
 
         if(!groups.isEmpty()){ // 기상 시간이 현재 시간과 일치한 그룹이 존재한다면
             for (Group group : groups) {
                 if (isWakeupDay(group, dayOfToday)) {
-                    System.out.println("Yes Today");
                     List<UserGroup> userGroups = userGroupRepository.findAllByGroup(group);
                     for (UserGroup userGroup : userGroups) {
                         if (!userGroup.getIsDisturbBanMode()) {
-                            System.out.println("Not BanMode");
                             User user = userGroup.getUser();
-                            System.out.println("알람 전송: 사용자 " + user.getNickname() + "님, 일어나세요! 현재 시간: " + now);
+                            try {
+                                fcmService.sendNotification(
+                                    user.getFcmToken(),
+                                    "Wake Up Alarm",
+                                    "It's time to wake up! Current time: " + now
+                                );
+                            } catch (FirebaseMessagingException e) {
+                                // 로그 기록 또는 에러 처리
+                                System.err.println("Failed to send notification to user: " + user.getNickname());
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }

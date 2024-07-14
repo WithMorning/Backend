@@ -18,7 +18,7 @@ public class FCMConfig {
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
-        Resource resource = resourceLoader.getResource("classpath:firebase-service-account.json");
+        Resource resource = resourceLoader.getResource("classpath:firebase_service_key.json");
         InputStream serviceAccount = resource.getInputStream();
 
         FirebaseOptions options = FirebaseOptions.builder()

@@ -23,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserGroupServiceImpl implements UserGroupService{
 
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
     private final UserGroupRepository userGroupRepository;
-
 
     @Override
     public List<Group> getGroupListByUserId(Long userId) {

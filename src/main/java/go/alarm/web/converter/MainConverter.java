@@ -5,7 +5,7 @@ import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.web.dto.MainResponseDTO;
-import go.alarm.domain.entity.WakeupDate;
+import go.alarm.domain.entity.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +20,13 @@ public class MainConverter {
     }
 
     public static MainResponseDTO.GroupDTO groupDTO(Group group, List<MainResponseDTO.UserDTO> userDTOList) {
-        List<String> wakeupDateList = getWakeupDateList(group.getWakeupDate());
+        List<String> dayOfWeekList = getDayOfWeekList(group.getWakeUpDayOfWeek());
 
         return MainResponseDTO.GroupDTO.builder()
             .groupId(group.getId())
             .name(group.getName())
             .wakeupTime(group.getWakeupTime())
-            .wakeupDateList(wakeupDateList)
+            .wakeUpDayOfWeekList(dayOfWeekList)
             .userList(userDTOList)
             .memo(group.getMemo())
             .build();
@@ -43,17 +43,17 @@ public class MainConverter {
             .build();
     }
 
-    private static List<String> getWakeupDateList(WakeupDate wakeupDate) {
-        List<String> wakeupDateList = new ArrayList<>();
+    private static List<String> getDayOfWeekList(DayOfWeek dayOfWeek) {
+        List<String> dayOfWeekList = new ArrayList<>();
 
-        if (wakeupDate.getMon()) wakeupDateList.add("mon");
-        if (wakeupDate.getTue()) wakeupDateList.add("tue");
-        if (wakeupDate.getWed()) wakeupDateList.add("wed");
-        if (wakeupDate.getThu()) wakeupDateList.add("thu");
-        if (wakeupDate.getFri()) wakeupDateList.add("fri");
-        if (wakeupDate.getSat()) wakeupDateList.add("sat");
-        if (wakeupDate.getSun()) wakeupDateList.add("sun");
+        if (dayOfWeek.getMon()) dayOfWeekList.add("mon");
+        if (dayOfWeek.getTue()) dayOfWeekList.add("tue");
+        if (dayOfWeek.getWed()) dayOfWeekList.add("wed");
+        if (dayOfWeek.getThu()) dayOfWeekList.add("thu");
+        if (dayOfWeek.getFri()) dayOfWeekList.add("fri");
+        if (dayOfWeek.getSat()) dayOfWeekList.add("sat");
+        if (dayOfWeek.getSun()) dayOfWeekList.add("sun");
 
-        return wakeupDateList;
+        return dayOfWeekList;
     }
 }

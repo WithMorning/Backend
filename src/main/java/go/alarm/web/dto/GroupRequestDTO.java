@@ -15,7 +15,7 @@ public class GroupRequestDTO {
         @NotNull
         LocalTime wakeupTime;
         @NotNull
-        List<String> wakeupDateList;
+        List<String> dayOfWeekList;
         @NotNull
         Boolean isAgree;
         String memo;
@@ -24,7 +24,7 @@ public class GroupRequestDTO {
     @Getter
     public static class UpdateGroupDTO{
         LocalTime wakeupTime;
-        List<String> wakeupDateList;
+        List<String> dayOfWeekList;
         String name;
         String memo;
     }

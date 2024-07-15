@@ -1,6 +1,5 @@
 package go.alarm.web.dto;
 
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ public class MyPageResponseDTO {
         String imageURL;
         String nickname;
         LocalTime bedtime;
-        List<DayOfWeek> dayOfWeekList;
+        List<String> dayOfWeekList;
     }
 
 }

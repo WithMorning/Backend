@@ -26,7 +26,7 @@ public class MainConverter {
             .groupId(group.getId())
             .name(group.getName())
             .wakeupTime(group.getWakeupTime())
-            .dayOfWeekList(dayOfWeekList)
+            .wakeUpDayOfWeekList(dayOfWeekList)
             .userList(userDTOList)
             .memo(group.getMemo())
             .build();

@@ -63,7 +63,7 @@ public class AlarmServiceImpl implements AlarmService{
     }
 
     /**
-     * 알람을 테스트함과 동시에 어떤 유저에게 알람을 보냈는지 리스트를 반환합니다.
+     * 알람을 테스트함과 동시에 어떤 유저에게 알람을 보냈는지 유저 리스트를 반환합니다.
      */
     @Override
     public List<User> sendAlarmsTest() {

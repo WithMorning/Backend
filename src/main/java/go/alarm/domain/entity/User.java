@@ -6,8 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -44,6 +46,18 @@ public class User extends BaseEntity {
     @OneToOne(mappedBy = "sender", cascade = CascadeType.ALL)
     private WakeupMate wakeupMate;
 
+    @Column
+    private LocalTime bedTime;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "day_of_week_id")
+    private DayOfWeek bedDayOfWeek;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
+
+    public void setDayOfWeek(DayOfWeek bedDayOfWeek) {
+        this.bedDayOfWeek = bedDayOfWeek;
+    }
+
 }

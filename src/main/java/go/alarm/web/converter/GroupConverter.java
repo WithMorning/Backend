@@ -32,8 +32,8 @@ public class GroupConverter {
         return Group.builder()
             .name(request.getName()) // 여기서 get~~은 DTO에 있는 친구들만 가져올 수 있음.
             .wakeupTime(request.getWakeupTime())
-            //.wakeupDate(WakeupDate.builder() 이런 식으로 한 번에 wakeupDate를 설정해줄 수 있으나,
-            //    .mon(true)                    나는 가독성을 위해 wakeupDateConverter를 새로 만듦.
+            //.dayOfWeek(dayOfWeek.builder() 이런 식으로 한 번에 dayOfWeek 설정해줄 수 있으나,
+            //    .mon(true)                    나는 가독성을 위해 dayOfWeekConverter를 새로 만듦.
             //    .build())                     마찬가지로 UserGroup도 여기서 생성해줄 수 있으나, 따로 뺌.
             .userGroupList(new ArrayList<>())
             // Group을 생성할 때 이 유저 리스트를 생성하는 부분을 생략했었음. 이후 userGroup의 setGroup에서

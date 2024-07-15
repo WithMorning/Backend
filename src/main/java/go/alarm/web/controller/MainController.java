@@ -1,18 +1,10 @@
 package go.alarm.web.controller;
 
-import go.alarm.domain.entity.Group;
 import go.alarm.response.BaseResponse;
-import go.alarm.service.GroupService;
 import go.alarm.service.UserGroupService;
-import go.alarm.service.UserService;
-import go.alarm.web.converter.MainConverter;
 import go.alarm.web.dto.MainResponseDTO;
-import go.alarm.web.dto.MainResponseDTO.GroupDTO;
-import go.alarm.web.dto.MainResponseDTO.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;

@@ -20,6 +20,7 @@ public class MyPageConverter {
             .dayOfWeekList(bedDayOfWeekList)
             .build();
     }
+
     private static List<String> getDayOfWeekList(DayOfWeek dayOfWeek) {
         List<String> dayOfWeekList = new ArrayList<>();
 

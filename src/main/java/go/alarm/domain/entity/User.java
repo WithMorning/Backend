@@ -47,6 +47,9 @@ public class User extends BaseEntity {
     private WakeupMate wakeupMate;
 
     @Column
+    private Boolean isAllowBedTimeAlarm;
+
+    @Column
     private LocalTime bedTime;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -58,6 +61,9 @@ public class User extends BaseEntity {
 
     public void setDayOfWeek(DayOfWeek bedDayOfWeek) {
         this.bedDayOfWeek = bedDayOfWeek;
+    }
+    public void setIsAllowBedTimeAlarm(Boolean isAllowBedTimeAlarm){
+        this.isAllowBedTimeAlarm = isAllowBedTimeAlarm;
     }
 
 }

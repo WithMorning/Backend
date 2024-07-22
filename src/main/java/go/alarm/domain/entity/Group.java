@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.time.LocalTime;
@@ -41,8 +42,9 @@ public class Group extends BaseEntity{
     @Column(columnDefinition = "VARCHAR(100)")
     private String participationCode;
 
-    @OneToOne(mappedBy = "group", cascade = CascadeType.ALL)
-    private WakeupDate wakeupDate;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "day_of_week_id")
+    private DayOfWeek wakeUpDayOfWeek;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
@@ -51,8 +53,8 @@ public class Group extends BaseEntity{
         this.wakeupTime = wakeupTime;
     }
 
-    public void setWakeupDate(WakeupDate wakeupDate) {
-        this.wakeupDate = wakeupDate;
+    public void setDayOfWeek(DayOfWeek wakeUpDayOfWeek) {
+        this.wakeUpDayOfWeek = wakeUpDayOfWeek;
     }
 
     public void setName(String name){

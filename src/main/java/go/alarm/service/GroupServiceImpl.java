@@ -2,13 +2,12 @@ package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.UserGroup;
-import go.alarm.domain.entity.WakeupDate;
+import go.alarm.domain.entity.DayOfWeek;
 import go.alarm.domain.repository.GroupRepository;
-import go.alarm.domain.repository.UserGroupRepository;
 import go.alarm.domain.repository.UserRepository;
 import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.converter.UserGroupConverter;
-import go.alarm.web.converter.WakeupDateConverter;
+import go.alarm.web.converter.dayOfWeekConverter;
 import go.alarm.web.dto.GroupRequestDTO;
 import go.alarm.web.dto.GroupRequestDTO.UpdateGroupDTO;
 import java.util.List;
@@ -24,14 +23,13 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
-    private final UserGroupRepository userGroupRepository;
 
     @Override
     public Group createGroup(Long userId, GroupRequestDTO.CreateGroupDTO request) {
 
         Group group = GroupConverter.toGroup(request); // 그룹 생성
-        WakeupDate wakeupDate = WakeupDateConverter.toWakeupDate(group, request.getWakeupDateList()); // 기상 요일 설정
-        group.setWakeupDate(wakeupDate);
+        DayOfWeek dayOfWeek = dayOfWeekConverter.toDayOfWeek(request.getDayOfWeekList()); // 기상 요일 설정
+        group.setDayOfWeek(dayOfWeek);
 
         UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree()); // 유저 그룹 생성
         userGroup.setGroup(group); // userGroup을 userGroupRepository.save로 저장해야 하나..?
@@ -53,35 +51,35 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findById(groupId).get();
 
         group.setWakeupTime(request.getWakeupTime());
-        updateWakeupDate(group.getWakeupDate(), request.getWakeupDateList());
+        updateDayOfWeek(group.getWakeUpDayOfWeek(), request.getDayOfWeekList());
         group.setName(request.getName());
         group.setMemo(request.getMemo());
 
         return group;
     }
 
-    public WakeupDate updateWakeupDate(WakeupDate wakeupDate, List<String> wakeupDateList){
-        
-        wakeupDate.resetWakeupDate(); // 기존 기상 요일 리셋
+    public DayOfWeek updateDayOfWeek(DayOfWeek dayOfWeek, List<String> dayOfWeekList){
 
-        for (String dayOfWeek : wakeupDateList) {
-            if (dayOfWeek.equals("mon")) {
-                wakeupDate.setMon(Boolean.TRUE);
-            } else if (dayOfWeek.equals("tue")) {
-                wakeupDate.setTue(Boolean.TRUE);
-            } else if (dayOfWeek.equals("wed")) {
-                wakeupDate.setWed(Boolean.TRUE);
-            } else if (dayOfWeek.equals("thu")) {
-                wakeupDate.setThu(Boolean.TRUE);
-            } else if (dayOfWeek.equals("fri")) {
-                wakeupDate.setFri(Boolean.TRUE);
-            } else if (dayOfWeek.equals("sat")) {
-                wakeupDate.setSat(Boolean.TRUE);
-            } else if (dayOfWeek.equals("sun")) {
-                wakeupDate.setSun(Boolean.TRUE);
+        dayOfWeek.resetDayOfWeek(); // 기존 기상 요일 리셋
+
+        for (String day : dayOfWeekList) {
+            if (day.equals("mon")) {
+                dayOfWeek.setMon(Boolean.TRUE);
+            } else if (day.equals("tue")) {
+                dayOfWeek.setTue(Boolean.TRUE);
+            } else if (day.equals("wed")) {
+                dayOfWeek.setWed(Boolean.TRUE);
+            } else if (day.equals("thu")) {
+                dayOfWeek.setThu(Boolean.TRUE);
+            } else if (day.equals("fri")) {
+                dayOfWeek.setFri(Boolean.TRUE);
+            } else if (day.equals("sat")) {
+                dayOfWeek.setSat(Boolean.TRUE);
+            } else if (day.equals("sun")) {
+                dayOfWeek.setSun(Boolean.TRUE);
             }
         }
-        return wakeupDate;
+        return dayOfWeek;
     }
 
     @Override

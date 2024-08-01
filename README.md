@@ -3,6 +3,7 @@
 
 ## 🛠️ 프로젝트 아키텍처
 
+### 👷‍♂️ 인프라 아키텍쳐
 ![image](https://github.com/user-attachments/assets/ad9407e6-b72e-4789-a797-e7148885def6)
 
 

@@ -34,7 +34,7 @@ public class TestController {
         return new BaseResponse<>("Health Check");
     }
 
-    @PostMapping("/alarm/test")
+    @GetMapping("/alarm/test")
     @Operation(summary = "알람 테스트 API", description = "FCM 알람을 테스트합니다.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "요청에 성공하였습니다.")

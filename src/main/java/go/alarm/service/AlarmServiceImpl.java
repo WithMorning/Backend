@@ -66,8 +66,8 @@ public class AlarmServiceImpl implements AlarmService{
      */
     @Override
     public List<User> sendAlarmsTest() {
-        // DB에 groupId가 존재하는지 꼭 확인해줘야 함.(여기선 groupId = 10)
-        Group group = groupRepository.findById(Long.valueOf(10)).get();
+        // DB에 groupId가 존재하는지 꼭 확인해줘야 함.(여기선 groupId = 1)
+        Group group = groupRepository.findById(Long.valueOf(1)).get();
         ArrayList<User> userList = new ArrayList<>();
 
         List<UserGroup> userGroups = userGroupRepository.findAllByGroup(group);

@@ -29,6 +29,9 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String fcmToken;
+
     @Column(columnDefinition = "VARCHAR(30)")
     private String nickname;
 

@@ -1,7 +1,15 @@
 # ALARM BackEnd
-커밋 컨벤션을 지키는 이유는 추후 팀 프로젝트를 진행 시 원활한 협업을 하기 위한 연습입니다.
+
+
+## 🛠️ 프로젝트 아키텍처
+
+![image](https://github.com/user-attachments/assets/ad9407e6-b72e-4789-a797-e7148885def6)
+
+
 
 ## 📠 Convention
+
+커밋 컨벤션을 지키는 이유는 추후 팀 프로젝트를 진행 시 원활한 협업을 하기 위한 연습입니다.
 ___
 ### 🤝 Branch Naming Convention
 

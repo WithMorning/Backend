@@ -32,7 +32,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User setBedTime(Long userId, UserRequestDTO.SetBedTimeDTO request) {
         User user = userRepository.findById(userId).get();
-        dayOfWeekRepository.delete(user.getBedDayOfWeek());
+
+        if(user.getBedDayOfWeek() != null){
+            dayOfWeekRepository.delete(user.getBedDayOfWeek());
+        }
 
         DayOfWeek dayOfWeek = dayOfWeekConverter.toDayOfWeek(request.getBedDayOfWeekList());
 

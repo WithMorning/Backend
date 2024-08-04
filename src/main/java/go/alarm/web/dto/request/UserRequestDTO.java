@@ -1,4 +1,4 @@
-package go.alarm.web.dto;
+package go.alarm.web.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalTime;

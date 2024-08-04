@@ -1,6 +1,6 @@
 package go.alarm.web.controller;
 
-import static go.alarm.web.dto.MyPageResponseDTO.*;
+import static go.alarm.web.dto.response.MyPageResponseDTO.*;
 
 import go.alarm.domain.entity.User;
 import go.alarm.response.BaseResponse;

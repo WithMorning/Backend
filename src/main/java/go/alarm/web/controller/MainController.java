@@ -2,7 +2,7 @@ package go.alarm.web.controller;
 
 import go.alarm.response.BaseResponse;
 import go.alarm.service.UserGroupService;
-import go.alarm.web.dto.MainResponseDTO;
+import go.alarm.web.dto.response.MainResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;

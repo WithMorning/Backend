@@ -1,7 +1,7 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
-import go.alarm.web.dto.MainResponseDTO;
+import go.alarm.web.dto.response.MainResponseDTO;
 import java.util.List;
 
 public interface UserGroupService {

@@ -1,7 +1,7 @@
 package go.alarm.web.converter;
 
 import go.alarm.domain.entity.User;
-import go.alarm.web.dto.UserResponseDTO;
+import go.alarm.web.dto.response.UserResponseDTO;
 
 public class UserConverter {
 

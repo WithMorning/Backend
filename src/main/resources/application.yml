@@ -20,6 +20,17 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
+  apple:
+    team:
+      id: ${TEAM_ID}
+    login:
+      key: ${KEY_ID}
+    client:
+      id: ${CLIENT_ID}
+    redirect:
+      url: https://withmorning.site/apple/callback
+    key:
+      path: ../../../../AuthKey_3N2GZNNVW2.p8
 
 fcm:
   service-account-file: file:./firebase-service-account.json

@@ -1,8 +1,9 @@
-package go.alarm.web.controller;
+package go.alarm.login.controller;
 
 
+import go.alarm.login.domain.MemberTokens;
 import go.alarm.response.BaseResponse;
-import go.alarm.service.LoginService;
+import go.alarm.login.service.LoginService;
 import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.dto.request.LoginRequest;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,10 @@ public class LoginController {
 
         MemberTokens memberTokens = loginService.login(provider, request.getCode());
 
-        return new BaseResponse<>(GroupConverter.toCreateGroupDTO(group));
+        //return ResponseEntity.status(CREATED).body(new AccessTokenResponse(memberTokens.getAccessToken())); 기존 코드
+
+        //빌더 패턴으로 엑세스 토큰하고, 유저 id 던져주면 될듯?
+        return new BaseResponse<>(GroupConverter.toCreateGroupDTO(group));// 여기 수정해야 함.
 
     }
 

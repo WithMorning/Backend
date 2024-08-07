@@ -22,19 +22,35 @@ repositories {
 }
 
 dependencies {
+
+	// Spring Boot Starters
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// Swagger
 	implementation 'io.springfox:springfox-swagger2:2.9.2'
 	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
+	// Lombok
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// MySQL
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// FCM
 	implementation 'com.google.firebase:firebase-admin:8.1.0' // FCM 의존성 추가
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 	//okhttp는 요청을 보내기 편리하기 위해서 추가한다. 우리는 역으로 클라이언트의 입장이 되어서 Firebase에 요청을 보내야 하기 때문이다.
+
+	// JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // 사용 중인 JSON 파서에 맞는 것을 선택
+
 }
 
 tasks.named('test') {

@@ -2,8 +2,7 @@ package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.UserGroup;
-import go.alarm.web.dto.GroupRequestDTO;
-import java.util.List;
+import go.alarm.web.dto.request.GroupRequestDTO;
 
 public interface GroupService {
 

@@ -1,4 +1,4 @@
-package go.alarm.config;
+package go.alarm.global.config;
 
 import go.alarm.service.AlarmService;
 import org.springframework.context.annotation.Configuration;

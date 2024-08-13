@@ -1,4 +1,4 @@
-package go.alarm.web.dto;
+package go.alarm.web.dto.response;
 
 import java.time.LocalTime;
 import java.util.List;

@@ -4,7 +4,7 @@ package go.alarm.web.converter;
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
-import go.alarm.web.dto.MainResponseDTO;
+import go.alarm.web.dto.response.MainResponseDTO;
 import go.alarm.domain.entity.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;

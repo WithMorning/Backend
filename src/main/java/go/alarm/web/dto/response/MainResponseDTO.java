@@ -1,4 +1,4 @@
-package go.alarm.web.dto;
+package go.alarm.web.dto.response;
 
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;

@@ -1,7 +1,7 @@
 package go.alarm.service;
 
 import go.alarm.domain.entity.User;
-import go.alarm.web.dto.UserRequestDTO;
+import go.alarm.web.dto.request.UserRequestDTO;
 
 public interface UserService {
     User getUser(Long userId);

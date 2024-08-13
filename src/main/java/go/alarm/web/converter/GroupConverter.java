@@ -2,8 +2,8 @@ package go.alarm.web.converter;
 
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;
-import go.alarm.web.dto.GroupRequestDTO.CreateGroupDTO;
-import go.alarm.web.dto.GroupResponseDTO;
+import go.alarm.web.dto.request.GroupRequestDTO.CreateGroupDTO;
+import go.alarm.web.dto.response.GroupResponseDTO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 

@@ -6,8 +6,8 @@ import go.alarm.domain.entity.UserGroup;
 import go.alarm.response.BaseResponse;
 import go.alarm.service.GroupService;
 import go.alarm.web.converter.GroupConverter;
-import go.alarm.web.dto.GroupRequestDTO;
-import go.alarm.web.dto.GroupResponseDTO;
+import go.alarm.web.dto.request.GroupRequestDTO;
+import go.alarm.web.dto.response.GroupResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -79,7 +79,7 @@ public class GroupController {
         return new BaseResponse<>(GroupConverter.toDeleteGroupDTO());
     }
 
-    @PostMapping("/{groupId}/join")
+    @PostMapping("/{groupId}/join") // 여기 헤더로 그룹 id를 받아올 필요가 없음. 어차피 그룹코드로 그룹을 찾아오기 때문. 수정해야 함!!!!
     @Operation(summary = "참여코드로 그룹에 참가하는 API", description = "참여 코드를 입력하여 그룹에 참가합니다.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201",description = "OK, 성공입니다.")

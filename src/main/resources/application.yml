@@ -20,17 +20,27 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
-  apple:
-    team:
-      id: ${TEAM_ID}
-    login:
-      key: ${KEY_ID}
-    client:
-      id: ${CLIENT_ID}
-    redirect:
-      url: https://withmorning.site/apple/callback
-    key:
-      path: ../../../../AuthKey_3N2GZNNVW2.p8
+  # JWT 설정 추가
+security:
+  jwt:
+    secret-key: ${JWT_SECRET}
+    access-expiration-time: 3600000 # 1시간
+    refresh-expiration-time: 604800000  # 7 days
+oauth2:
+  provider:
+    apple:
+      auth:
+        token-url: https://appleid.apple.com/auth/token
+      redirect:
+        url: ${REDIRECT_URL}
+      client:
+        id: ${CLIENT_ID}
+      team:
+        id: ${TEAM_ID}
+      key:
+        id: ${KEY_ID}
+        path: ../../../../AuthKey_${KEY_ID}.p8
+
 
 fcm:
   service-account-file: file:./firebase-service-account.json

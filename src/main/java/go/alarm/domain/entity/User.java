@@ -58,7 +58,7 @@ public class User extends BaseEntity {
     private Boolean isCertify;
 
     @OneToOne(mappedBy = "sender", cascade = CascadeType.ALL)
-    private WakeupMate wakeupMate;
+    private WakeUpDayOfWeek wakeUpDayOfWeek;
 
     @Column
     private Boolean isAllowBedTimeAlarm;
@@ -68,12 +68,12 @@ public class User extends BaseEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "day_of_week_id")
-    private DayOfWeek bedDayOfWeek;
+    private WakeUpDayOfWeek bedDayOfWeek;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
 
-    public void setDayOfWeek(DayOfWeek bedDayOfWeek) {
+    public void setDayOfWeek(WakeUpDayOfWeek bedDayOfWeek) {
         this.bedDayOfWeek = bedDayOfWeek;
     }
     public void setIsAllowBedTimeAlarm(Boolean isAllowBedTimeAlarm){

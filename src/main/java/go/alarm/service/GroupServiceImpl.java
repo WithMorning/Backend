@@ -2,7 +2,7 @@ package go.alarm.service;
 
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.UserGroup;
-import go.alarm.domain.entity.DayOfWeek;
+import go.alarm.domain.entity.WakeUpDayOfWeek;
 import go.alarm.domain.repository.GroupRepository;
 import go.alarm.domain.repository.UserRepository;
 import go.alarm.web.converter.GroupConverter;
@@ -28,7 +28,7 @@ public class GroupServiceImpl implements GroupService {
     public Group createGroup(Long userId, GroupRequestDTO.CreateGroupDTO request) {
 
         Group group = GroupConverter.toGroup(request); // 그룹 생성
-        DayOfWeek dayOfWeek = dayOfWeekConverter.toDayOfWeek(request.getDayOfWeekList()); // 기상 요일 설정
+        WakeUpDayOfWeek dayOfWeek = dayOfWeekConverter.toDayOfWeek(request.getDayOfWeekList()); // 기상 요일 설정
         group.setDayOfWeek(dayOfWeek);
 
         UserGroup userGroup = UserGroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree()); // 유저 그룹 생성
@@ -58,7 +58,7 @@ public class GroupServiceImpl implements GroupService {
         return group;
     }
 
-    public DayOfWeek updateDayOfWeek(DayOfWeek dayOfWeek, List<String> dayOfWeekList){
+    public WakeUpDayOfWeek updateDayOfWeek(WakeUpDayOfWeek dayOfWeek, List<String> dayOfWeekList){
 
         dayOfWeek.resetDayOfWeek(); // 기존 기상 요일 리셋
 

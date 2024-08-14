@@ -1,8 +1,8 @@
 package go.alarm.service;
 
-import go.alarm.domain.entity.DayOfWeek;
+import go.alarm.domain.entity.WakeUpDayOfWeek;
 import go.alarm.domain.entity.User;
-import go.alarm.domain.repository.DayOfWeekRepository;
+import go.alarm.domain.repository.WakeUpDayOfWeekRepository;
 import go.alarm.domain.repository.UserRepository;
 import go.alarm.web.converter.dayOfWeekConverter;
 import go.alarm.web.dto.request.UserRequestDTO;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final DayOfWeekRepository dayOfWeekRepository;
+    private final WakeUpDayOfWeekRepository wakeUpDayOfWeekRepository;
 
 
     @Override
@@ -32,10 +32,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).get();
 
         if(user.getBedDayOfWeek() != null){
-            dayOfWeekRepository.delete(user.getBedDayOfWeek());
+            wakeUpDayOfWeekRepository.delete(user.getBedDayOfWeek());
         }
 
-        DayOfWeek dayOfWeek = dayOfWeekConverter.toDayOfWeek(request.getBedDayOfWeekList());
+        WakeUpDayOfWeek dayOfWeek = dayOfWeekConverter.toDayOfWeek(request.getBedDayOfWeekList());
 
         for (String day : request.getBedDayOfWeekList()){
             if (day.equals("mon")) {

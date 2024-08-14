@@ -1,15 +1,15 @@
 package go.alarm.web.converter;
 
 
-import go.alarm.domain.entity.DayOfWeek;
+import go.alarm.domain.entity.WakeUpDayOfWeek;
 import java.util.List;
 
 public class dayOfWeekConverter {
 
-    public static DayOfWeek toDayOfWeek(List<String> dayOfWeekList) {
+    public static WakeUpDayOfWeek toDayOfWeek(List<String> dayOfWeekList) {
 
         DayOfWeekResult dayOfWeekResult = getDayOfWeek(dayOfWeekList);
-        return DayOfWeek.builder()
+        return WakeUpDayOfWeek.builder()
             .mon(dayOfWeekResult.isMon())
             .tue(dayOfWeekResult.isTue())
             .wed(dayOfWeekResult.isWed())

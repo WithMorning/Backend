@@ -1,5 +1,7 @@
 package go.alarm.login.web.controller;
 
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
+
 import go.alarm.login.domain.UserTokens;
 import go.alarm.login.dto.AccessToken;
 import go.alarm.login.web.converter.LoginConverter;
@@ -41,12 +43,16 @@ public class LoginController {
         // userTokens의 필드 -> refreshToken, accessToken
 
         final ResponseCookie cookie = ResponseCookie.from("refresh-token", userTokens.getRefreshToken())
-            .maxAge(COOKIE_AGE_SECONDS)
-            .sameSite("None")
-            .secure(true)
-            .httpOnly(true)
-            .path("/")
+            .maxAge(COOKIE_AGE_SECONDS) // 쿠키의 유효 시간  설정
+            .sameSite("None") // 크로스 사이트 요청에 대한 쿠키 전송 정책을 설정, "None"으로 설정하면 모든 크로스 사이트 컨텍스트에서 쿠키를 전송 가능
+            .secure(true) // HTTPS 연결에서만 쿠키를 전송하도록 설정
+            .httpOnly(true) // JavaScript를 통한 쿠키 접근을 방지하여 보안을 강화
+            .path("/") // 쿠키가 유효한 경로를 설정, "/"로 설정하면 전체 사이트에서 쿠키가 유효
             .build();
+
+        response.addHeader(SET_COOKIE, cookie.toString());
+        // 생성한 쿠키를 HTTP 응답 헤더에 추가
+        // response.addHeader() 메서드는 HttpServletResponse 객체를 직접 조작하므로, return 문의 형식과 관계없이 응답 헤더에 포함
 
         return new BaseResponse<>(LoginConverter.toAccessToken(userTokens.getAccessToken()));
 

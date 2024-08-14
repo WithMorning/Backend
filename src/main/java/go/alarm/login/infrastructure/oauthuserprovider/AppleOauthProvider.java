@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.util.Base64;
-import org.springframework.stereotype.Service;
 
 @Component
 public class AppleOauthProvider implements OauthProvider {

@@ -39,7 +39,7 @@ oauth2:
         id: ${TEAM_ID}
       key:
         id: ${KEY_ID}
-        path: ../../../../AuthKey_${KEY_ID}.p8
+        path: file:./AuthKey_${KEY_ID}.p8
 
 
 fcm:

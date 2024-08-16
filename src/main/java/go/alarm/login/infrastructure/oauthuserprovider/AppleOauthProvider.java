@@ -16,6 +16,7 @@ import java.math.BigInteger;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,7 @@ import java.security.PublicKey;
 import java.util.Base64;
 
 @Component
+@Slf4j
 public class AppleOauthProvider implements OauthProvider {
 
     private static final String PROPERTIES_PATH = "${oauth2.provider.apple.";
@@ -86,11 +88,15 @@ public class AppleOauthProvider implements OauthProvider {
 
         if (jwksResponse == null || !jwksResponse.containsKey("keys")) {
             // JWKS가 유효하지 않거나 사용할 수 없는 경우 예외를 발생
+            log.warn("jwksResponse가 null인지?" + jwksResponse.toString());
+            log.warn("jwksResponse에 containsKey인지?" + jwksResponse.containsKey("keys"));
             throw new AuthException(NOT_SUPPORTED_OAUTH_SERVICE);
         }
 
         List<Map<String, String>> keys = (List<Map<String, String>>) jwksResponse.get("keys");
         // JWKS에서 키 목록을 추출
+
+        log.warn("jwksResponse.get으로 가져온 keys"+ keys.toString());
 
         Map<String, String> key = keys.stream() // Java 스트림을 사용하여 일치하는 kid를 가진 키를 찾음
             .filter(k -> kid.equals(k.get("kid")))

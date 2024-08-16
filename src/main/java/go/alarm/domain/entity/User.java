@@ -36,7 +36,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(300)", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String socialLoginId;
 
     @Column(unique = true)

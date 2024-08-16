@@ -68,7 +68,9 @@ public class AppleOauthProvider implements OauthProvider {
                 .getBody();
 
             String socialLoginId = claims.getSubject(); // subject(사용자의 고유 식별자) 추출
+            log.warn("소셜로그인 ID >>" + socialLoginId);
             String email = claims.get("email", String.class); // 이메일 추출
+            log.warn("이메일 >>" + email);
 
             return new AppleUserInfo(socialLoginId, email);
         } catch (Exception e) {

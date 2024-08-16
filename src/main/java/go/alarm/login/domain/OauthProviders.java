@@ -1,8 +1,8 @@
 package go.alarm.login.domain;
 
-import static go.alarm.global.exception.ExceptionCode.NOT_SUPPORTED_OAUTH_SERVICE;
+import static go.alarm.global.response.ResponseCode.NOT_SUPPORTED_OAUTH_SERVICE;
 
-import go.alarm.global.exception.AuthException;
+import go.alarm.global.response.exception.AuthException;
 import java.util.List;
 import org.springframework.stereotype.Component;
 

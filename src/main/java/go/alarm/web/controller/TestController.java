@@ -1,7 +1,7 @@
 package go.alarm.web.controller;
 
 import go.alarm.domain.entity.User;
-import go.alarm.response.BaseResponse;
+import go.alarm.global.response.SuccessResponse;
 import go.alarm.service.AlarmService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,9 +28,9 @@ public class TestController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "요청에 성공하였습니다.")
     })
-    public BaseResponse<String> healthCheck() {
+    public SuccessResponse<String> healthCheck() {
 
-        return new BaseResponse<>("Health Check");
+        return new SuccessResponse<>("Health Check");
     }
 
     @GetMapping("/alarm/test")
@@ -39,7 +38,7 @@ public class TestController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "요청에 성공하였습니다.")
     })
-    public BaseResponse<List<String>> pushAlarmTest() {
+    public SuccessResponse<List<String>> pushAlarmTest() {
         ArrayList<String> userNameList = new ArrayList<>();
         List<User> userList = alarmService.sendAlarmsTest();
 
@@ -47,7 +46,7 @@ public class TestController {
             userNameList.add(user.getNickname());
         }
 
-        return new BaseResponse<>(userNameList);
+        return new SuccessResponse<>(userNameList);
     }
 
 }

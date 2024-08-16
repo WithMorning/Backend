@@ -30,7 +30,7 @@ public class MainResponseDTO {
         Long groupId;
         String name;
         LocalTime wakeupTime;
-        List<String> wakeUpDayOfWeekList;
+        List<String> dayOfWeekList;
         List<UserDTO> userList;
         String memo;
     }

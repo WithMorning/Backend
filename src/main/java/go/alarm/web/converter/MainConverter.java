@@ -5,7 +5,7 @@ import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
 import go.alarm.web.dto.response.MainResponseDTO;
-import go.alarm.domain.entity.DayOfWeek;
+import go.alarm.domain.entity.WakeUpDayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class MainConverter {
             .groupId(group.getId())
             .name(group.getName())
             .wakeupTime(group.getWakeupTime())
-            .wakeUpDayOfWeekList(dayOfWeekList)
+            .dayOfWeekList(dayOfWeekList)
             .userList(userDTOList)
             .memo(group.getMemo())
             .build();
@@ -43,7 +43,7 @@ public class MainConverter {
             .build();
     }
 
-    private static List<String> getDayOfWeekList(DayOfWeek dayOfWeek) {
+    private static List<String> getDayOfWeekList(WakeUpDayOfWeek dayOfWeek) {
         List<String> dayOfWeekList = new ArrayList<>();
 
         if (dayOfWeek.getMon()) dayOfWeekList.add("mon");

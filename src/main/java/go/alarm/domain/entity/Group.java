@@ -1,6 +1,7 @@
 package go.alarm.domain.entity;
 
 
+import go.alarm.global.BaseEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Group extends BaseEntity{
+public class Group extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +45,7 @@ public class Group extends BaseEntity{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "day_of_week_id")
-    private DayOfWeek wakeUpDayOfWeek;
+    private WakeUpDayOfWeek wakeUpDayOfWeek;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
@@ -53,7 +54,7 @@ public class Group extends BaseEntity{
         this.wakeupTime = wakeupTime;
     }
 
-    public void setDayOfWeek(DayOfWeek wakeUpDayOfWeek) {
+    public void setDayOfWeek(WakeUpDayOfWeek wakeUpDayOfWeek) {
         this.wakeUpDayOfWeek = wakeUpDayOfWeek;
     }
 

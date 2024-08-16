@@ -1,8 +1,9 @@
 package go.alarm.login.infrastructure;
 
-import static go.alarm.global.exception.ExceptionCode.INVALID_ACCESS_TOKEN;
 
-import go.alarm.global.exception.InvalidJwtException;
+import static go.alarm.global.response.ResponseCode.INVALID_ACCESS_TOKEN;
+
+import go.alarm.global.response.exception.InvalidJwtException;
 import org.springframework.stereotype.Component;
 
 /**

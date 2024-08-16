@@ -5,7 +5,7 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import go.alarm.login.domain.UserTokens;
 import go.alarm.login.dto.AccessToken;
 import go.alarm.login.web.converter.LoginConverter;
-import go.alarm.response.BaseResponse;
+import go.alarm.global.response.SuccessResponse;
 import go.alarm.login.service.LoginService;
 import go.alarm.login.dto.LoginRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,7 +33,7 @@ public class LoginController {
     * 추후 Resource Server가 추가될 수도 있기에 {provider}로 받아옵니다.
     * */
     @PostMapping("/login/oauth/{provider}")
-    public BaseResponse<AccessToken> login(
+    public SuccessResponse<AccessToken> login(
         @PathVariable String provider,
         @RequestBody LoginRequest request,
         final HttpServletResponse response
@@ -54,7 +54,7 @@ public class LoginController {
         // 생성한 쿠키를 HTTP 응답 헤더에 추가
         // response.addHeader() 메서드는 HttpServletResponse 객체를 직접 조작하므로, return 문의 형식과 관계없이 응답 헤더에 포함
 
-        return new BaseResponse<>(LoginConverter.toAccessToken(userTokens.getAccessToken()));
+        return new SuccessResponse<>(LoginConverter.toAccessToken(userTokens.getAccessToken()));
 
         //return new BaseResponse<>(new AccessToken(userTokens.getAccessToken()));
         //위처럼 해도 될지 테스트 해봐야 함.

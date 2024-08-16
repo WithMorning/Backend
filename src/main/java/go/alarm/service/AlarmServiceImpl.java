@@ -4,6 +4,7 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.User;
 import go.alarm.domain.entity.UserGroup;
+import go.alarm.domain.entity.WakeUpDayOfWeek;
 import go.alarm.domain.repository.GroupRepository;
 import go.alarm.domain.repository.UserGroupRepository;
 import java.time.DayOfWeek;
@@ -93,27 +94,27 @@ public class AlarmServiceImpl implements AlarmService{
     }
 
     private boolean isWakeupDay(Group group, DayOfWeek dayOfToday) {
-        go.alarm.domain.entity.DayOfWeek wakeUpDayOfWeek = group.getWakeUpDayOfWeek();
+        WakeUpDayOfWeek dayOfWeek = group.getWakeUpDayOfWeek();
 
-        if (wakeUpDayOfWeek == null) {
+        if (dayOfWeek == null) {
             return false; // WakeupDate가 설정되지 않은 경우
         }
 
         switch (dayOfToday) {
             case MONDAY:
-                return wakeUpDayOfWeek.getMon();
+                return dayOfWeek.getMon();
             case TUESDAY:
-                return wakeUpDayOfWeek.getTue();
+                return dayOfWeek.getTue();
             case WEDNESDAY:
-                return wakeUpDayOfWeek.getWed();
+                return dayOfWeek.getWed();
             case THURSDAY:
-                return wakeUpDayOfWeek.getThu();
+                return dayOfWeek.getThu();
             case FRIDAY:
-                return wakeUpDayOfWeek.getFri();
+                return dayOfWeek.getFri();
             case SATURDAY:
-                return wakeUpDayOfWeek.getSat();
+                return dayOfWeek.getSat();
             case SUNDAY:
-                return wakeUpDayOfWeek.getSun();
+                return dayOfWeek.getSun();
             default:
                 return false; // 예상치 못한 요일 값
         }

@@ -1,8 +1,8 @@
 package go.alarm.web.controller;
 
-import go.alarm.response.BaseResponse;
+import go.alarm.global.response.SuccessResponse;
 import go.alarm.service.UserGroupService;
-import go.alarm.web.dto.response.MainResponseDTO;
+import go.alarm.web.dto.response.MainResponseDTO.MainDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +28,9 @@ public class MainController {
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공입니다.")
     })
-    public BaseResponse<MainResponseDTO.MainDTO> getMainPage(@RequestHeader(name = "userId") Long userId) {
+    public SuccessResponse<MainDTO> getMainPage(@RequestHeader(name = "userId") Long userId) {
         //소셜로그인이 들어가면 위 헤더 부분이 사라지고 토큰으로 유저를 구분해야함.
 
-        return new BaseResponse<>(userGroupService.getMainDTO(userId));
+        return new SuccessResponse<>(userGroupService.getMainDTO(userId));
     }
 }

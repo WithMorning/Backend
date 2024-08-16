@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +22,15 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity(name = "Users")
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,23 +60,27 @@ public class User extends BaseEntity {
     @Column
     private Boolean isCertify;
 
-    @OneToOne(mappedBy = "sender", cascade = CascadeType.ALL)
-    private WakeupMate wakeupMate;
-
     @Column
     private Boolean isAllowBedTimeAlarm;
 
     @Column
     private LocalTime bedTime;
 
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "day_of_week_id")
-    private DayOfWeek bedDayOfWeek;
+    private WakeUpDayOfWeek bedDayOfWeek;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
 
-    public void setDayOfWeek(DayOfWeek bedDayOfWeek) {
+    public void setDayOfWeek(WakeUpDayOfWeek bedDayOfWeek) {
         this.bedDayOfWeek = bedDayOfWeek;
     }
     public void setIsAllowBedTimeAlarm(Boolean isAllowBedTimeAlarm){

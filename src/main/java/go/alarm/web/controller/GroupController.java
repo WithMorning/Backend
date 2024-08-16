@@ -3,11 +3,14 @@ package go.alarm.web.controller;
 
 import go.alarm.domain.entity.Group;
 import go.alarm.domain.entity.UserGroup;
-import go.alarm.response.BaseResponse;
+import go.alarm.global.response.SuccessResponse;
 import go.alarm.service.GroupService;
 import go.alarm.web.converter.GroupConverter;
 import go.alarm.web.dto.request.GroupRequestDTO;
-import go.alarm.web.dto.response.GroupResponseDTO;
+import go.alarm.web.dto.response.GroupResponseDTO.CreateGroupDto;
+import go.alarm.web.dto.response.GroupResponseDTO.DeleteGroupDto;
+import go.alarm.web.dto.response.GroupResponseDTO.JoinGroupDto;
+import go.alarm.web.dto.response.GroupResponseDTO.UpdateGroupDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -42,10 +45,10 @@ public class GroupController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<GroupResponseDTO.CreateGroupDto> createGroup(@RequestHeader(name = "userId") Long userId,
+    public SuccessResponse<CreateGroupDto> createGroup(@RequestHeader(name = "userId") Long userId,
                                                                         @RequestBody @Valid GroupRequestDTO.CreateGroupDTO request) {
         Group group = groupService.createGroup(userId, request);
-        return new BaseResponse<>(GroupConverter.toCreateGroupDTO(group));
+        return new SuccessResponse<>(GroupConverter.toCreateGroupDTO(group));
     }
 
     @PatchMapping("/{groupId}")
@@ -56,12 +59,12 @@ public class GroupController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<GroupResponseDTO.UpdateGroupDto> UpdateGroup(@RequestHeader(name = "userId") Long userId,
+    public SuccessResponse<UpdateGroupDto> UpdateGroup(@RequestHeader(name = "userId") Long userId,
                                                                     @PathVariable(name = "groupId") Long groupId,
                                                                     @RequestBody @Valid GroupRequestDTO.UpdateGroupDTO request) {
 
         Group group = groupService.updateGroup(userId, groupId, request);
-        return new BaseResponse<>(GroupConverter.toUpdateGroupDTO(group));
+        return new SuccessResponse<>(GroupConverter.toUpdateGroupDTO(group));
     }
 
     @DeleteMapping("/{groupId}")
@@ -72,11 +75,11 @@ public class GroupController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<GroupResponseDTO.DeleteGroupDto> DeleteGroup(@RequestHeader(name = "userId") Long userId,
+    public SuccessResponse<DeleteGroupDto> DeleteGroup(@RequestHeader(name = "userId") Long userId,
                                                                     @PathVariable(name = "groupId") Long groupId) {
 
         groupService.deleteGroup(userId, groupId);
-        return new BaseResponse<>(GroupConverter.toDeleteGroupDTO());
+        return new SuccessResponse<>(GroupConverter.toDeleteGroupDTO());
     }
 
     @PostMapping("/{groupId}/join") // 여기 헤더로 그룹 id를 받아올 필요가 없음. 어차피 그룹코드로 그룹을 찾아오기 때문. 수정해야 함!!!!
@@ -88,12 +91,12 @@ public class GroupController {
         @Parameter(name = "groupId", description = "그룹의 아이디, path variable입니다."),
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<GroupResponseDTO.JoinGroupDto> joinGroup(@RequestHeader(name = "userId") Long userId,
+    public SuccessResponse<JoinGroupDto> joinGroup(@RequestHeader(name = "userId") Long userId,
                                                                     @RequestBody @Valid GroupRequestDTO.JoinGroupDTO request) {
 
         UserGroup userGroup = groupService.joinGroup(userId, request);
 
-        return new BaseResponse<>(GroupConverter.toJoinGroupDTO(userGroup.getGroup(), userGroup.getUser()));
+        return new SuccessResponse<>(GroupConverter.toJoinGroupDTO(userGroup.getGroup(), userGroup.getUser()));
     }
 
 }

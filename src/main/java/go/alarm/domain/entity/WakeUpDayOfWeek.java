@@ -1,5 +1,6 @@
 package go.alarm.domain.entity;
 
+import go.alarm.global.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,8 +17,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class DayOfWeek extends BaseEntity { // 기존 엔티티명 = wakeupDate
-    // 여기에 wakeupTime, bedTime도 추가해서 하나의 클래스로 관리해도 좋을듯?
+public class WakeUpDayOfWeek extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,6 @@
 package go.alarm.domain.entity;
 
+import go.alarm.global.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -19,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class UserGroup extends BaseEntity{ // UserGroup이라는 클래스명보다 AlarmGroup이 더 맞는 것 같은데?? 검토해봐야 함.
+public class UserGroup extends BaseEntity { // UserGroup이라는 클래스명보다 AlarmGroup이 더 맞는 것 같은데?? 검토해봐야 함.
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,6 @@
 package go.alarm.web.converter;
 
-import go.alarm.domain.entity.DayOfWeek;
+import go.alarm.domain.entity.WakeUpDayOfWeek;
 import go.alarm.domain.entity.User;
 import go.alarm.web.dto.response.MyPageResponseDTO;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class MyPageConverter {
             .build();
     }
 
-    private static List<String> getDayOfWeekList(DayOfWeek dayOfWeek) {
+    private static List<String> getDayOfWeekList(WakeUpDayOfWeek dayOfWeek) {
         List<String> dayOfWeekList = new ArrayList<>();
 
         if (dayOfWeek.getMon()) dayOfWeekList.add("mon");

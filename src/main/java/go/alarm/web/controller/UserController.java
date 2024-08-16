@@ -1,11 +1,11 @@
 package go.alarm.web.controller;
 
 import go.alarm.domain.entity.User;
-import go.alarm.response.BaseResponse;
+import go.alarm.global.response.SuccessResponse;
 import go.alarm.service.UserService;
 import go.alarm.web.converter.UserConverter;
 import go.alarm.web.dto.request.UserRequestDTO;
-import go.alarm.web.dto.response.UserResponseDTO;
+import go.alarm.web.dto.response.UserResponseDTO.setUserBedTimeDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -37,13 +37,13 @@ public class UserController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<UserResponseDTO.setUserBedTimeDTO> setBedTime(@RequestHeader(name = "userId") Long userId,
+    public SuccessResponse<setUserBedTimeDTO> setBedTime(@RequestHeader(name = "userId") Long userId,
                                                 @RequestBody @Valid UserRequestDTO.SetBedTimeDTO request) {
         //소셜로그인이 들어가면 위 헤더 부분이 사라지고 토큰으로 유저를 구분해야함.
 
         User user = userService.setBedTime(userId, request);
 
-        return new BaseResponse<>(UserConverter.setBedTime(user));
+        return new SuccessResponse<>(UserConverter.setBedTime(user));
     }
 
 }

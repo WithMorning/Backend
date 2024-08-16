@@ -1,4 +1,4 @@
-package go.alarm.global.exception;
+package go.alarm.global.response.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ExceptionResponse {
 
+    private final Boolean isSuccess;
     private final int code;
     private final String message;
 }

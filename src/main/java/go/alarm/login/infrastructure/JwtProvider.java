@@ -1,13 +1,14 @@
 package go.alarm.login.infrastructure;
 
 
-import static go.alarm.global.exception.ExceptionCode.EXPIRED_PERIOD_ACCESS_TOKEN;
-import static go.alarm.global.exception.ExceptionCode.EXPIRED_PERIOD_REFRESH_TOKEN;
-import static go.alarm.global.exception.ExceptionCode.INVALID_ACCESS_TOKEN;
-import static go.alarm.global.exception.ExceptionCode.INVALID_REFRESH_TOKEN;
 
-import go.alarm.global.exception.ExpiredPeriodJwtException;
-import go.alarm.global.exception.InvalidJwtException;
+import static go.alarm.global.response.ResponseCode.EXPIRED_PERIOD_ACCESS_TOKEN;
+import static go.alarm.global.response.ResponseCode.EXPIRED_PERIOD_REFRESH_TOKEN;
+import static go.alarm.global.response.ResponseCode.INVALID_ACCESS_TOKEN;
+import static go.alarm.global.response.ResponseCode.INVALID_REFRESH_TOKEN;
+
+import go.alarm.global.response.exception.ExpiredPeriodJwtException;
+import go.alarm.global.response.exception.InvalidJwtException;
 import go.alarm.login.domain.UserTokens;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

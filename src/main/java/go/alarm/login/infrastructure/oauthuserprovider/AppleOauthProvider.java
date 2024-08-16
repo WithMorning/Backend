@@ -1,12 +1,12 @@
 package go.alarm.login.infrastructure.oauthuserprovider;
 
-import static go.alarm.global.exception.ExceptionCode.INVALID_AUTHORIZATION_CODE;
-import static go.alarm.global.exception.ExceptionCode.NOT_SUPPORTED_OAUTH_SERVICE;
 
+import static go.alarm.global.response.ResponseCode.INVALID_AUTHORIZATION_CODE;
+import static go.alarm.global.response.ResponseCode.NOT_SUPPORTED_OAUTH_SERVICE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import go.alarm.global.exception.AuthException;
+import go.alarm.global.response.exception.AuthException;
 import go.alarm.login.domain.OauthProvider;
 import go.alarm.login.domain.OauthUserInfo;
 import go.alarm.login.infrastructure.oauthuserinfo.AppleUserInfo;

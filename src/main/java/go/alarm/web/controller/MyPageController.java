@@ -3,7 +3,7 @@ package go.alarm.web.controller;
 import static go.alarm.web.dto.response.MyPageResponseDTO.*;
 
 import go.alarm.domain.entity.User;
-import go.alarm.response.BaseResponse;
+import go.alarm.global.response.SuccessResponse;
 import go.alarm.service.UserService;
 import go.alarm.web.converter.MyPageConverter;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,12 +35,12 @@ public class MyPageController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public BaseResponse<myPageDTO> getMyPage(@RequestHeader(name = "userId") Long userId) {
+    public SuccessResponse<myPageDTO> getMyPage(@RequestHeader(name = "userId") Long userId) {
         //소셜로그인이 들어가면 위 헤더 부분이 사라지고 토큰으로 유저를 구분해야함.
 
         User user = userService.getUser(userId);
 
-        return new BaseResponse<>(MyPageConverter.toMyPageDTO(user));
+        return new SuccessResponse<>(MyPageConverter.toMyPageDTO(user));
     }
 
 

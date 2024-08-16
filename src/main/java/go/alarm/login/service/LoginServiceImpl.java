@@ -1,12 +1,13 @@
 package go.alarm.login.service;
 
 
-import static go.alarm.global.exception.ExceptionCode.FAIL_TO_VALIDATE_TOKEN;
-import static go.alarm.global.exception.ExceptionCode.INVALID_REFRESH_TOKEN;
+
+import static go.alarm.global.response.ResponseCode.FAIL_TO_VALIDATE_TOKEN;
+import static go.alarm.global.response.ResponseCode.INVALID_REFRESH_TOKEN;
 
 import go.alarm.domain.entity.User;
 import go.alarm.domain.repository.UserRepository;
-import go.alarm.global.exception.AuthException;
+import go.alarm.global.response.exception.AuthException;
 import go.alarm.login.domain.OauthProvider;
 import go.alarm.login.domain.OauthProviders;
 import go.alarm.login.domain.OauthUserInfo;

@@ -1,5 +1,6 @@
 package go.alarm.domain.entity;
 
+import go.alarm.global.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

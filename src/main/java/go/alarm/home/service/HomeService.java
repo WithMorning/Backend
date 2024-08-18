@@ -9,6 +9,6 @@ public interface HomeService {
     List<Group> getGroupListByUserId(Long userId);
     List<HomeResponse.UserDTO> getUserDTOListByGroup(Group group);
     HomeResponse.GroupDTO getGroupDTOWithUsers(Group group);
-    HomeResponse.HomeDTO getMainDTO(Long userId);
+    HomeResponse.HomeDTO getHome(Long userId);
 
 }

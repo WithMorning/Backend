@@ -57,7 +57,7 @@ public class GroupController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public SuccessResponse<Void> UpdateGroup(@RequestHeader(name = "userId") Long userId,
+    public SuccessResponse<Void> updateGroup(@RequestHeader(name = "userId") Long userId,
                                                                     @PathVariable(name = "groupId") Long groupId,
                                                                     @RequestBody @Valid GroupRequest request) {
 
@@ -73,7 +73,7 @@ public class GroupController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public SuccessResponse<Void> DeleteGroup(@RequestHeader(name = "userId") Long userId,
+    public SuccessResponse<Void> deleteGroup(@RequestHeader(name = "userId") Long userId,
                                                                     @PathVariable(name = "groupId") Long groupId) {
 
         groupService.deleteGroup(userId, groupId);

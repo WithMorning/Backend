@@ -30,6 +30,6 @@ public class HomeController {
         public SuccessResponse<HomeResponse.HomeDTO> getMainPage(@RequestHeader(name = "userId") Long userId) {
             //소셜로그인이 들어가면 위 헤더 부분이 사라지고 토큰으로 유저를 구분해야함.
 
-            return new SuccessResponse<>(homeService.getMainDTO(userId));
+            return new SuccessResponse<>(homeService.getHome(userId));
         }
 }

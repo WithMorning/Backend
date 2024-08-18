@@ -28,7 +28,7 @@ public class HomeServiceImpl implements HomeService {
      * 메인 페이지 정보를 반환합니다.
      * */
     @Override
-    public HomeDTO getMainDTO(Long userId) {
+    public HomeDTO getHome(Long userId) {
 
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));

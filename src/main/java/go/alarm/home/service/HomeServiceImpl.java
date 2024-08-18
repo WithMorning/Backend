@@ -6,10 +6,10 @@ import go.alarm.group.domain.UserGroup;
 import go.alarm.group.domain.repository.UserGroupRepository;
 import go.alarm.user.domain.repository.UserRepository;
 import go.alarm.home.presentation.HomeConverter;
-import go.alarm.home.dto.HomeResponseDTO;
-import go.alarm.home.dto.HomeResponseDTO.GroupDTO;
-import go.alarm.home.dto.HomeResponseDTO.HomeDTO;
-import go.alarm.home.dto.HomeResponseDTO.UserDTO;
+import go.alarm.home.dto.response.HomeResponse;
+import go.alarm.home.dto.response.HomeResponse.GroupDTO;
+import go.alarm.home.dto.response.HomeResponse.HomeDTO;
+import go.alarm.home.dto.response.HomeResponse.UserDTO;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,24 @@ public class HomeServiceImpl implements HomeService {
 
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
+
+    /**
+     * 메인 페이지 정보를 반환합니다.
+     * */
+    @Override
+    public HomeDTO getMainDTO(Long userId) {
+
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        String connectorProfileURL = user.getImageURL();
+        List<Group> groupList = getGroupListByUserId(userId);
+        List<HomeResponse.GroupDTO> groupDTOList = groupList.stream()
+            .map(this::getGroupDTOWithUsers)
+            .collect(Collectors.toList());
+
+        return HomeConverter.homeDTO(connectorProfileURL, groupDTOList);
+    }
 
     /**
      * 유저 Id로 유저가 속한 그룹 리스트를 조회합니다.
@@ -40,20 +58,6 @@ public class HomeServiceImpl implements HomeService {
             .collect(Collectors.toList());
     }
 
-
-    /**
-     * 그룹 객체로 유저 정보를 조회합니다.
-     * */
-    @Override
-    public List<UserDTO> getUserDTOListByGroup(Group group) {
-
-        List<UserGroup> userGroups = userGroupRepository.findAllByGroup(group);
-
-        return userGroups.stream()
-            .map(ug -> HomeConverter.userDTO(ug.getUser(), ug))
-            .collect(Collectors.toList());
-    }
-
     /**
      * 그룹과 그룹에 속한 유저 리스트를 반환합니다.
      * */
@@ -64,23 +68,17 @@ public class HomeServiceImpl implements HomeService {
         return HomeConverter.groupDTO(group, userDTOList);
     }
 
+
     /**
-     * 메인 페이지를 조회합니다.
+     * 그룹 객체로 유저 정보 리스트를 조회합니다.
      * */
     @Override
-    public HomeDTO getMainDTO(Long userId) {
+    public List<UserDTO> getUserDTOListByGroup(Group group) {
 
-        User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+        List<UserGroup> userGroups = userGroupRepository.findAllByGroup(group);
 
-        String connectorProfileURL = user.getImageURL();
-        List<Group> groupList = getGroupListByUserId(userId);
-        List<HomeResponseDTO.GroupDTO> groupDTOList = groupList.stream()
-            .map(this::getGroupDTOWithUsers)
+        return userGroups.stream()
+            .map(ug -> HomeConverter.userDTO(ug.getUser(), ug))
             .collect(Collectors.toList());
-
-        return HomeConverter.homeDTO(connectorProfileURL, groupDTOList);
     }
-
-
 }

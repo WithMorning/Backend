@@ -4,25 +4,25 @@ package go.alarm.home.presentation;
 import go.alarm.group.domain.Group;
 import go.alarm.user.domain.User;
 import go.alarm.group.domain.UserGroup;
-import go.alarm.home.dto.HomeResponseDTO;
+import go.alarm.home.dto.response.HomeResponse;
 import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeConverter {
 
-    public static HomeResponseDTO.HomeDTO homeDTO(String connectorProfileURL, List<HomeResponseDTO.GroupDTO> groupDTOList) {
-        return HomeResponseDTO.HomeDTO.builder()
+    public static HomeResponse.HomeDTO homeDTO(String connectorProfileURL, List<HomeResponse.GroupDTO> groupDTOList) {
+        return HomeResponse.HomeDTO.builder()
             .connectorProfileURL(connectorProfileURL)
             .groupList(groupDTOList)
             .listSize(groupDTOList.size())
             .build();
     }
 
-    public static HomeResponseDTO.GroupDTO groupDTO(Group group, List<HomeResponseDTO.UserDTO> userDTOList) {
+    public static HomeResponse.GroupDTO groupDTO(Group group, List<HomeResponse.UserDTO> userDTOList) {
         List<String> dayOfWeekList = getDayOfWeekList(group.getWakeUpDayOfWeek());
 
-        return HomeResponseDTO.GroupDTO.builder()
+        return HomeResponse.GroupDTO.builder()
             .groupId(group.getId())
             .name(group.getName())
             .wakeupTime(group.getWakeupTime())
@@ -32,8 +32,8 @@ public class HomeConverter {
             .build();
     }
 
-    public static HomeResponseDTO.UserDTO userDTO(User user, UserGroup userGroup) {
-        return HomeResponseDTO.UserDTO.builder()
+    public static HomeResponse.UserDTO userDTO(User user, UserGroup userGroup) {
+        return HomeResponse.UserDTO.builder()
             .userId(user.getId())
             .imageURL(user.getImageURL())
             .nickname(user.getNickname())

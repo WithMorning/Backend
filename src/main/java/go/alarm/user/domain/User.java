@@ -81,11 +81,16 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserGroup> userGroupList = new ArrayList<>();
 
-    public void setDayOfWeek(WakeUpDayOfWeek bedDayOfWeek) {
-        this.bedDayOfWeek = bedDayOfWeek;
-    }
     public void setIsAllowBedTimeAlarm(Boolean isAllowBedTimeAlarm){
         this.isAllowBedTimeAlarm = isAllowBedTimeAlarm;
     }
+    public void setBedTime(LocalTime bedTime){
+        this.bedTime = bedTime;
+    }
+
+    public void setDayOfWeek(WakeUpDayOfWeek bedDayOfWeek) {
+        this.bedDayOfWeek = bedDayOfWeek;
+    }
+
 
 }

@@ -59,6 +59,7 @@ public class LoginController {
         //위처럼 해도 될지 테스트 해봐야 함.
     }
 
+
     /*
     @PostMapping("/token")
     public ResponseEntity<AccessTokenResponse> extendLogin(
@@ -68,7 +69,7 @@ public class LoginController {
         final String renewalRefreshToken = loginService.renewalAccessToken(refreshToken, authorizationHeader);
         return ResponseEntity.status(CREATED).body(new AccessTokenResponse(renewalRefreshToken));
     }
-    */
+*/
 
     /*
     @DeleteMapping("/logout")

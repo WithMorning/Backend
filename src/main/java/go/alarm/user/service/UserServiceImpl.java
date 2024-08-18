@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
 
         user.setDayOfWeek(dayOfWeek);
         user.setIsAllowBedTimeAlarm(request.getIsAllowBedTimeAlarm());
+        user.setBedTime(request.getBedTime());
 
         return user;
     }

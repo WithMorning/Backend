@@ -2,17 +2,17 @@ package go.alarm.user.presentation;
 
 import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
 import go.alarm.user.domain.User;
-import go.alarm.user.dto.MyPageResponseDTO;
+import go.alarm.user.dto.response.MyPageResponse;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyPageConverter {
 
-    public static MyPageResponseDTO.myPageDTO toMyPageDTO(User user){
+    public static MyPageResponse getMyPage(User user){
 
         List<String> bedDayOfWeekList = getDayOfWeekList(user.getBedDayOfWeek());
 
-        return MyPageResponseDTO.myPageDTO.builder()
+        return MyPageResponse.builder()
             .userId(user.getId())
             .imageURL(user.getImageURL())
             .nickname(user.getNickname())

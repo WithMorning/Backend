@@ -2,10 +2,9 @@ package go.alarm.user.presentation;
 
 import go.alarm.user.domain.User;
 import go.alarm.global.response.SuccessResponse;
+import go.alarm.user.dto.response.MyPageResponse;
 import go.alarm.user.service.UserService;
-import go.alarm.user.dto.UserRequestDTO;
-import go.alarm.user.dto.MyPageResponseDTO.myPageDTO;
-import go.alarm.user.dto.UserResponseDTO.setUserBedTimeDTO;
+import go.alarm.user.dto.request.UserBedTimeRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+
     @GetMapping("/mypage")
     @Operation(summary = "마이페이지 조회 API", description = "마이페이지를 조회합니다.")
     @ApiResponses({
@@ -37,12 +37,12 @@ public class UserController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public SuccessResponse<myPageDTO> getMyPage(@RequestHeader(name = "userId") Long userId) {
+    public SuccessResponse<MyPageResponse> getMyPage(@RequestHeader(name = "userId") Long userId) {
         //소셜로그인이 들어가면 위 헤더 부분이 사라지고 토큰으로 유저를 구분해야함.
 
         User user = userService.getUser(userId);
 
-        return new SuccessResponse<>(MyPageConverter.toMyPageDTO(user));
+        return new SuccessResponse<>(MyPageConverter.getMyPage(user));
     }
 
     @PostMapping("/bedtime/alarm")
@@ -53,12 +53,12 @@ public class UserController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public SuccessResponse<setUserBedTimeDTO> setBedTime(@RequestHeader(name = "userId") Long userId,
-                                                @RequestBody @Valid UserRequestDTO.SetBedTimeDTO request) {
+    public SuccessResponse<Void> setBedTime(@RequestHeader(name = "userId") Long userId,
+                                                @RequestBody @Valid UserBedTimeRequest request) {
         //소셜로그인이 들어가면 위 헤더 부분이 사라지고 토큰으로 유저를 구분해야함.
 
-        User user = userService.setBedTime(userId, request);
+        userService.setBedTime(userId, request);
 
-        return new SuccessResponse<>(UserConverter.setBedTime(user));
+        return new SuccessResponse<>();
     }
 }

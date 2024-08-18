@@ -5,7 +5,7 @@ import go.alarm.user.domain.User;
 import go.alarm.wakeupdayofweek.domain.repository.WakeUpDayOfWeekRepository;
 import go.alarm.user.domain.repository.UserRepository;
 import go.alarm.wakeupdayofweek.presentation.WakeUpDayOfWeekConverter;
-import go.alarm.user.dto.UserRequestDTO;
+import go.alarm.user.dto.request.UserBedTimeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +22,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long userId) {
 
-        User user = userRepository.findById(userId).get();
-
-        return user;
+        return userRepository.findById(userId).get();
     }
 
     @Override
-    public User setBedTime(Long userId, UserRequestDTO.SetBedTimeDTO request) {
+    public User setBedTime(Long userId, UserBedTimeRequest request) {
+
         User user = userRepository.findById(userId).get();
 
         if(user.getBedDayOfWeek() != null){

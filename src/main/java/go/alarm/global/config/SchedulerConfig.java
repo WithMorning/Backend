@@ -1,17 +1,16 @@
 package go.alarm.global.config;
 
-import go.alarm.service.AlarmService;
+import go.alarm.fcm.service.FCMService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
 @EnableScheduling
 public class SchedulerConfig {
-    private final AlarmService alarmService;
+    private final FCMService FCMService;
 
-    public SchedulerConfig(AlarmService alarmService) {
-        this.alarmService = alarmService;
+    public SchedulerConfig(FCMService FCMService) {
+        this.FCMService = FCMService;
     }
 
     /*

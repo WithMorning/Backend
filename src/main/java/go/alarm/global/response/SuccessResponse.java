@@ -13,13 +13,28 @@ public class SuccessResponse<T> {
     private final String message;
     private final int code;
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL)// 어노테이션이 적용된 필드가 null인 경우, JSON 응답에서 해당 필드는 제외
     private T result;
 
+    /**
+     * 일반적인 응답 형식
+     * */
+    public SuccessResponse() {
+        this.isSuccess = ResponseCode.SUCCESS.isSuccess();
+        this.code = ResponseCode.SUCCESS.getCode();
+        this.message = ResponseCode.SUCCESS.getMessage();
+    }
+
+    /**
+     * 반환값이 필요한 응답 형식
+     * */
     public SuccessResponse(T result) {
         this.isSuccess = ResponseCode.SUCCESS.isSuccess();
         this.code = ResponseCode.SUCCESS.getCode();
         this.message = ResponseCode.SUCCESS.getMessage();
         this.result = result;
     }
+    
+    
+
 }

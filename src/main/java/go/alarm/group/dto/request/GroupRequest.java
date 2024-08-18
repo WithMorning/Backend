@@ -25,6 +25,7 @@ public class GroupRequest {
     @NotNull(message = "알람 그룹의 알람 수신 동의 여부를 입력해주세요.")
     private Boolean isAgree;
 
-    @NotNull(message = "알람 그룹의 공지사항을 입력해주세요.")
+    @NotBlank(message = "알람 그룹의 공지사항을 입력해주세요.")
+    @Size(max = 48, message = "알람 그룹의 메모는 48자를 초과할 수 없습니다.")
     private String memo;
 }

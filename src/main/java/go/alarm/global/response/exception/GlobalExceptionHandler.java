@@ -38,10 +38,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         String errMessage = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
         // BindingResult에서 첫 번째 FieldError의 DefaultMessage를 가져옵니다. 이후 FieldError가 null이 아님을 보장합니다.
+
         return ResponseEntity.badRequest() // HTTP 상태 코드 400으로 응답을 시작
             .body(new ExceptionResponse(INVALID_REQUEST.isSuccess(), INVALID_REQUEST.getCode(), errMessage)); // 응답 body 생성
-
-
     }
 
     /*

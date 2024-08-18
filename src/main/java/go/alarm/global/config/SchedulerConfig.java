@@ -1,17 +1,16 @@
 package go.alarm.global.config;
 
-import go.alarm.service.AlarmService;
+import go.alarm.fcm.service.FCMService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
 @EnableScheduling
 public class SchedulerConfig {
-    private final AlarmService alarmService;
+    private final FCMService fcmService;
 
-    public SchedulerConfig(AlarmService alarmService) {
-        this.alarmService = alarmService;
+    public SchedulerConfig(FCMService fcmService) {
+        this.fcmService = fcmService;
     }
 
     /*
@@ -24,7 +23,7 @@ public class SchedulerConfig {
     /*
     @Scheduled(cron = "0 * * * * *") // 매분 실행
     public void scheduleAlarms() {
-        alarmService.sendAlarms();  // 테스트를 위해 스케줄러 실행 일시 정지
+        fcmService.sendAlarms();  // 테스트를 위해 스케줄러 실행 일시 정지
     }*/
 
 }

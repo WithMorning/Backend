@@ -14,6 +14,7 @@ import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -23,19 +24,12 @@ public class WakeUpDayOfWeek extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Setter
     private Boolean mon;
-    @Setter
     private Boolean tue;
-    @Setter
     private Boolean wed;
-    @Setter
     private Boolean thu;
-    @Setter
     private Boolean fri;
-    @Setter
     private Boolean sat;
-    @Setter
     private Boolean sun;
 
     public void resetDayOfWeek(){

@@ -17,6 +17,7 @@ public class MyPageConverter {
             .imageURL(user.getImageURL())
             .nickname(user.getNickname())
             .bedtime(user.getBedTime())
+            .isAllowBedTimeAlarm(user.getIsAllowBedTimeAlarm())
             .dayOfWeekList(bedDayOfWeekList)
             .build();
     }

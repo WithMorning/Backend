@@ -22,7 +22,7 @@ public class HomeController {
 
         private final HomeService homeService;
 
-        @GetMapping("/")
+        @GetMapping("/home")
         @Operation(summary = "메인페이지 조회 API", description = "메인페이지를 조회합니다.")
         @ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공입니다.")

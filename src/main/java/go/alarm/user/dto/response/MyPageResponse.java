@@ -13,6 +13,7 @@ public class MyPageResponse {
     private String imageURL;
     private String nickname;
     private LocalTime bedtime;
+    private Boolean isAllowBedTimeAlarm;
     private List<String> dayOfWeekList;
 
 }

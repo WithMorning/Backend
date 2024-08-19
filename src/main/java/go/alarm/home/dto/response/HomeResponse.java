@@ -1,5 +1,6 @@
 package go.alarm.home.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
@@ -20,6 +21,7 @@ public class HomeResponse {
     public static class GroupDTO {
         private Long groupId;
         private String name;
+        @JsonFormat(pattern = "HH:mm")
         private LocalTime wakeupTime;
         private List<String> dayOfWeekList;
         private List<UserDTO> userList;

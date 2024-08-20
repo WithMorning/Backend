@@ -63,7 +63,7 @@ public class LoginController {
 
 
 
-    @PostMapping("/token")
+    @PostMapping("/accesstoken")
     public SuccessResponse<AccessTokenResponse> extendLogin(
         @CookieValue("refresh-token") final String refreshToken,
         @RequestHeader("Authorization") final String authorizationHeader // Authorization 헤더 값 (Bearer 토큰을 포함한 엑세스 토큰)

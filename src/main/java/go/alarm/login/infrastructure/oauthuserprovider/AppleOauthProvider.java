@@ -68,9 +68,7 @@ public class AppleOauthProvider implements OauthProvider {
                 .getBody();
 
             String socialLoginId = claims.getSubject(); // subject(사용자의 고유 식별자) 추출
-            log.warn("소셜로그인 ID >>" + socialLoginId);
             String email = claims.get("email", String.class); // 이메일 추출
-            log.warn("이메일 >>" + email);
 
             return new AppleUserInfo(socialLoginId, email);
         } catch (Exception e) {
@@ -90,15 +88,11 @@ public class AppleOauthProvider implements OauthProvider {
 
         if (jwksResponse == null || !jwksResponse.containsKey("keys")) {
             // JWKS가 유효하지 않거나 사용할 수 없는 경우 예외를 발생
-            log.warn("jwksResponse가 null인지?" + jwksResponse.toString());
-            log.warn("jwksResponse에 containsKey인지?" + jwksResponse.containsKey("keys"));
             throw new AuthException(NOT_SUPPORTED_OAUTH_SERVICE);
         }
 
         List<Map<String, String>> keys = (List<Map<String, String>>) jwksResponse.get("keys");
         // JWKS에서 키 목록을 추출
-
-        log.warn("jwksResponse.get으로 가져온 keys"+ keys.toString());
 
         Map<String, String> key = keys.stream() // Java 스트림을 사용하여 일치하는 kid를 가진 키를 찾음
             .filter(k -> kid.equals(k.get("kid")))

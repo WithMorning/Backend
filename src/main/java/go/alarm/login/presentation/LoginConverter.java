@@ -2,8 +2,6 @@ package go.alarm.login.presentation;
 
 import go.alarm.user.domain.User;
 import go.alarm.login.domain.RefreshToken;
-import go.alarm.login.dto.AccessTokenResponse;
-
 
 public class LoginConverter {
 
@@ -19,13 +17,6 @@ public class LoginConverter {
         return RefreshToken.builder()
             .refreshToken(refreshToken)
             .userId(userId)
-            .build();
-    }
-
-    public static AccessTokenResponse toAccessToken(final String accessToken){
-
-        return AccessTokenResponse.builder()
-            .accessToken(accessToken)
             .build();
     }
 }

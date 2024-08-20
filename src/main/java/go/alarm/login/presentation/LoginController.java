@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -60,16 +62,16 @@ public class LoginController {
     }
 
 
-    /*
-    @PostMapping("/token")
-    public ResponseEntity<AccessTokenResponse> extendLogin(
+
+    @PostMapping("/accesstoken")
+    public SuccessResponse<AccessTokenResponse> extendLogin(
         @CookieValue("refresh-token") final String refreshToken,
-        @RequestHeader("Authorization") final String authorizationHeader // Authorization 헤더 값 (Bearer 토큰을 포함)
+        @RequestHeader("Authorization") final String authorizationHeader // Authorization 헤더 값 (Bearer 토큰을 포함한 엑세스 토큰)
     ) {
-        final String renewalRefreshToken = loginService.renewalAccessToken(refreshToken, authorizationHeader);
-        return ResponseEntity.status(CREATED).body(new AccessTokenResponse(renewalRefreshToken));
+        final String renewalAccessToken = loginService.renewalAccessToken(refreshToken, authorizationHeader);
+        return new SuccessResponse<>(LoginConverter.toAccessToken(renewalAccessToken));
     }
-*/
+
 
     /*
     @DeleteMapping("/logout")

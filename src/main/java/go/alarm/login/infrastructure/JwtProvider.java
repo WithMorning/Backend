@@ -48,7 +48,6 @@ public class JwtProvider {
         this.refreshExpirationTime = refreshExpirationTime;
     }
 
-
     /**
     * 로그인 시 사용자 식별자(subject)를 받아 액세스 토큰과 리프레시 토큰을 생성
     * */
@@ -61,6 +60,12 @@ public class JwtProvider {
         return new UserTokens(refreshToken, accessToken);
     }
 
+    /**
+     * 새로운 액세스 토큰을 생성
+     * */
+    public String regenerateAccessToken(final String subject) {
+        return createToken(subject, accessExpirationTime);
+    }
 
     /**
     * 실제 JWT 토큰을 생성하는 메서드
@@ -141,12 +146,7 @@ public class JwtProvider {
             .parseClaimsJws(token); // 주어진 토큰을 파싱하고 서명을 검증
     }
 
-    /**
-     * 새로운 액세스 토큰을 생성
-     * */
-    public String regenerateAccessToken(final String subject) {
-        return createToken(subject, accessExpirationTime);
-    }
+
 
     /**
      * 리프레시 토큰은 유효하고 액세스 토큰은 만료된 상황인지 확인

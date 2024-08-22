@@ -3,6 +3,7 @@ package go.alarm.login.presentation;
 
 import go.alarm.login.domain.UserTokens;
 import go.alarm.global.response.SuccessResponse;
+import go.alarm.login.dto.ExtendLoginRequest;
 import go.alarm.login.dto.LoginTokenResponse;
 import go.alarm.login.service.LoginService;
 import go.alarm.login.dto.LoginRequest;
@@ -47,12 +48,12 @@ public class LoginController {
 
     @PostMapping("/accesstoken")
     public SuccessResponse<LoginTokenResponse> extendLogin(
-        @RequestBody final String refreshToken,
+        @RequestBody final ExtendLoginRequest request,
         @RequestHeader("Authorization") final String authorizationHeader // Authorization 헤더 값 (Bearer 토큰을 포함한 엑세스 토큰)
     ) {
-        log.warn("컨트롤러단(/accesstoken) 리프레시 토큰 >>" + refreshToken);
+        log.warn("컨트롤러단(/accesstoken) 리프레시 토큰 >>" + request.getRefreshToken());
         log.warn("컨트롤러단(/accesstoken) 엑세스 토큰 >>" + authorizationHeader);
-        final String renewalAccessToken = loginService.renewalAccessToken(refreshToken, authorizationHeader);
+        final String renewalAccessToken = loginService.renewalAccessToken(request.getRefreshToken(), authorizationHeader);
         return new SuccessResponse<>(new LoginTokenResponse(renewalAccessToken));
     }
 

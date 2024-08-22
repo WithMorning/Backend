@@ -37,6 +37,8 @@ public class LoginController {
     ) {
         final UserTokens userTokens = loginService.login(provider, request.getCode());
         // userTokens의 필드 -> refreshToken, accessToken
+        log.warn("컨트롤러단(/login) 리프레시 토큰 >>" + userTokens.getRefreshToken());
+        log.warn("컨트롤러단(/login) 엑세스 토큰 >>" + userTokens.getAccessToken());
 
         return new SuccessResponse<>(new LoginTokenResponse(userTokens.getAccessToken(), userTokens.getRefreshToken()));
     }
@@ -48,6 +50,8 @@ public class LoginController {
         @RequestBody final String refreshToken,
         @RequestHeader("Authorization") final String authorizationHeader // Authorization 헤더 값 (Bearer 토큰을 포함한 엑세스 토큰)
     ) {
+        log.warn("컨트롤러단(/accesstoken) 리프레시 토큰 >>" + refreshToken);
+        log.warn("컨트롤러단(/accesstoken) 엑세스 토큰 >>" + authorizationHeader);
         final String renewalAccessToken = loginService.renewalAccessToken(refreshToken, authorizationHeader);
         return new SuccessResponse<>(new LoginTokenResponse(renewalAccessToken));
     }

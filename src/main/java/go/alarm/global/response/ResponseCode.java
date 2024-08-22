@@ -38,7 +38,7 @@ public enum ResponseCode {
     INVALID_IMAGE(false, 5102, "올바르지 않은 이미지 파일입니다."),
 
 
-    INVALID_USER_NAME(false, 8001, "존재하지 않는 사용자입니다."),
+    INVALID_USER(false, 8001, "존재하지 않는 사용자입니다."),
     INVALID_PASSWORD(false, 8002, "비밀번호가 일치하지 않습니다."),
     NULL_ADMIN_AUTHORITY(false, 8101, "잘못된 관리자 권한입니다."),
     DUPLICATED_ADMIN_USERNAME(false, 8102, "중복된 사용자 이름입니다."),
@@ -55,7 +55,7 @@ public enum ResponseCode {
     EXPIRED_PERIOD_REFRESH_TOKEN(false, 9103, "기한이 만료된 RefreshToken입니다."),
     EXPIRED_PERIOD_ACCESS_TOKEN(false, 9104, "기한이 만료된 AccessToken입니다."),
     FAIL_TO_VALIDATE_TOKEN(false, 9105, "토큰 유효성 검사 중 오류가 발생했습니다."),
-    NOT_FOUND_REFRESH_TOKEN(false, 9106, "refresh-token에 해당하는 쿠키 정보가 없습니다."),
+    NOT_FOUND_REFRESH_TOKEN(false, 9106, "RefreshToken이 null이거나 빈 문자열입니다."),
     INVALID_AUTHORITY(false, 9201, "해당 요청에 대한 접근 권한이 없습니다.");
 
     private final boolean isSuccess;

@@ -100,7 +100,6 @@ public class JwtProvider {
         validateAccessToken(userTokens.getAccessToken());
     }
 
-
     /**
      * 리프레시 토큰 유효성 검사
      * */
@@ -149,8 +148,6 @@ public class JwtProvider {
             .build()
             .parseClaimsJws(token); // 주어진 토큰을 파싱하고 서명을 검증
     }
-
-
 
     /**
      * 리프레시 토큰은 유효하고 액세스 토큰은 만료된 상황인지 확인

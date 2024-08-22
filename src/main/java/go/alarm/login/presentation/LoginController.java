@@ -1,16 +1,19 @@
 package go.alarm.login.presentation;
 
 
+import go.alarm.auth.Auth;
+import go.alarm.auth.domain.Accessor;
 import go.alarm.login.domain.UserTokens;
 import go.alarm.global.response.SuccessResponse;
-import go.alarm.login.dto.ExtendLoginRequest;
-import go.alarm.login.dto.LoginTokenResponse;
+import go.alarm.login.dto.RefreshTokenRequest;
+import go.alarm.login.dto.LoginTokensResponse;
 import go.alarm.login.service.LoginService;
 import go.alarm.login.dto.LoginRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -31,7 +34,7 @@ public class LoginController {
     * 추후 Resource Server가 추가될 수도 있기에 {provider}로 받아옵니다.
     * */
     @PostMapping("/login/oauth/{provider}")
-    public SuccessResponse<LoginTokenResponse> login(
+    public SuccessResponse<LoginTokensResponse> login(
         @PathVariable final String provider,
         @RequestBody final LoginRequest request,
         final HttpServletResponse response
@@ -41,33 +44,33 @@ public class LoginController {
         log.warn("컨트롤러단(/login) 리프레시 토큰 >>" + userTokens.getRefreshToken());
         log.warn("컨트롤러단(/login) 엑세스 토큰 >>" + userTokens.getAccessToken());
 
-        return new SuccessResponse<>(new LoginTokenResponse(userTokens.getAccessToken(), userTokens.getRefreshToken()));
+        return new SuccessResponse<>(new LoginTokensResponse(userTokens.getAccessToken(), userTokens.getRefreshToken()));
     }
 
 
 
     @PostMapping("/accesstoken")
-    public SuccessResponse<LoginTokenResponse> extendLogin(
-        @RequestBody final ExtendLoginRequest request,
+    public SuccessResponse<LoginTokensResponse> extendLogin(
+        @RequestBody final RefreshTokenRequest request,
         @RequestHeader("Authorization") final String authorizationHeader // Authorization 헤더 값 (Bearer 토큰을 포함한 엑세스 토큰)
     ) {
         log.warn("컨트롤러단(/accesstoken) 리프레시 토큰 >>" + request.getRefreshToken());
         log.warn("컨트롤러단(/accesstoken) 엑세스 토큰 >>" + authorizationHeader);
         final String renewalAccessToken = loginService.renewalAccessToken(request.getRefreshToken(), authorizationHeader);
-        return new SuccessResponse<>(new LoginTokenResponse(renewalAccessToken));
+        return new SuccessResponse<>(new LoginTokensResponse(renewalAccessToken));
     }
 
 
-    /*
+
     @DeleteMapping("/logout")
-    @MemberOnly
-    public ResponseEntity<Void> logout(
+    public SuccessResponse<Void> logout(
         @Auth final Accessor accessor,
-        @CookieValue("refresh-token") final String refreshToken) {
-        loginService.removeRefreshToken(refreshToken);
-        return ResponseEntity.noContent().build();
+        @RequestBody final RefreshTokenRequest request) {
+        loginService.removeRefreshToken(request.getRefreshToken());
+        return new SuccessResponse<>();
+
     }
-    */
+
 
     /*
     일단 삭제는 보류

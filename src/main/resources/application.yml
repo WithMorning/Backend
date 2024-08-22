@@ -24,8 +24,8 @@ spring:
 security:
   jwt:
     secret-key: ${JWT_SECRET}
-    access-expiration-time: 3600000 # 1시간
-    refresh-expiration-time: 604800000  # 7 days
+    access-expiration-time: 180000 # 3분
+    refresh-expiration-time: 600000  # 10분
 oauth2:
   provider:
     apple:

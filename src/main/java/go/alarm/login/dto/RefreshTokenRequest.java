@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExtendLoginRequest {
+public class RefreshTokenRequest {
 
     private String refreshToken;
 

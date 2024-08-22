@@ -25,7 +25,7 @@ security:
   jwt:
     secret-key: ${JWT_SECRET}
     access-expiration-time: 180000 # 3분
-    refresh-expiration-time: 600000  # 10분
+    refresh-expiration-time: 604800000  # 7일
 oauth2:
   provider:
     apple:

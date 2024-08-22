@@ -18,12 +18,14 @@ import go.alarm.login.infrastructure.BearerAuthorizationExtractor;
 import go.alarm.login.infrastructure.JwtProvider;
 import go.alarm.login.presentation.LoginConverter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class LoginServiceImpl implements LoginService{
 
     private final UserRepository userRepository;
@@ -44,6 +46,8 @@ public class LoginServiceImpl implements LoginService{
         );
         final UserTokens userTokens = jwtProvider.generateLoginToken(user.getId().toString());
         // UserTokens에서 엑세스, 리프레쉬 토큰 가져와서 유저 필드에 저장
+        log.warn("서비스단(/login) 리프레시 토큰 >>" + userTokens.getRefreshToken());
+        log.warn("서비스단(/login) 엑세스 토큰 >>" + userTokens.getAccessToken());
 
         RefreshToken savedRefreshToken = LoginConverter.toRefreshToken(
             userTokens.getRefreshToken(), user.getId());

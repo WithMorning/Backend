@@ -34,7 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatusCode status,
         WebRequest request
     ) {
-        log.warn(e.getMessage(), e); // 예외 메시지를 WARN 레벨로 로깅
+        // 예외 메시지를 WARN 레벨로 로깅
 
         String errMessage = Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage();
         // BindingResult에서 첫 번째 FieldError의 DefaultMessage를 가져옵니다. 이후 FieldError가 null이 아님을 보장합니다.

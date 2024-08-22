@@ -21,12 +21,14 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import javax.crypto.SecretKey;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
 * JWT 토큰을 생성하고 검증
 * */
+@Slf4j
 @Component
 public class JwtProvider {
 
@@ -99,6 +101,8 @@ public class JwtProvider {
      * */
     private void validateRefreshToken(final String refreshToken) {
         try {
+            log.warn("validateRefreshToken 메소드에서의(JwtProvider) 리프레시 토큰 >>" + refreshToken);
+            
             parseToken(refreshToken);
         } catch (final ExpiredJwtException e) {
             throw new ExpiredPeriodJwtException(EXPIRED_PERIOD_REFRESH_TOKEN);

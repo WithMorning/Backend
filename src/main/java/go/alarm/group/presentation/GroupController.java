@@ -1,6 +1,8 @@
 package go.alarm.group.presentation;
 
 
+import go.alarm.auth.Auth;
+import go.alarm.auth.domain.Accessor;
 import go.alarm.group.domain.Group;
 import go.alarm.group.domain.UserGroup;
 import go.alarm.global.response.SuccessResponse;
@@ -43,9 +45,11 @@ public class GroupController {
     @Parameters({
         @Parameter(name = "userId", description = "유저의 아이디, header에 담아주시면 됩니다.")
     })
-    public SuccessResponse<GroupResponse> createGroup(@RequestHeader(name = "userId") Long userId,
-                                                                        @RequestBody @Valid GroupRequest request) {
-        Group group = groupService.createGroup(userId, request);
+    public SuccessResponse<GroupResponse> createGroup(
+        @Auth final Accessor accessor,
+        @RequestBody @Valid GroupRequest request) {
+
+        Group group = groupService.createGroup(accessor.getUserId(), request);
         return new SuccessResponse<>(GroupConverter.createGroup(group));
     }
 

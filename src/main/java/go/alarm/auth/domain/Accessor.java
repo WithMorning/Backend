@@ -5,24 +5,24 @@ import lombok.Getter;
 @Getter
 public class Accessor {
 
-    private final Long memberId;
+    private final Long userId;
     private final Authority authority;
 
-    private Accessor(final Long memberId, final Authority authority) {
-        this.memberId = memberId;
+    private Accessor(final Long userId, final Authority authority) {
+        this.userId = userId;
         this.authority = authority;
     }
 
-    public static Accessor member(final Long memberId) {
-        return new Accessor(memberId, Authority.MEMBER);
+    public static Accessor member(final Long userId) {
+        return new Accessor(userId, Authority.MEMBER);
     }
 
-    public static Accessor admin(final Long memberId) {
-        return new Accessor(memberId, Authority.ADMIN);
+    public static Accessor admin(final Long userId) {
+        return new Accessor(userId, Authority.ADMIN);
     }
 
-    public static Accessor master(final Long memberId) {
-        return new Accessor(memberId, Authority.MASTER);
+    public static Accessor master(final Long userId) {
+        return new Accessor(userId, Authority.MASTER);
     }
 
 

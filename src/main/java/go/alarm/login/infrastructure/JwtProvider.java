@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
-* JWT 토큰을 생성하고 검증
+* JWT 토큰을 생성하고 검증합니다.
 * */
 @Slf4j
 @Component
@@ -51,8 +51,9 @@ public class JwtProvider {
     }
 
     /**
-    * 로그인 시 사용자 식별자(subject)를 받아 액세스 토큰과 리프레시 토큰을 생성
-    * */
+     * 로그인 시 사용자 식별자(subject)를 받아 액세스 토큰과 리프레시 토큰을 생성
+     * subject는 userId를 사용
+     *  */
     public UserTokens generateLoginToken(final String subject) {
 
         final String refreshToken = createToken(EMPTY_SUBJECT, refreshExpirationTime);
@@ -93,20 +94,10 @@ public class JwtProvider {
     }
 
     /**
-     * 액세스 토큰과 리프레시 토큰의 유효성을 검사
-     * */
-    public void validateTokens(final UserTokens userTokens) {
-        validateRefreshToken(userTokens.getRefreshToken());
-        validateAccessToken(userTokens.getAccessToken());
-    }
-
-    /**
      * 리프레시 토큰 유효성 검사
      * */
-    private void validateRefreshToken(final String refreshToken) {
+    public void validateRefreshToken(final String refreshToken) {
         try {
-            log.warn("validateRefreshToken 메소드에서의(JwtProvider) 리프레시 토큰 >>" + refreshToken);
-            
             parseToken(refreshToken);
         } catch (final ExpiredJwtException e) {
             throw new ExpiredPeriodJwtException(EXPIRED_PERIOD_REFRESH_TOKEN);
@@ -118,7 +109,7 @@ public class JwtProvider {
     /**
      * 엑세스 토큰 유효성 검사
      * */
-    private void validateAccessToken(final String accessToken) {
+    public void validateAccessToken(final String accessToken) {
         try {
             parseToken(accessToken);
         } catch (final ExpiredJwtException e) {

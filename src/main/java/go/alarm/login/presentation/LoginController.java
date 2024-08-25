@@ -2,6 +2,7 @@ package go.alarm.login.presentation;
 
 
 import go.alarm.auth.Auth;
+import go.alarm.auth.UesrOnly;
 import go.alarm.auth.domain.Accessor;
 import go.alarm.login.domain.UserTokens;
 import go.alarm.global.response.SuccessResponse;
@@ -63,6 +64,7 @@ public class LoginController {
 
 
     @DeleteMapping("/logout")
+    @UesrOnly
     public SuccessResponse<Void> logout(
         @Auth final Accessor accessor,
         @RequestBody final RefreshTokenRequest request) {

@@ -2,6 +2,10 @@ package go.alarm.auth.domain;
 
 import lombok.Getter;
 
+/**
+ * LoginArgumentResolver 클래스의 resolveArgument 메서드가 반환한 Accessor 객체가 컨트롤러의 파라미터로 전달됩니다.
+ * 이러한 Accessor를 저장할 객체입니다.
+ * */
 @Getter
 public class Accessor {
 
@@ -13,8 +17,8 @@ public class Accessor {
         this.authority = authority;
     }
 
-    public static Accessor member(final Long userId) {
-        return new Accessor(userId, Authority.MEMBER);
+    public static Accessor user(final Long userId) {
+        return new Accessor(userId, Authority.USER);
     }
 
     public static Accessor admin(final Long userId) {
@@ -26,8 +30,8 @@ public class Accessor {
     }
 
 
-    public boolean isMember() {
-        return Authority.MEMBER.equals(authority);
+    public boolean isUser() {
+        return Authority.USER.equals(authority);
     }
 
     public boolean isAdmin() {

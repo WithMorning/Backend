@@ -1,7 +1,7 @@
 package go.alarm.auth.domain;
 
 public enum Authority {
-    MEMBER,
+    USER,
     ADMIN,
     MASTER
 }

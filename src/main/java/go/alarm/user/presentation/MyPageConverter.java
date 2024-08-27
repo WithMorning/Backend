@@ -10,7 +10,7 @@ public class MyPageConverter {
 
     public static MyPageResponse getMyPage(User user){
 
-        List<String> bedDayOfWeekList = getDayOfWeekList(user.getBedDayOfWeek());
+        List<String> bedDayOfWeekList = getBedDayOfWeekList(user.getBedDayOfWeek());
 
         return MyPageResponse.builder()
             .userId(user.getId())
@@ -22,18 +22,22 @@ public class MyPageConverter {
             .build();
     }
 
-    private static List<String> getDayOfWeekList(WakeUpDayOfWeek dayOfWeek) {
-        List<String> dayOfWeekList = new ArrayList<>();
+    private static List<String> getBedDayOfWeekList(WakeUpDayOfWeek bedDayOfWeek) {
+        if(bedDayOfWeek == null){ // 취침 시간 설정을 안 해줬다면 null 반환
+            return null;
+        }
 
-        if (dayOfWeek.getMon()) dayOfWeekList.add("mon");
-        if (dayOfWeek.getTue()) dayOfWeekList.add("tue");
-        if (dayOfWeek.getWed()) dayOfWeekList.add("wed");
-        if (dayOfWeek.getThu()) dayOfWeekList.add("thu");
-        if (dayOfWeek.getFri()) dayOfWeekList.add("fri");
-        if (dayOfWeek.getSat()) dayOfWeekList.add("sat");
-        if (dayOfWeek.getSun()) dayOfWeekList.add("sun");
+        List<String> bedDayOfWeekList = new ArrayList<>();
 
-        return dayOfWeekList;
+        if (bedDayOfWeek.getMon()) bedDayOfWeekList.add("mon");
+        if (bedDayOfWeek.getTue()) bedDayOfWeekList.add("tue");
+        if (bedDayOfWeek.getWed()) bedDayOfWeekList.add("wed");
+        if (bedDayOfWeek.getThu()) bedDayOfWeekList.add("thu");
+        if (bedDayOfWeek.getFri()) bedDayOfWeekList.add("fri");
+        if (bedDayOfWeek.getSat()) bedDayOfWeekList.add("sat");
+        if (bedDayOfWeek.getSun()) bedDayOfWeekList.add("sun");
+
+        return bedDayOfWeekList;
     }
 
 }

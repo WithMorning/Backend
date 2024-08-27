@@ -72,6 +72,7 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public String renewalAccessToken(final String refreshTokenRequest, final String authorizationHeader) {
         final String accessToken = bearerExtractor.extractAccessToken(authorizationHeader);
+        log.warn("서비스단(/accesstoken)의 bearer 제거 후 엑세스 토큰 >> " + accessToken);
         // Authorization 헤더에서 액세스 토큰을 추출
 
         if (jwtProvider.isValidRefreshAndInvalidAccess(refreshTokenRequest, accessToken)) {

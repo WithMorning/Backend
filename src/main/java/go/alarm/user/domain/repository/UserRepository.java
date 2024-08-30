@@ -9,9 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findBySocialLoginId(String socialLoginId);
-
-    boolean existsByNickname(String nickname);
-
     @Modifying
     @Query("""
             UPDATE Users user

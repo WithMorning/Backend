@@ -5,6 +5,7 @@ package go.alarm.login.service;
 import static go.alarm.global.response.ResponseCode.FAIL_TO_VALIDATE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_REFRESH_TOKEN;
 
+import go.alarm.group.domain.repository.UserGroupRepository;
 import go.alarm.user.domain.User;
 import go.alarm.user.domain.repository.UserRepository;
 import go.alarm.global.response.exception.AuthException;
@@ -17,6 +18,7 @@ import go.alarm.login.domain.repository.RefreshTokenRepository;
 import go.alarm.login.infrastructure.BearerAuthorizationExtractor;
 import go.alarm.login.infrastructure.JwtProvider;
 import go.alarm.login.presentation.LoginConverter;
+import go.alarm.wakeupdayofweek.domain.repository.WakeUpDayOfWeekRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,11 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class LoginServiceImpl implements LoginService{
 
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
+    private final WakeUpDayOfWeekRepository wakeUpDayOfWeekRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final OauthProviders oauthProviders;
     private final JwtProvider jwtProvider;
     private final BearerAuthorizationExtractor bearerExtractor;
-    //private final ApplicationEventPublisher publisher; 일단 삭제는 보류
 
 
     @Override
@@ -91,19 +94,20 @@ public class LoginServiceImpl implements LoginService{
 
     @Override
     public void removeRefreshToken(final String refreshToken) {
-        refreshTokenRepository.deleteById(refreshToken);
+        refreshTokenRepository.deleteById(refreshToken); // 리프레시 토큰이 삭제되지 않고 남아있음. 이거 해결해야 함!!
     }
 
     @Override
     public void deleteAccount(final Long userId) {
-        /*
-        일단 삭제는 보류. Soft Delete를 해야 하기 때문에 모든 엔티티 설정을 다시 해줘야 함.
-        final List<Long> tripIds = customTripRepository.findTripIdsByMemberId(userId);
-        publishedTripRepository.deleteByTripIds(tripIds);
-        sharedTripRepository.deleteByTripIds(tripIds);
-        memberRepository.deleteByMemberId(userId);
-        publisher.publishEvent(new MemberDeleteEvent(tripIds, userId));
-         */
+
+        User user = userRepository.findById(userId).get();
+        Long dayOfWeekId = user.getBedDayOfWeek().getId();
+
+        userRepository.deleteByUserId(userId);
+        wakeUpDayOfWeekRepository.deleteById(dayOfWeekId);
+        userGroupRepository.deleteByUserId(userId);
+        refreshTokenRepository.deleteByUserId(userId);
+
     }
 
 }

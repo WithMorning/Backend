@@ -1,5 +1,8 @@
 package go.alarm.home.service;
 
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_USER_ID;
+
+import go.alarm.global.response.exception.BadRequestException;
 import go.alarm.group.domain.Group;
 import go.alarm.user.domain.User;
 import go.alarm.group.domain.UserGroup;
@@ -31,7 +34,7 @@ public class HomeServiceImpl implements HomeService {
     public HomeDTO getHome(Long userId) {
 
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+            .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_ID));
 
         String connectorProfileURL = user.getImageURL();
         List<Group> groupList = getGroupListByUserId(userId);
@@ -49,7 +52,7 @@ public class HomeServiceImpl implements HomeService {
     public List<Group> getGroupListByUserId(Long userId) {
 
         User user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다.")); 
+            .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_ID));
         // 모각 깃허브 보면 .orElseThrow(() -> new UserException(ErrorCode.NOT_EXIST_JOB)); 이런 식으로 예외처리함
 
         List<UserGroup> userGroupList = userGroupRepository.findAllByUser(user);

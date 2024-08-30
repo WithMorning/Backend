@@ -1,8 +1,12 @@
 package go.alarm.group.service;
 
+import static go.alarm.global.response.ResponseCode.NOT_GROUP_HOST;
+
+import go.alarm.global.response.exception.BadRequestException;
 import go.alarm.group.domain.Group;
 import go.alarm.group.domain.UserGroup;
 import go.alarm.group.dto.request.GroupJoinRequest;
+import go.alarm.user.domain.User;
 import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
 import go.alarm.group.domain.repository.GroupRepository;
 import go.alarm.user.domain.repository.UserRepository;
@@ -84,8 +88,15 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public void deleteGroup(Long userId, Long groupId) {
 
-        //Group group = groupRepository.findById(groupId).get(); 해당 그룹이 존재하는지 예외 처리도 들어가야 함
-        groupRepository.deleteById(groupId);
+        Group group = groupRepository.findById(groupId).get();
+        User host = group.getUserGroupList().get(0).getUser(); // 이 부분 테스트 해봐야 함!!!!
+
+        if(userId == host.getId()){
+            groupRepository.deleteById(groupId);
+        }
+        else {
+            throw new BadRequestException(NOT_GROUP_HOST);
+        }
 
     }
 

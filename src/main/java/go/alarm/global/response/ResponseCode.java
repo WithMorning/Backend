@@ -15,7 +15,7 @@ public enum ResponseCode {
      * 2000번대 >> 알람 관련 예외
      * 3000번대 >>
      * 5000번대 >> 이미지 관련 예외
-     * 8000번대 >> 유저 관려 예외
+     * 8000번대 >> 유저 관련 예외
      * 9000번대 >> 로그인 관련 예외
      *
      * */
@@ -38,8 +38,8 @@ public enum ResponseCode {
     INVALID_IMAGE(false, 5102, "올바르지 않은 이미지 파일입니다."),
 
 
-    INVALID_USER(false, 8001, "존재하지 않는 사용자입니다."),
-    INVALID_PASSWORD(false, 8002, "비밀번호가 일치하지 않습니다."),
+    INVALID_USER(false, 8001, "존재하지 않는 유저입니다."),
+    NOT_GROUP_HOST(false, 8002, "해당 유저는 방장이 아닙니다."),
     NULL_ADMIN_AUTHORITY(false, 8101, "잘못된 관리자 권한입니다."),
     DUPLICATED_ADMIN_USERNAME(false, 8102, "중복된 사용자 이름입니다."),
     NOT_FOUND_ADMIN_ID(false, 8103, "요청한 ID에 해당하는 관리자를 찾을 수 없습니다."),

@@ -74,13 +74,11 @@ public class LoginController {
     }
 
 
-    /*
-    일단 삭제는 보류
     @DeleteMapping("/account")
-    @MemberOnly
-    public ResponseEntity<Void> deleteAccount(@Auth final Accessor accessor) {
-        loginService.deleteAccount(accessor.getMemberId());
-        return ResponseEntity.noContent().build();
-    }*/
+    @UesrOnly
+    public SuccessResponse<Void> deleteAccount(@Auth final Accessor accessor) {
+        loginService.deleteAccount(accessor.getUserId());
+        return new SuccessResponse<>();
+    }
 
 }

@@ -2,6 +2,7 @@ package go.alarm.login.presentation;
 
 import go.alarm.user.domain.User;
 import go.alarm.login.domain.RefreshToken;
+import go.alarm.user.domain.UserState;
 
 public class LoginConverter {
 
@@ -9,6 +10,7 @@ public class LoginConverter {
         return User.builder()
             .socialLoginId(socialLoginId)
             .email(email)
+            .status(UserState.ACTIVE)
             .build();
     }
 

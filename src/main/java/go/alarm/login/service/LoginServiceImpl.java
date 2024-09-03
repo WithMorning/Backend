@@ -47,8 +47,11 @@ public class LoginServiceImpl implements LoginService{
             oauthUserInfo.getSocialLoginId(),
             oauthUserInfo.getEmail()
         );
+        
         RefreshToken refreshTokenObject = refreshTokenRepository.findByUserId(user.getId());
-        removeRefreshToken(refreshTokenObject.getRefreshToken()); // 기존에 존재하던 리프레시 토큰 제거
+        if (refreshTokenObject != null){ // 기존에 리프레시 토큰이 없을 때는 제외
+            removeRefreshToken(refreshTokenObject.getRefreshToken()); // 기존에 존재하던 리프레시 토큰 제거
+        }
 
         final UserTokens userTokens = jwtProvider.generateLoginToken(user.getId().toString());
         // UserTokens에서 엑세스, 리프레쉬 토큰 가져와서 유저 필드에 저장

@@ -49,6 +49,8 @@ public class LoginServiceImpl implements LoginService{
         );
         
         RefreshToken refreshTokenObject = refreshTokenRepository.findByUserId(user.getId());
+        log.warn("서비스단(/login) refreshTokenObject >>" + refreshTokenObject);
+
         if (refreshTokenObject != null){ // 기존에 리프레시 토큰이 없을 때는 제외
             removeRefreshToken(refreshTokenObject.getRefreshToken()); // 기존에 존재하던 리프레시 토큰 제거
         }

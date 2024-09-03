@@ -14,6 +14,8 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
     List<UserGroup> findAllByUser(User user);
     List<UserGroup> findAllByGroup(Group group);
 
+    UserGroup findByUserAndGroup(User user, Group group);
+
     @Modifying
     @Query("""
             UPDATE UserGroup userGroup

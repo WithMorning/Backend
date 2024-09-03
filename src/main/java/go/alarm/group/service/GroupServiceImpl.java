@@ -5,6 +5,7 @@ import static go.alarm.global.response.ResponseCode.NOT_GROUP_HOST;
 import go.alarm.global.response.exception.BadRequestException;
 import go.alarm.group.domain.Group;
 import go.alarm.group.domain.UserGroup;
+import go.alarm.group.domain.repository.UserGroupRepository;
 import go.alarm.group.dto.request.GroupJoinRequest;
 import go.alarm.user.domain.User;
 import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
@@ -26,6 +27,7 @@ public class GroupServiceImpl implements GroupService {
 
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
 
     @Override
     public Group createGroup(Long userId, GroupRequest request) {
@@ -115,6 +117,16 @@ public class GroupServiceImpl implements GroupService {
         // 그룹에 인원수가 다 찼다면 참여가 불가능한 예외 처리도 해줘야 함.
 
         return userGroup;
+    }
+
+    @Override
+    public void leaveGroup(Long userId, Long groupId) {
+
+        Group group = groupRepository.findById(groupId).get();
+        User user = userRepository.findById(userId).get();
+        UserGroup userGroup = userGroupRepository.findByUserAndGroup(user,group);
+
+        userGroupRepository.delete(userGroup);
     }
 
 }

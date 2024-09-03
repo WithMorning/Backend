@@ -98,4 +98,18 @@ public class GroupController {
         return new SuccessResponse<>(GroupConverter.joinGroup(userGroup.getGroup(), userGroup.getUser()));
     }
 
+    @DeleteMapping("/{groupId}/leave") // 테스트 해봐야 함!!!
+    @UesrOnly
+    @Operation(summary = "알람 그룹 나가기(참여자 플로우) API", description = "알람 그룹을 나갑니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "OK, 성공입니다.")
+    })
+    public SuccessResponse<Void> leaveGroup(
+        @Auth final Accessor accessor,
+        @PathVariable(name = "groupId") Long groupId) {
+
+        groupService.leaveGroup(accessor.getUserId(), groupId);
+        return new SuccessResponse<>();
+    }
+
 }

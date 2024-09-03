@@ -14,4 +14,6 @@ public interface GroupService {
     void deleteGroup(Long userId, Long groupId);
 
     UserGroup joinGroup(Long userId, GroupJoinRequest request);
+
+    void leaveGroup(Long userId, Long groupId);
 }

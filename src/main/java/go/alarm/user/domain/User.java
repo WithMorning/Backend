@@ -92,5 +92,15 @@ public class User {
         this.bedDayOfWeek = bedDayOfWeek;
     }
 
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 }

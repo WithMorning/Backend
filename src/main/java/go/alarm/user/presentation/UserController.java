@@ -5,6 +5,7 @@ import go.alarm.auth.UesrOnly;
 import go.alarm.auth.domain.Accessor;
 import go.alarm.user.domain.User;
 import go.alarm.global.response.SuccessResponse;
+import go.alarm.user.dto.request.UserProfileRequest;
 import go.alarm.user.dto.response.MyPageResponse;
 import go.alarm.user.service.UserService;
 import go.alarm.user.dto.request.UserBedTimeRequest;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -52,10 +54,22 @@ public class UserController {
     public SuccessResponse<Void> setBedTime(
         @Auth final Accessor accessor,
         @RequestBody @Valid UserBedTimeRequest request) {
-        //소셜로그인이 들어가면 위 헤더 부분이 사라지고 토큰으로 유저를 구분해야함.
 
         userService.setBedTime(accessor.getUserId(), request);
+        return new SuccessResponse<>();
+    }
 
+    @PostMapping(value = "/profile", consumes = "multipart/form-data")
+    @UesrOnly
+    @Operation(summary = "유저 프로필 설정 API", description = "유저의 프로필 사진, 닉네임을 설정합니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
+    })
+    public SuccessResponse<Void> setProfile(
+        @Auth final Accessor accessor,
+        @RequestPart @Valid UserProfileRequest request) {
+
+        userService.setProfile(accessor.getUserId(), request);
         return new SuccessResponse<>();
     }
 }

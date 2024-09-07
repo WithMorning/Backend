@@ -25,8 +25,9 @@ public enum ResponseCode {
     INVALID_REQUEST(false, 1000, "올바르지 않은 요청입니다."),
 
     NOT_FOUND_GROUP_ID(false, 1001, "요청한 ID에 해당하는 그룹이 존재하지 않습니다."),
-    NOT_FOUND_USER_ID(false, 1010, "요청한 ID에 해당하는 유저가 존재하지 않습니다."),
-    DUPLICATED_MEMBER_NICKNAME(false, 1013, "중복된 닉네임입니다."),
+    NOT_FOUND_JOIN_CODE(false, 1002, "요청한 참여 코드의 그룹이 존재하지 않습니다."),
+    DUPLICATED_JOIN_USER(false, 1003, "해당 유저는 해당 그룹에 이미 참여했습니다."),
+    EXCEED_USER_SIZE(false, 1004, "참여하려는 그룹의 인원수가 다 찼습니다."),
 
 
     EXCEED_IMAGE_CAPACITY(false, 5001, "업로드 가능한 이미지 용량을 초과했습니다."),
@@ -40,11 +41,12 @@ public enum ResponseCode {
 
     INVALID_USER(false, 8001, "존재하지 않는 유저입니다."),
     NOT_GROUP_HOST(false, 8002, "해당 유저는 방장이 아닙니다."),
+    DUPLICATED_ADMIN_USERNAME(false, 8102, "중복된 사용자 닉네임입니다."),
+    NOT_FOUND_USER_ID(false, 8104, "요청한 ID에 해당하는 유저가 존재하지 않습니다."),
+    INVALID_CURRENT_PASSWORD(false, 8105, "현재 사용중인 비밀번호가 일치하지 않습니다."),
     NULL_ADMIN_AUTHORITY(false, 8101, "잘못된 관리자 권한입니다."),
-    DUPLICATED_ADMIN_USERNAME(false, 8102, "중복된 사용자 이름입니다."),
-    NOT_FOUND_ADMIN_ID(false, 8103, "요청한 ID에 해당하는 관리자를 찾을 수 없습니다."),
-    INVALID_CURRENT_PASSWORD(false, 8104, "현재 사용중인 비밀번호가 일치하지 않습니다."),
-    INVALID_ADMIN_AUTHORITY(false, 8201, "해당 관리자 기능에 대한 접근 권한이 없습니다."),
+    NOT_FOUND_ADMIN_ID(false, 8202, "요청한 ID에 해당하는 관리자를 찾을 수 없습니다."),
+    INVALID_ADMIN_AUTHORITY(false, 8202, "해당 관리자 기능에 대한 접근 권한이 없습니다."),
 
 
     INVALID_AUTHORIZATION_CODE(false, 9001, "유효하지 않은 인증 코드입니다."),

@@ -1,5 +1,8 @@
 package go.alarm.group.service;
 
+import static go.alarm.global.response.ResponseCode.DUPLICATED_JOIN_USER;
+import static go.alarm.global.response.ResponseCode.EXCEED_USER_SIZE;
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_JOIN_CODE;
 import static go.alarm.global.response.ResponseCode.NOT_GROUP_HOST;
 
 import go.alarm.global.response.exception.BadRequestException;
@@ -102,19 +105,27 @@ public class GroupServiceImpl implements GroupService {
 
     }
 
-
-
+    /**
+     * 참여 코드로 알람 그룹에 참여합니다.
+     * */
     @Override
     public UserGroup joinGroup(Long userId, GroupJoinRequest request) {
         Group group = groupRepository.findByParticipationCode(request.getParticipationCode()); // 참여 코드로 그룹 찾기
-        // 위에서 굳이 참여 코드로 그룹을 찾을 필요가 있나? Path Variable로 넘어온 그룹 Id를 통해서 하면 안됨?
-        // 참여 코드가 Path Variable로 넘어온 그룹 Id의 참여 코드인지 검증도 해줘야 함.
-        // 참여 코드가 없을 시 예외 처리도 해줘야 함.
-        // 유저가 존재하는 지 예외 처리 해줘야 함.
+        User user = userRepository.findById(userId).get();
 
-        UserGroup userGroup = GroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree()); // 유저 그룹 생성(그룹에 유저 넣기)
+        UserGroup foundUserGroup = userGroupRepository.findByUserAndGroup(user, group);
+        Long headCount = userGroupRepository.findHeadCount(group);
+
+        if (group == null){
+            throw new BadRequestException(NOT_FOUND_JOIN_CODE);
+        } else if (foundUserGroup != null) {
+            throw new BadRequestException(DUPLICATED_JOIN_USER);
+        } else if (headCount >= 4) {
+            throw new BadRequestException(EXCEED_USER_SIZE);
+        }
+
+        UserGroup userGroup = GroupConverter.toUserGroup(user, request.getIsAgree());
         userGroup.setGroup(group);
-        // 그룹에 인원수가 다 찼다면 참여가 불가능한 예외 처리도 해줘야 함.
 
         return userGroup;
     }

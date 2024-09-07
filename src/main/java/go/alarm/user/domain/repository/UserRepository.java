@@ -15,6 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             SET user.status = 'DELETED'
             WHERE user.id = :userId
             """)
-    void deleteByUserId(@Param("userId") final Long userId);
+    void softDeleteByUserId(@Param("userId") final Long userId);
 
 }

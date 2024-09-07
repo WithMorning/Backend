@@ -108,7 +108,7 @@ public class LoginServiceImpl implements LoginService{
         User user = userRepository.findById(userId).get();
         Long dayOfWeekId = user.getBedDayOfWeek().getId();
 
-        userRepository.deleteByUserId(userId);
+        userRepository.deleteById(userId);
         wakeUpDayOfWeekRepository.deleteById(dayOfWeekId);
         userGroupRepository.deleteByUserId(userId);
         refreshTokenRepository.deleteByUserId(userId);

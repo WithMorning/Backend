@@ -19,6 +19,6 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             SET group.status = 'DELETED'
             WHERE group.id = :groupId
             """)
-    void deleteById(@Param("groupId") final Long groupId);
+    void softDeleteById(@Param("groupId") final Long groupId);
 
 }

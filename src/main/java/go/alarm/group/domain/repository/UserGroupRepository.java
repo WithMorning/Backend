@@ -13,8 +13,14 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
 
     List<UserGroup> findAllByUser(User user);
     List<UserGroup> findAllByGroup(Group group);
-
     UserGroup findByUserAndGroup(User user, Group group);
+
+    @Query("""
+            SELECT COUNT(DISTINCT ug.user)
+            FROM UserGroup ug
+            WHERE ug.group = :group
+            """)
+    Long findHeadCount(Group group); // 인원수 찾기
 
     @Modifying
     @Query("""
@@ -22,7 +28,9 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
             SET userGroup.status = 'DELETED'
             WHERE userGroup.user.id = :userId
             """)
-    void deleteByUserId(@Param("userId") final Long userId);
+    void softDeleteByUserId(@Param("userId") final Long userId);
+
+    void deleteByUserId(Long userId);
 
 
 

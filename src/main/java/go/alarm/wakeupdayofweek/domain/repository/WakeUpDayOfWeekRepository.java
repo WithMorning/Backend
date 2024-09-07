@@ -14,6 +14,6 @@ public interface WakeUpDayOfWeekRepository extends JpaRepository<WakeUpDayOfWeek
             SET wakeUpDayOfWeek.status = 'DELETED'
             WHERE wakeUpDayOfWeek.id = :dayOfWeekId
             """)
-    void deleteById(@Param("dayOfWeekId") final Long dayOfWeekId);
+    void softDeleteById(@Param("dayOfWeekId") final Long dayOfWeekId);
 
 }

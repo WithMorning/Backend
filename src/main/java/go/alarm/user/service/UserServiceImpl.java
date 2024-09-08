@@ -6,6 +6,10 @@ import static go.alarm.global.response.ResponseCode.UNMATCHED_CODE;
 
 import go.alarm.global.response.exception.SmsSendException;
 import go.alarm.global.response.exception.VerifyCodeException;
+import go.alarm.group.domain.Group;
+import go.alarm.group.domain.UserGroup;
+import go.alarm.group.domain.repository.GroupRepository;
+import go.alarm.group.domain.repository.UserGroupRepository;
 import go.alarm.image.ImageUploader;
 import go.alarm.user.dto.request.UserProfileRequest;
 import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
@@ -35,6 +39,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
+    private final GroupRepository groupRepository;
     private final WakeUpDayOfWeekRepository wakeUpDayOfWeekRepository;
     private final ImageUploader imageUploader;
     private final DefaultMessageService messageService;
@@ -153,5 +159,16 @@ public class UserServiceImpl implements UserService {
         else {
             throw new VerifyCodeException(UNMATCHED_CODE);
         }
+    }
+
+    @Override
+    public void setDisturbBanMode(Long userId, Long groupId, Boolean isDisturbBanMode) {
+        User user = userRepository.findById(userId).get();
+        Group group = groupRepository.findById(groupId).get();
+
+        UserGroup userGroup = userGroupRepository.findByUserAndGroup(user, group);
+
+        userGroup.setDisturbBanMode(isDisturbBanMode);
+
     }
 }

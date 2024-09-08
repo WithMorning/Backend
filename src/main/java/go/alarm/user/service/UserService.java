@@ -15,4 +15,6 @@ public interface UserService {
 
     void verifyCode(String phone, String code, Long userId);
 
+    void setDisturbBanMode(Long userId, Long groupId, Boolean isDisturbBanMode);
+
 }

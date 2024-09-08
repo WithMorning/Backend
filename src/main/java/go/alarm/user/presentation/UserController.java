@@ -6,6 +6,7 @@ import go.alarm.auth.domain.Accessor;
 import go.alarm.user.domain.User;
 import go.alarm.global.response.SuccessResponse;
 import go.alarm.user.dto.request.CodeVerificationRequest;
+import go.alarm.user.dto.request.DisturbBanModeRequest;
 import go.alarm.user.dto.request.PhoneSmsRequest;
 import go.alarm.user.dto.request.UserProfileRequest;
 import go.alarm.user.dto.response.MyPageResponse;
@@ -18,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -101,6 +104,22 @@ public class UserController {
         @RequestBody @Valid CodeVerificationRequest request) {
 
         userService.verifyCode(request.getPhone(), request.getCode(), accessor.getUserId());
+
+        return new SuccessResponse<>();
+    }
+
+    @PatchMapping(value = "/{groupId}/disturb")
+    @UesrOnly
+    @Operation(summary = "방해금지모드 설정 API", description = "방해금지모드를 On/Off 합니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
+    })
+    public SuccessResponse<Void> setDisturbBanMode(
+        @Auth final Accessor accessor,
+        @PathVariable(name = "groupId") Long groupId,
+        @RequestBody @Valid DisturbBanModeRequest request) {
+
+        userService.setDisturbBanMode(accessor.getUserId(), groupId, request.getIsDisturbBanMode());
 
         return new SuccessResponse<>();
     }

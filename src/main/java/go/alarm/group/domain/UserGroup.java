@@ -52,4 +52,7 @@ public class UserGroup extends BaseEntity { // UserGroup이라는 클래스명�
         group.getUserGroupList().add(this);
     }
 
+    public void setDisturbBanMode(Boolean disturbBanMode) {
+        isDisturbBanMode = disturbBanMode;
+    }
 }

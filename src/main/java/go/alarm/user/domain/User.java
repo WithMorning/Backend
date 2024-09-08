@@ -103,4 +103,8 @@ public class User {
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }

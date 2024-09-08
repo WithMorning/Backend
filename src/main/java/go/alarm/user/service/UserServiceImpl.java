@@ -22,10 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 @Slf4j
 @Service
 @Transactional
@@ -38,7 +40,9 @@ public class UserServiceImpl implements UserService {
     private final DefaultMessageService messageService;
     private final RedisTemplate<String, String> redisTemplate;
 
-    private static final long VERIFICATION_CODE_EXPIRY = 5; // 5 minutes
+    @Value("${coolsms.from.number}")
+    private String fromNumber;
+    private static final long VERIFICATION_CODE_EXPIRY = 3; // 3 minutes
 
     @Override
     public User getUser(Long userId) {
@@ -127,22 +131,27 @@ public class UserServiceImpl implements UserService {
 
     private Message setMessage(String phone, String code) {
         Message message = new Message();
-        message.setFrom("${coolsms.from.number}");
+        message.setFrom(fromNumber);
         message.setTo(phone);
-        message.setText("인증번호는 [" + code + "]입니다.");
+        message.setText("[윗모닝] 인증번호는 [" + code + "]입니다.");
 
         return message;
     }
 
     @Override
-    public void verifyCode(String phone, String code) {
+    public void verifyCode(String phone, String code, Long userId) {
+        User user = userRepository.findById(userId).get();
+
         String cachedCode = redisTemplate.opsForValue().get(phone);
+        log.warn("cachedCode >> " + cachedCode);
+        log.warn("code >> " + code);
 
         if (cachedCode != null && cachedCode.equals(code)) {
+            user.setPhone(phone);
             redisTemplate.delete(phone); // 인증 성공 시 코드 삭제
         }
-
-        throw new VerifyCodeException(UNMATCHED_CODE);
+        else {
+            throw new VerifyCodeException(UNMATCHED_CODE);
+        }
     }
-
 }

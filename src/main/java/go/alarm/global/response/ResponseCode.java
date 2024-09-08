@@ -41,9 +41,13 @@ public enum ResponseCode {
 
     INVALID_USER(false, 8001, "존재하지 않는 유저입니다."),
     NOT_GROUP_HOST(false, 8002, "해당 유저는 방장이 아닙니다."),
-    DUPLICATED_ADMIN_USERNAME(false, 8102, "중복된 사용자 닉네임입니다."),
-    NOT_FOUND_USER_ID(false, 8104, "요청한 ID에 해당하는 유저가 존재하지 않습니다."),
-    INVALID_CURRENT_PASSWORD(false, 8105, "현재 사용중인 비밀번호가 일치하지 않습니다."),
+    DUPLICATED_ADMIN_USERNAME(false, 8003, "중복된 사용자 닉네임입니다."),
+    NOT_FOUND_USER_ID(false, 8004, "요청한 ID에 해당하는 유저가 존재하지 않습니다."),
+    INVALID_CURRENT_PASSWORD(false, 8005, "현재 사용중인 비밀번호가 일치하지 않습니다."),
+    FAIL_SEND_SMS(false, 8006, "휴대폰 본인 인증 SMS 발송을 실패했습니다."),
+    ERROR_SEND_SMS(false, 8007, "휴대폰 본인 인증 SMS 발송 중 오류가 발생했습니다."),
+    UNMATCHED_CODE(false, 8008, "인증번호가 일치하지 않습니다."),
+
     NULL_ADMIN_AUTHORITY(false, 8101, "잘못된 관리자 권한입니다."),
     NOT_FOUND_ADMIN_ID(false, 8202, "요청한 ID에 해당하는 관리자를 찾을 수 없습니다."),
     INVALID_ADMIN_AUTHORITY(false, 8202, "해당 관리자 기능에 대한 접근 권한이 없습니다."),

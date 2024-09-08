@@ -13,6 +13,6 @@ public interface UserService {
 
     void sendVerificationCode(String phone);
 
-    void verifyCode(String phone, String code);
+    void verifyCode(String phone, String code, Long userId);
 
 }

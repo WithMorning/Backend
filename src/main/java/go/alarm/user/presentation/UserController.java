@@ -100,7 +100,7 @@ public class UserController {
         @Auth final Accessor accessor,
         @RequestBody @Valid CodeVerificationRequest request) {
 
-        userService.verifyCode(request.getPhone(), request.getCode());
+        userService.verifyCode(request.getPhone(), request.getCode(), accessor.getUserId());
 
         return new SuccessResponse<>();
     }

@@ -1,5 +1,11 @@
 package go.alarm.user.service;
 
+import static go.alarm.global.response.ResponseCode.ERROR_SEND_SMS;
+import static go.alarm.global.response.ResponseCode.FAIL_SEND_SMS;
+import static go.alarm.global.response.ResponseCode.UNMATCHED_CODE;
+
+import go.alarm.global.response.exception.SmsSendException;
+import go.alarm.global.response.exception.VerifyCodeException;
 import go.alarm.image.ImageUploader;
 import go.alarm.user.dto.request.UserProfileRequest;
 import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
@@ -8,9 +14,15 @@ import go.alarm.wakeupdayofweek.domain.repository.WakeUpDayOfWeekRepository;
 import go.alarm.user.domain.repository.UserRepository;
 import go.alarm.wakeupdayofweek.presentation.WakeUpDayOfWeekConverter;
 import go.alarm.user.dto.request.UserBedTimeRequest;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.service.DefaultMessageService;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +35,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final WakeUpDayOfWeekRepository wakeUpDayOfWeekRepository;
     private final ImageUploader imageUploader;
+    private final DefaultMessageService messageService;
+    private final RedisTemplate<String, String> redisTemplate;
 
+    private static final long VERIFICATION_CODE_EXPIRY = 5; // 5 minutes
 
     @Override
     public User getUser(Long userId) {
@@ -85,6 +100,49 @@ public class UserServiceImpl implements UserService {
                 imageUploader.generateUserProfileKeyName(uuid), image);
             user.setImageURL(imageUrl);
         }
+    }
+
+    @Override
+    public void sendVerificationCode(String phone) {
+        String code = generateRandomCode();
+        Message message = setMessage(phone, code);
+
+        redisTemplate.opsForValue().set(phone, code, VERIFICATION_CODE_EXPIRY, TimeUnit.MINUTES);
+
+        try {
+            messageService.send(message);
+        } catch (NurigoMessageNotReceivedException exception) { // 발송 실패 처리
+            log.error("(NurigoMessageNotReceivedException) 휴대폰 문자 전송 에러 상세 내용: " + exception.getMessage());
+            throw new SmsSendException(FAIL_SEND_SMS);
+
+        } catch (Exception exception) {
+            log.error("(Exception) 휴대폰 문자 전송 에러 상세 내용: " + exception.getMessage());
+            throw new SmsSendException(ERROR_SEND_SMS);
+        }
+    }
+
+    private String generateRandomCode() {
+        return String.format("%06d", new Random().nextInt(999999));
+    }
+
+    private Message setMessage(String phone, String code) {
+        Message message = new Message();
+        message.setFrom("${coolsms.from.number}");
+        message.setTo(phone);
+        message.setText("인증번호는 [" + code + "]입니다.");
+
+        return message;
+    }
+
+    @Override
+    public void verifyCode(String phone, String code) {
+        String cachedCode = redisTemplate.opsForValue().get(phone);
+
+        if (cachedCode != null && cachedCode.equals(code)) {
+            redisTemplate.delete(phone); // 인증 성공 시 코드 삭제
+        }
+
+        throw new VerifyCodeException(UNMATCHED_CODE);
     }
 
 }

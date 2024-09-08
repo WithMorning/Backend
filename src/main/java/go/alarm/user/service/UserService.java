@@ -11,4 +11,8 @@ public interface UserService {
 
     void setProfile(Long userId, UserProfileRequest request);
 
+    void sendVerificationCode(String phone);
+
+    void verifyCode(String phone, String code);
+
 }

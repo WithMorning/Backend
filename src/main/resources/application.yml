@@ -26,12 +26,14 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-  # JWT 설정 추가
+# JWT 설정 추가
 security:
   jwt:
     secret-key: ${JWT_SECRET}
     access-expiration-time: 604800000 # 7일
     refresh-expiration-time: 604800000  # 7일
+    
+# 소셜 로그인   
 oauth2:
   provider:
     apple:
@@ -47,10 +49,11 @@ oauth2:
         id: ${KEY_ID}
         path: file:./AuthKey_${KEY_ID}.p8
 
-
+# 알람
 fcm:
   service-account-file: file:./firebase-service-account.json
 
+# S3
 aws:
   s3:
     bucket: with-morning
@@ -63,3 +66,10 @@ aws:
     accessKey: ${S3_ACCESS_KEY}
     secretKey: ${S3_SECRET_KEY}
 
+# 문자 메시징
+coolsms:
+  api:
+    key: ${COOLSMS_KEY}
+    secret: ${COOLSMS_SECRET}
+  from:
+    number: ${FROM_NUMBER}

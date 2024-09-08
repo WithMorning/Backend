@@ -5,6 +5,8 @@ import go.alarm.auth.UesrOnly;
 import go.alarm.auth.domain.Accessor;
 import go.alarm.user.domain.User;
 import go.alarm.global.response.SuccessResponse;
+import go.alarm.user.dto.request.CodeVerificationRequest;
+import go.alarm.user.dto.request.PhoneSmsRequest;
 import go.alarm.user.dto.request.UserProfileRequest;
 import go.alarm.user.dto.response.MyPageResponse;
 import go.alarm.user.service.UserService;
@@ -72,4 +74,36 @@ public class UserController {
         userService.setProfile(accessor.getUserId(), request);
         return new SuccessResponse<>();
     }
+
+    @PostMapping(value = "/send-code")
+    @UesrOnly
+    @Operation(summary = "휴대폰 문자 인증 요청 API", description = "휴대폰 인증 문자를 보냅니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
+    })
+    public SuccessResponse<Void> sendVerificationCode(
+        @Auth final Accessor accessor,
+        @RequestBody @Valid PhoneSmsRequest request) {
+
+        userService.sendVerificationCode(request.getPhone());
+
+        return new SuccessResponse<>();
+    }
+
+    @PostMapping(value = "/verify-code")
+    @UesrOnly
+    @Operation(summary = "휴대폰 문자 인증 확인 API", description = "휴대폰 인증 문자를 확인합니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
+    })
+    public SuccessResponse<Void> verifyCode(
+        @Auth final Accessor accessor,
+        @RequestBody @Valid CodeVerificationRequest request) {
+
+        userService.verifyCode(request.getPhone(), request.getCode());
+
+        return new SuccessResponse<>();
+    }
+
+
 }

@@ -11,14 +11,20 @@
    <img width="210px;" src="https://github.com/user-attachments/assets/d4fc461f-b6db-41c5-b3de-6694f7868d3b"/>
 </p>
 
-## 🖥 서비스 화면
+## 서비스 화면 🖥
 <p align="middle" >
   <img width="210px;" src="https://github.com/user-attachments/assets/aeabd03a-aee0-429e-9313-30484d9df25f"/>
    <img width="210px;" src="https://github.com/user-attachments/assets/a4655b1a-8a02-4984-aed6-4965d6192600"/>
 </p>
 
+## 주요 기능 ✨
 
+#### 1. 애플 소셜로그인
+#### 2. CoolSMS를 활용한 휴대폰 문자 인증
+#### 3. FCM과 Scheduler를 활용한 기상 알람 전송
+#### 4. S3를 활용한 프로필 이미지 등록
 
+</br>
 
 ## 🛠️ 프로젝트 아키텍처
 ![image](https://github.com/user-attachments/assets/ad9407e6-b72e-4789-a797-e7148885def6)

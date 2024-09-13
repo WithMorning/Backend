@@ -1,9 +1,19 @@
-# ALARM BackEnd
+<p align="middle" >
+  <img width="200px;" src="https://github.com/user-attachments/assets/873d07a7-f9b4-4967-9c9e-662d8dda5820"/>
+</p>
+<h1 align="middle">윗모닝</h1>
+<p align="middle">친구랑 함께하는 기상 알람 앱 윗모닝입니다!</p>
+
+## 프로젝트 소개 📝
+<p align="middle" >
+  <img width="300px;" src="https://github.com/user-attachments/assets/a1c30d93-0289-4441-8134-275ba14f18b3"/>
+   <img width="300px;" src="https://github.com/user-attachments/assets/c8a7564e-3f36-4a3a-afc2-064ac55d6869"/>
+   <img width="300px;" src="https://github.com/user-attachments/assets/a379b1a4-5b05-482e-80c4-b6d8b7223aba"/>
+</p>
+
 
 
 ## 🛠️ 프로젝트 아키텍처
-
-### 👷‍♂️ 인프라 아키텍쳐
 ![image](https://github.com/user-attachments/assets/ad9407e6-b72e-4789-a797-e7148885def6)
 
 

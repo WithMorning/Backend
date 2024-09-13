@@ -6,9 +6,9 @@
 
 ## 프로젝트 소개 📝
 <p align="middle" >
-  <img width="300px;" src="https://github.com/user-attachments/assets/a1c30d93-0289-4441-8134-275ba14f18b3"/>
-   <img width="300px;" src="https://github.com/user-attachments/assets/c8a7564e-3f36-4a3a-afc2-064ac55d6869"/>
-   <img width="300px;" src="https://github.com/user-attachments/assets/a379b1a4-5b05-482e-80c4-b6d8b7223aba"/>
+  <img width="200px;" src="https://github.com/user-attachments/assets/a1c30d93-0289-4441-8134-275ba14f18b3"/>
+   <img width="200px;" src="https://github.com/user-attachments/assets/c8a7564e-3f36-4a3a-afc2-064ac55d6869"/>
+   <img width="200px;" src="https://github.com/user-attachments/assets/a379b1a4-5b05-482e-80c4-b6d8b7223aba"/>
 </p>
 
 

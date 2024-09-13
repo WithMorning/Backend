@@ -1,9 +1,32 @@
-# ALARM BackEnd
+<p align="middle" >
+  <img width="200px;" src="https://github.com/user-attachments/assets/873d07a7-f9b4-4967-9c9e-662d8dda5820"/>
+</p>
+<h1 align="middle">윗모닝</h1>
+<p align="middle">친구랑 함께하는 기상 알람 앱 윗모닝입니다!</p>
 
+## 프로젝트 소개 📝
+<p align="middle" >
+  <img width="210px;" src="https://github.com/user-attachments/assets/ac3badd2-6e6a-4316-80e3-f5dd97435b3e"/>
+   <img width="210px;" src="https://github.com/user-attachments/assets/033232e8-ec74-4134-9b32-f0f7e4b84f8d"/>
+   <img width="210px;" src="https://github.com/user-attachments/assets/d4fc461f-b6db-41c5-b3de-6694f7868d3b"/>
+</p>
+
+## 서비스 화면 🖥
+<p align="middle" >
+  <img width="210px;" src="https://github.com/user-attachments/assets/aeabd03a-aee0-429e-9313-30484d9df25f"/>
+   <img width="210px;" src="https://github.com/user-attachments/assets/a4655b1a-8a02-4984-aed6-4965d6192600"/>
+</p>
+
+## 주요 기능 ✨
+
+#### 1. 애플 소셜로그인
+#### 2. CoolSMS를 활용한 휴대폰 문자 인증
+#### 3. FCM과 Scheduler를 활용한 기상 알람 전송
+#### 4. S3를 활용한 프로필 이미지 등록
+
+</br>
 
 ## 🛠️ 프로젝트 아키텍처
-
-### 👷‍♂️ 인프라 아키텍쳐
 ![image](https://github.com/user-attachments/assets/ad9407e6-b72e-4789-a797-e7148885def6)
 
 

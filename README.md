@@ -30,12 +30,22 @@
 ![image](https://github.com/user-attachments/assets/ad9407e6-b72e-4789-a797-e7148885def6)
 
 
+## 서버 담당자 🧑‍💻
+<div align=center>
 
-## 📠 Convention
+| 김진형 | 
+|:---:|
+| <a href="https://github.com/Muokok"> <img src="https://avatars.githubusercontent.com/u/131960164?v=4" width=200px alt="_"/> </a> |
+| **Server** |
+
+</div>
+
+
+## Convention 📠 
 
 커밋 컨벤션을 지키는 이유는 추후 팀 프로젝트를 진행 시 원활한 협업을 하기 위한 연습입니다.
 ___
-### 🤝 Branch Naming Convention
+### Branch Naming Convention 🤝
 
 | 머릿말  | 설명                               |
 | ------- | ---------------------------------- |
@@ -84,7 +94,7 @@ master(main) ── develop ── feature
 </div>
 </details>
 
-### 🤝 Commit Convention
+### Commit Convention 🤝
 
 | 머릿말           | 설명                                                                      |
 | ---------------- | ------------------------------------------------------------------------- |

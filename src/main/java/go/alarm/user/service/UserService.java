@@ -17,4 +17,6 @@ public interface UserService {
 
     void setDisturbBanMode(Long userId, Long groupId, Boolean isDisturbBanMode);
 
+    void setWakeStatus(Long userId, Long groupId);
+
 }

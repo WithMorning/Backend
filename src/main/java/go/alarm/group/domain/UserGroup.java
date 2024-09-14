@@ -55,4 +55,8 @@ public class UserGroup extends BaseEntity { // UserGroup이라는 클래스명�
     public void setDisturbBanMode(Boolean disturbBanMode) {
         isDisturbBanMode = disturbBanMode;
     }
+
+    public void setWakeup(Boolean wakeup) {
+        isWakeup = wakeup;
+    }
 }

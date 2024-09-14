@@ -171,4 +171,14 @@ public class UserServiceImpl implements UserService {
         userGroup.setDisturbBanMode(isDisturbBanMode);
 
     }
+
+    @Override
+    public void setWakeStatus(Long userId, Long groupId) {
+        User user = userRepository.findById(userId).get();
+        Group group = groupRepository.findById(groupId).get();
+
+        UserGroup userGroup = userGroupRepository.findByUserAndGroup(user, group);
+
+        userGroup.setWakeup(true);
+    }
 }

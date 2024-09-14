@@ -110,7 +110,7 @@ public class UserController {
 
     @PatchMapping(value = "/{groupId}/disturb")
     @UesrOnly
-    @Operation(summary = "방해금지모드 설정 API", description = "방해금지모드를 On/Off 합니다.")
+    @Operation(summary = "방해금지모드 설정 API", description = "특정 그룹의 방해금지모드를 On/Off 합니다.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
     })
@@ -120,6 +120,21 @@ public class UserController {
         @RequestBody @Valid DisturbBanModeRequest request) {
 
         userService.setDisturbBanMode(accessor.getUserId(), groupId, request.getIsDisturbBanMode());
+
+        return new SuccessResponse<>();
+    }
+
+    @PatchMapping(value = "/{groupId}/wake-status")
+    @UesrOnly
+    @Operation(summary = "기상 상태로 변경 API", description = "특정 그룹의 유저 상태를 기상 상태로 변경합니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "요청에 성공하였습니다.")
+    })
+    public SuccessResponse<Void> setWakeStatus(
+        @Auth final Accessor accessor,
+        @PathVariable(name = "groupId") Long groupId) {
+
+        userService.setWakeStatus(accessor.getUserId(), groupId);
 
         return new SuccessResponse<>();
     }

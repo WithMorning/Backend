@@ -93,21 +93,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setProfile(Long userId, UserProfileRequest request) {
+    public void setProfile(Long userId, UserProfileRequest request, MultipartFile image) {
 
         User user = userRepository.findById(userId).get();
 
         user.setFcmToken(request.getFcmToken());
         user.setNickname(request.getNickname());
 
-        MultipartFile image = request.getImage();
         log.warn("image는 >> " + image);
-
 
         if (image != null){
             String uuid = UUID.randomUUID().toString();
-            String imageUrl = imageUploader.uploadFile(
-                imageUploader.generateUserProfileKeyName(uuid), image);
+            String imageUrl = imageUploader.uploadFile(imageUploader.generateUserProfileKeyName(uuid), image);
             user.setImageURL(imageUrl);
         }
     }

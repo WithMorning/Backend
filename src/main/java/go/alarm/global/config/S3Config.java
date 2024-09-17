@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,15 +19,20 @@ public class S3Config {
 
     private AWSCredentials awsCredentials;
 
-    private String accessKey = "${aws.credentials.accessKey}";
+    @Value("${aws.credentials.accessKey}")
+    private String accessKey;
 
-    private String secretKey = "${aws.credentials.secretKey}";
+    @Value("${aws.credentials.secretKey}")
+    private String secretKey;
 
-    private String region = "${aws.region.static}";
+    @Value("${aws.region.static}")
+    private String region;
 
-    private String bucket = "${aws.s3.bucket}";
+    @Value("${aws.s3.bucket}")
+    private String bucket;
 
-    private String userProfilePath = "${aws.s3.path}";
+    @Value("${aws.s3.path}")
+    private String userProfilePath;
 
 
     @PostConstruct

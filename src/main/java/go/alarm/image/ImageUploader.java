@@ -22,6 +22,7 @@ public class ImageUploader {
 
     public String uploadFile(String keyName, MultipartFile file){
         ObjectMetadata metadata = new ObjectMetadata(); // 추가적인 정보를 담아줌
+        metadata.setContentType("image/jpeg");
         metadata.setContentLength(file.getSize());
 
         log.warn("metadata(imageUploader) >> " + metadata);

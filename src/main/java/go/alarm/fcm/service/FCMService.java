@@ -8,5 +8,6 @@ public interface FCMService {
 
     public void sendAlarms();
     public List<User> sendAlarmsTest();
+    void sendBedTimeAlarms();
 
 }

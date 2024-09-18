@@ -12,6 +12,7 @@ public class HomeResponse {
     @Getter
     public static class HomeDTO{
         private String connectorProfileURL; // 접속자의 프로필 이미지 URL
+        private String connectorNickname;
         private List<GroupDTO> groupList;
         private Integer listSize;
     }
@@ -20,12 +21,14 @@ public class HomeResponse {
     @Getter
     public static class GroupDTO {
         private Long groupId;
+        private Boolean isDisturbBanGroup;
         private String name;
         @JsonFormat(pattern = "HH:mm")
         private LocalTime wakeupTime;
         private List<String> dayOfWeekList;
         private List<UserDTO> userList;
         private String memo;
+        private String participationCode;
     }
 
     @Builder
@@ -35,6 +38,7 @@ public class HomeResponse {
         private String imageURL;
         private String nickname;
         private Boolean isWakeup;
+        private Boolean isAgree;
         private Boolean isDisturbBanMode;
         private String phone;
     }

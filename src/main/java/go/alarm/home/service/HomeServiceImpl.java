@@ -13,6 +13,7 @@ import go.alarm.home.dto.response.HomeResponse;
 import go.alarm.home.dto.response.HomeResponse.GroupDTO;
 import go.alarm.home.dto.response.HomeResponse.HomeDTO;
 import go.alarm.home.dto.response.HomeResponse.UserDTO;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +37,15 @@ public class HomeServiceImpl implements HomeService {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_ID));
 
-        String connectorProfileURL = user.getImageURL();
         List<Group> groupList = getGroupListByUserId(userId);
-        List<HomeResponse.GroupDTO> groupDTOList = groupList.stream()
-            .map(this::getGroupDTOWithUsers)
-            .collect(Collectors.toList());
+        List<HomeResponse.GroupDTO> groupDTOList = new ArrayList<>();
 
-        return HomeConverter.homeDTO(connectorProfileURL, groupDTOList);
+        for (Group group : groupList) {
+            HomeResponse.GroupDTO groupDTO = getGroupDTOWithUsers(group, user);
+            groupDTOList.add(groupDTO);
+        }
+
+        return HomeConverter.homeDTO(user, groupDTOList);
     }
 
     /**
@@ -65,10 +68,11 @@ public class HomeServiceImpl implements HomeService {
      * 그룹과 그룹에 속한 유저 리스트를 반환합니다.
      * */
     @Override
-    public GroupDTO getGroupDTOWithUsers(Group group) {
+    public GroupDTO getGroupDTOWithUsers(Group group, User user) {
+        UserGroup userGroup = userGroupRepository.findByUserAndGroup(user, group);
 
         List<UserDTO> userDTOList = getUserDTOListByGroup(group);
-        return HomeConverter.groupDTO(group, userDTOList);
+        return HomeConverter.groupDTO(group, userGroup, userDTOList);
     }
 
 

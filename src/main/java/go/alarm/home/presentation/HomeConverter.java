@@ -11,24 +11,27 @@ import java.util.List;
 
 public class HomeConverter {
 
-    public static HomeResponse.HomeDTO homeDTO(String connectorProfileURL, List<HomeResponse.GroupDTO> groupDTOList) {
+    public static HomeResponse.HomeDTO homeDTO(User user, List<HomeResponse.GroupDTO> groupDTOList) {
         return HomeResponse.HomeDTO.builder()
-            .connectorProfileURL(connectorProfileURL)
+            .connectorProfileURL(user.getImageURL())
+            .connectorNickname(user.getNickname())
             .groupList(groupDTOList)
             .listSize(groupDTOList.size())
             .build();
     }
 
-    public static HomeResponse.GroupDTO groupDTO(Group group, List<HomeResponse.UserDTO> userDTOList) {
+    public static HomeResponse.GroupDTO groupDTO(Group group, UserGroup userGroup, List<HomeResponse.UserDTO> userDTOList) {
         List<String> dayOfWeekList = getDayOfWeekList(group.getWakeUpDayOfWeek());
 
         return HomeResponse.GroupDTO.builder()
             .groupId(group.getId())
+            .isDisturbBanGroup(userGroup.getIsDisturbBanMode())
             .name(group.getName())
             .wakeupTime(group.getWakeupTime())
             .dayOfWeekList(dayOfWeekList)
             .userList(userDTOList)
             .memo(group.getMemo())
+            .participationCode(group.getParticipationCode())
             .build();
     }
 
@@ -38,6 +41,7 @@ public class HomeConverter {
             .imageURL(user.getImageURL())
             .nickname(user.getNickname())
             .isWakeup(userGroup.getIsWakeup())
+            .isAgree(userGroup.getIsAgree())
             .isDisturbBanMode(userGroup.getIsDisturbBanMode())
             .phone(user.getPhone())
             .build();

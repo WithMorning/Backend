@@ -127,6 +127,29 @@ public class FCMServiceImpl implements FCMService{
     }
 
     /**
+     * 콕 찌르기를 합니다.
+     */
+    @Override
+    public void prick(Long senderId, Long receiverId) {
+        User sender = userRepository.findById(senderId).get();
+        User receiver = userRepository.findById(receiverId).get();
+
+        LocalTime now = LocalTime.now().withNano(0);
+
+        try {
+            sendNotification(
+                receiver.getFcmToken(),
+                "콕 찌르기",
+                sender.getNickname() + "이/가" + receiver.getNickname() + "을/를" + "콕 찔렀어요!! 현재 시각: " + now
+            );
+        } catch (FirebaseMessagingException e) {
+            log.warn("유저" + receiver.getNickname() + "에게 콕 찌르기를 실패했습니다.");
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * FCM으로 알림을 보내줍니다.
      */
     private void sendNotification(String token, String title, String body) throws FirebaseMessagingException {

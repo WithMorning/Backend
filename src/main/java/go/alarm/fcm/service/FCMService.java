@@ -10,4 +10,6 @@ public interface FCMService {
     public List<User> sendAlarmsTest();
     void sendBedTimeAlarms();
 
+    void prick(Long senderId, Long receiverId);
+
 }

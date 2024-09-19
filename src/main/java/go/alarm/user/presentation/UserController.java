@@ -3,11 +3,13 @@ package go.alarm.user.presentation;
 import go.alarm.auth.Auth;
 import go.alarm.auth.UesrOnly;
 import go.alarm.auth.domain.Accessor;
+import go.alarm.fcm.service.FCMService;
 import go.alarm.user.domain.User;
 import go.alarm.global.response.SuccessResponse;
 import go.alarm.user.dto.request.CodeVerificationRequest;
 import go.alarm.user.dto.request.DisturbBanModeRequest;
 import go.alarm.user.dto.request.PhoneSmsRequest;
+import go.alarm.user.dto.request.UserPrickRequest;
 import go.alarm.user.dto.request.UserProfileRequest;
 import go.alarm.user.dto.response.MyPageResponse;
 import go.alarm.user.service.UserService;
@@ -36,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
 
     private final UserService userService;
+    private final FCMService fcmService;
 
     @GetMapping("/mypage")
     @UesrOnly
@@ -138,6 +141,21 @@ public class UserController {
         @PathVariable(name = "groupId") Long groupId) {
 
         userService.setWakeStatus(accessor.getUserId(), groupId);
+
+        return new SuccessResponse<>();
+    }
+
+    @PostMapping("/prick")
+    @UesrOnly
+    @Operation(summary = "콬 찌르기 API", description = "특정 유저를 콕 찌릅니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK, 성공입니다.")
+    })
+    public SuccessResponse<Void> prick(
+        @Auth final Accessor accessor,
+        @RequestBody @Valid UserPrickRequest request) {
+
+        fcmService.prick(accessor.getUserId(), request.getUserId());
 
         return new SuccessResponse<>();
     }

@@ -107,6 +107,9 @@ public class UserServiceImpl implements UserService {
             String imageUrl = imageUploader.uploadFile(imageUploader.generateUserProfileKeyName(uuid), image);
             user.setImageURL(imageUrl);
         }
+        else {
+            user.setImageURL(null);
+        }
     }
 
     @Override

@@ -2,8 +2,10 @@ package go.alarm.user.service;
 
 import static go.alarm.global.response.ResponseCode.ERROR_SEND_SMS;
 import static go.alarm.global.response.ResponseCode.FAIL_SEND_SMS;
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_GROUP_ID;
 import static go.alarm.global.response.ResponseCode.UNMATCHED_CODE;
 
+import go.alarm.global.response.exception.BadRequestException;
 import go.alarm.global.response.exception.SmsSendException;
 import go.alarm.global.response.exception.VerifyCodeException;
 import go.alarm.group.domain.Group;
@@ -167,9 +169,12 @@ public class UserServiceImpl implements UserService {
         Group group = groupRepository.findById(groupId).get();
 
         UserGroup userGroup = userGroupRepository.findByUserAndGroup(user, group);
-
-        userGroup.setDisturbBanMode(isDisturbBanMode);
-
+        if (userGroup != null){
+            userGroup.setDisturbBanMode(isDisturbBanMode);
+        }
+        else {
+            throw new BadRequestException(NOT_FOUND_GROUP_ID);
+        }
     }
 
     @Override

@@ -58,7 +58,7 @@ public class HomeServiceImpl implements HomeService {
             .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_ID));
         // 모각 깃허브 보면 .orElseThrow(() -> new UserException(ErrorCode.NOT_EXIST_JOB)); 이런 식으로 예외처리함
 
-        List<UserGroup> userGroupList = userGroupRepository.findAllByUser(user);
+        List<UserGroup> userGroupList = userGroupRepository.findAllByUserOrderByCreatedAtAsc(user);
         return userGroupList.stream()
             .map(UserGroup::getGroup)
             .collect(Collectors.toList());

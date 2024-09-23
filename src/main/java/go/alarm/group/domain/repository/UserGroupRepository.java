@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
 
-    List<UserGroup> findAllByUser(User user);
+    List<UserGroup> findAllByUserOrderByCreatedAtAsc(User user);
     List<UserGroup> findAllByGroup(Group group);
     UserGroup findByUserAndGroup(User user, Group group);
 

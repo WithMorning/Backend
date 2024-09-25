@@ -59,4 +59,8 @@ public class UserGroup extends BaseEntity { // UserGroup이라는 클래스명�
     public void setWakeup(Boolean wakeup) {
         isWakeup = wakeup;
     }
+
+    public void setAgree(Boolean agree) {
+        isAgree = agree;
+    }
 }

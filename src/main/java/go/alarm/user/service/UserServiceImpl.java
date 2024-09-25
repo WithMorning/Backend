@@ -186,4 +186,14 @@ public class UserServiceImpl implements UserService {
 
         userGroup.setWakeup(true);
     }
+
+    @Override
+    public void setPhoneAgree(Long userId, Long groupId, Boolean isAgree) {
+        User user = userRepository.findById(userId).get();
+        Group group = groupRepository.findById(groupId).get();
+
+        UserGroup userGroup = userGroupRepository.findByUserAndGroup(user, group);
+
+        userGroup.setAgree(isAgree);
+    }
 }

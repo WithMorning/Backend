@@ -20,4 +20,6 @@ public interface UserService {
 
     void setWakeStatus(Long userId, Long groupId);
 
+    void setPhoneAgree(Long userId, Long groupId, Boolean isAgree);
+
 }

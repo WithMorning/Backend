@@ -9,6 +9,7 @@ import go.alarm.global.response.SuccessResponse;
 import go.alarm.user.dto.request.CodeVerificationRequest;
 import go.alarm.user.dto.request.DisturbBanModeRequest;
 import go.alarm.user.dto.request.PhoneSmsRequest;
+import go.alarm.user.dto.request.UserPhoneAgreeRequest;
 import go.alarm.user.dto.request.UserPrickRequest;
 import go.alarm.user.dto.request.UserProfileRequest;
 import go.alarm.user.dto.response.MyPageResponse;
@@ -156,6 +157,22 @@ public class UserController {
         @RequestBody @Valid UserPrickRequest request) {
 
         fcmService.prick(accessor.getUserId(), request.getUserId());
+
+        return new SuccessResponse<>();
+    }
+
+    @PatchMapping("/{groupId}/phone-agree")
+    @UesrOnly
+    @Operation(summary = "콬 찌르기 API", description = "특정 유저를 콕 찌릅니다.")
+    @ApiResponses({
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK, 성공입니다.")
+    })
+    public SuccessResponse<Void> setPhoneAgree(
+        @Auth final Accessor accessor,
+        @PathVariable(name = "groupId") Long groupId,
+        @RequestBody @Valid UserPhoneAgreeRequest request) {
+
+        userService.setPhoneAgree(accessor.getUserId(), groupId, request.getIsAgree());
 
         return new SuccessResponse<>();
     }

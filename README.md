@@ -1,8 +1,11 @@
 <p align="middle" >
   <img width="200px;" src="https://github.com/user-attachments/assets/873d07a7-f9b4-4967-9c9e-662d8dda5820"/>
 </p>
-<h1 align="middle">윗모닝</h1>
-<p align="middle">친구랑 함께하는 기상 알람 앱 윗모닝입니다!</p>
+<h1 align="middle">친구와 함께 하는 알람앱 윗모닝!</h1>
+<p align="middle">10분만.. 10분만.. 하다가 2시간이 지나 일어난 적이 있나요?</p>
+<p align="middle">친구와 구성된 팀 안에서 전화나 푸시알림을 통해 친구를 깨워보세요!</p>
+<p align="middle">메모에 벌칙을 정해 모임여비를 모아보세요.</p>
+<p align="middle">모두가 일어나지 않았다면... so sad.. 모임여비가 3배가 되겠네요!</p>
 
 ## 프로젝트 소개 📝
 <p align="middle" >

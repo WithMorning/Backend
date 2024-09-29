@@ -20,7 +20,7 @@ public class SchedulerConfig {
     * "0 0 9 * * MON-FRI": 평일 오전 9시에 실행
     * */
 
-    @Scheduled(cron = "0 * * * * *") // 매분 실행
+    @Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
     public void scheduleAlarms() {
         fcmService.sendAlarms();
         fcmService.sendBedTimeAlarms();

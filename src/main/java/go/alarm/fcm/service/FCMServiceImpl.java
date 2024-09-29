@@ -14,7 +14,6 @@ import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -99,31 +98,22 @@ public class FCMServiceImpl implements FCMService{
      * 알람을 테스트함과 동시에 어떤 유저에게 알람을 보냈는지 유저 리스트를 반환합니다.
      */
     @Override
-    public List<User> sendAlarmsTest() {
-        // DB에 groupId가 존재하는지 꼭 확인해줘야 함.(여기선 groupId = 1)
-        Group group = groupRepository.findById(Long.valueOf(1)).get();
-        ArrayList<User> userList = new ArrayList<>();
+    public User sendAlarmsTest(Long userId) {
+        User user = userRepository.findById(userId).get();
 
-        List<UserGroup> userGroups = userGroupRepository.findAllByGroup(group);
-        for (UserGroup userGroup : userGroups) {
-            if (!userGroup.getIsDisturbBanMode()) {
-                User user = userGroup.getUser();
-                userList.add(user); // 어떤 유저에게 알림을 보냈는지 리스트에 담는다.
-
-                try {
-                    sendNotification(
-                        user.getFcmToken(),
-                        "Test Alarm",
-                        "It's just Test. Don't Worry"
-                    );
-                } catch (FirebaseMessagingException e) {
-                    // 로그 기록 또는 에러 처리
-                    System.err.println("Failed to send notification to user: " + user.getNickname());
-                    e.printStackTrace();
-                }
-            }
+        try {
+            sendNotification(
+                user.getFcmToken(),
+                "Test Alarm",
+                "It's just Test. Don't Worry"
+            );
+        } catch (FirebaseMessagingException e) {
+            // 로그 기록 또는 에러 처리
+            System.err.println("Failed to send notification to user: " + user.getNickname());
+            e.printStackTrace();
         }
-        return userList;
+
+        return user;
     }
 
     /**

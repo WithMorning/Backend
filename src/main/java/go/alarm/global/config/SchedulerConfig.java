@@ -15,12 +15,13 @@ public class SchedulerConfig {
     }
 
     /*
+    * "0 * * * * *": 매 분에 실행
     * "0 0 * * * *": 매 시간 정각에 실행
     * "0 0 9 * * *": 매일 오전 9시에 실행
     * "0 0 9 * * MON-FRI": 평일 오전 9시에 실행
     * */
 
-    @Scheduled(cron = "0 0 * * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 * * * * *")
     public void scheduleAlarms() {
         fcmService.sendAlarms();
         fcmService.sendBedTimeAlarms();

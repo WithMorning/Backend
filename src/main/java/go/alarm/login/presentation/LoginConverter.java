@@ -11,6 +11,7 @@ public class LoginConverter {
             .socialLoginId(socialLoginId)
             .email(email)
             .status(UserState.ACTIVE)
+            .isCertify(true)
             .build();
     }
 

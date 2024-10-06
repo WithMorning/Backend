@@ -41,7 +41,6 @@ public class LoginController {
         final HttpServletResponse response
     ) {
         final UserTokens userTokens = loginService.login(provider, request.getCode());
-        // userTokens의 필드 -> refreshToken, accessToken
         log.warn("컨트롤러단(/login) 리프레시 토큰 >>" + userTokens.getRefreshToken());
         log.warn("컨트롤러단(/login) 엑세스 토큰 >>" + userTokens.getAccessToken());
 

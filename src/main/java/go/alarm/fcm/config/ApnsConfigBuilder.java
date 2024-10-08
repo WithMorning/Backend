@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 /**
  * FCM을 사용하면서도 iOS 디바이스에 특화된 APNS(Apple Push Notification Service) 설정을 적용하기 위한 Config 파일
  * */
-@Configuration
 public class ApnsConfigBuilder {
 
     /**
@@ -19,14 +18,10 @@ public class ApnsConfigBuilder {
      * @return ApnsConfig 객체
      */
     public static ApnsConfig buildApnsConfig(String sound) {
-        Map<String, Object> apnsPayload = new HashMap<>();
-        Map<String, Object> aps = new HashMap<>(); // 'aps'는 APNS의 핵심 구성 요소
-        aps.put("sound", sound);
-        apnsPayload.put("aps", aps);
-
         return ApnsConfig.builder()
-            .setAps(Aps.builder().setSound(sound).build())
-            .putAllCustomData(apnsPayload)
+            .setAps(Aps.builder()
+                .setSound(sound)
+                .build())
             .build();
     }
 }

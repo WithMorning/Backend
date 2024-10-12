@@ -18,6 +18,7 @@ import go.alarm.login.domain.repository.RefreshTokenRepository;
 import go.alarm.login.infrastructure.BearerAuthorizationExtractor;
 import go.alarm.login.infrastructure.JwtProvider;
 import go.alarm.login.presentation.LoginConverter;
+import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
 import go.alarm.wakeupdayofweek.domain.repository.WakeUpDayOfWeekRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,12 +105,15 @@ public class LoginServiceImpl implements LoginService{
 
     @Override
     public void deleteAccount(final Long userId) {
-
         User user = userRepository.findById(userId).get();
-        Long dayOfWeekId = user.getBedDayOfWeek().getId();
+
+        WakeUpDayOfWeek bedDayOfWeek = user.getBedDayOfWeek();
+        if (bedDayOfWeek != null) {
+            Long dayOfWeekId = bedDayOfWeek.getId();
+            wakeUpDayOfWeekRepository.deleteById(dayOfWeekId);
+        }
 
         userRepository.deleteById(userId);
-        wakeUpDayOfWeekRepository.deleteById(dayOfWeekId);
         userGroupRepository.deleteByUserId(userId);
         refreshTokenRepository.deleteByUserId(userId);
 

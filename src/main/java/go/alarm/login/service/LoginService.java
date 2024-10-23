@@ -9,5 +9,5 @@ public interface LoginService {
 
     void removeRefreshToken(final String refreshToken);
 
-    void deleteAccount(final Long memberId);
+    void deleteAccount(final Long memberId, String providerName);
 }

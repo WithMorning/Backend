@@ -1,6 +1,7 @@
 package go.alarm.login.infrastructure.oauthuserprovider;
 
 
+import static go.alarm.global.response.ResponseCode.FAIL_REVOKE_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_AUTHORIZATION_CODE;
 import static go.alarm.global.response.ResponseCode.NOT_SUPPORTED_OAUTH_SERVICE;
 
@@ -12,17 +13,30 @@ import go.alarm.login.domain.OauthUserInfo;
 import go.alarm.login.infrastructure.oauthuserinfo.AppleUserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.util.Base64;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 @Component
 @Slf4j
@@ -44,9 +58,9 @@ public class AppleOauthProvider implements OauthProvider {
         @Value(PROPERTIES_PATH + "key.id}") final String keyId,
         @Value(PROPERTIES_PATH + "key.path}") final String keyPath
     ) {
-        this.clientId = clientId;
-        this.teamId = teamId;
-        this.keyId = keyId;
+        this.clientId = clientId; //  Apple Developer Console에서 확인할 수 있는 클라이언트 ID
+        this.teamId = teamId; // Apple Developer 팀 ID
+        this.keyId = keyId; // Apple Developer Console에서 생성한 private key의 ID
         this.keyPath = keyPath;
     }
 
@@ -73,6 +87,95 @@ public class AppleOauthProvider implements OauthProvider {
             return new AppleUserInfo(socialLoginId, email);
         } catch (Exception e) {
             throw new AuthException(INVALID_AUTHORIZATION_CODE);
+        }
+    }
+
+    @Override
+    public void revokeToken(String socialLoginId) {
+        try {
+
+            String clientSecret = generateAppleClientSecret();
+
+            // Apple Revoke Token API 호출을 위한 파라미터
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("client_id", clientId);
+            params.add("client_secret", clientSecret);
+            params.add("token", socialLoginId);
+
+            // API 호출
+            RestTemplate restTemplate = new RestTemplate();
+            String revokeUrl = "https://appleid.apple.com/auth/revoke";
+
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                revokeUrl,
+                params,
+                String.class
+            );
+            /**
+             * 사용 과정을 순서대로 보면:
+             * 앱 서버가 Apple API를 호출하려고 함
+             * generateAppleClientSecret()메소드로 Client Secret JWT를 생성 (iss, iat, exp, aud, sub 정보 + private key로 서명)
+             * API 요청 시 이 JWT를 client_secret 파라미터로 전달
+             * Apple 서버는 JWT를 검증하고, 이 요청이 진짜 해당 앱의 서버에서 온 것인지 확인
+             * 검증이 성공하면 요청한 작업(토큰 취소 등)을 수행
+             * */
+
+            if (response.getStatusCode() != HttpStatus.OK) {
+                throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
+            }
+        } catch (Exception e) {
+            // 예상치 못한 에러의 상세 내용 로깅
+            log.error("애플 토큰 삭제 중 예상치 못한 에러 발생", e);
+            // 표준화된 에러 응답 전달
+            throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
+        }
+    }
+
+
+    /**
+     *  Apple Client Secret 생성하는 메소드입니다. 이는 서버가 애플 서버에 API 요청을 할 때 자신을 인증하기 위한 용도로 JWT 형태로 생성합니다.
+     *  Client Secret은 서버가 자신을 인증하는 "신분증" 같은 역할을 한다고 보면 됩니다.
+     * */
+    private String generateAppleClientSecret() {
+        try {
+            // private key 파일 읽기
+            byte[] privateKeyBytes = Files.readAllBytes(Path.of(keyPath));
+
+            // PEM 형식의 헤더/푸터를 제거하고 공백을 제거하여 순수 키 내용만 추출
+            String privateKeyContent = new String(privateKeyBytes)
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replaceAll("\\s+", "");
+
+            // PKCS8 형식의 private key 생성
+            byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent); // Base64로 인코딩된 키를 디코드
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey); // PKCS8 형식의 키 스펙을 생성
+            KeyFactory keyFactory = KeyFactory.getInstance("EC"); // EC 알고리즘을 사용하는 KeyFactory를 생성
+            PrivateKey privateKey = keyFactory.generatePrivate(keySpec); // KeyFactory를 통해 실제 프라이빗 키 객체를 생성
+
+            // JWT 생성 시간과 만료 시간 설정 (만료시간은 생성 후 5분)
+            LocalDateTime now = LocalDateTime.now();
+            Date issuedAt = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
+            Date expirationTime = Date.from(
+                now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant()
+            );
+
+            // JWT 생성
+            return Jwts.builder()
+                .setHeaderParam("kid", keyId)
+                .setHeaderParam("alg", "ES256")       // 서명 알고리즘
+                .setIssuer(teamId)                          // 발급자 (Apple Developer Team ID)
+                .setIssuedAt(issuedAt)                      // 발급 시간
+                .setExpiration(expirationTime)              // 만료 시간
+                .setAudience("https://appleid.apple.com")   // 대상자
+                .setSubject(clientId)
+                .signWith(privateKey, SignatureAlgorithm.ES256) // ES256으로 서명
+                .compact();
+
+        } catch (Exception e) {
+            //throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
+            log.warn("Apple Client Secret을 생성하던 도중에 에러 발생", e);
+            throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
         }
     }
 

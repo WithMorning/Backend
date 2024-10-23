@@ -49,7 +49,7 @@ oauth2:
         id: ${TEAM_ID}
       key:
         id: ${KEY_ID}
-        path: file:./AuthKey_${KEY_ID}.p8
+        path: ./AuthKey_${KEY_ID}.p8
 
 # 알람
 fcm:

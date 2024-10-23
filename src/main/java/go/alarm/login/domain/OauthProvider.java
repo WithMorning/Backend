@@ -8,4 +8,6 @@ public interface OauthProvider {
 
     boolean is(String name);
     OauthUserInfo getUserInfo(String code);
+
+    void revokeToken(String socialLoginId);
 }

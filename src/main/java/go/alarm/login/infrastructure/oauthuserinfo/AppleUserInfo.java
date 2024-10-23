@@ -14,7 +14,7 @@ public class    AppleUserInfo implements OauthUserInfo {
     private String socialLoginId; // 애플에서 제공하는 고유한 사용자 ID,  JWT의 'sub' 클레임에서 제공됨
 
     @JsonProperty("email")
-    private String email; // 애플에서는 이메일을 제공, 사용자가 거부하면 null이 됨.
+    private String email; // 애플에서는 이메일을 제공, 사용자가 거부하면 애플에서 생성한 임의의 이메일이 됨.
 
     @Override
     public String getSocialLoginId() {

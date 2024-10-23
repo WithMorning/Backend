@@ -104,8 +104,11 @@ public class LoginServiceImpl implements LoginService{
     }
 
     @Override
-    public void deleteAccount(final Long userId) {
+    public void deleteAccount(final Long userId,final String providerName) {
         User user = userRepository.findById(userId).get();
+        OauthProvider provider = oauthProviders.mapping(providerName);
+
+        provider.revokeToken(user.getSocialLoginId());
 
         WakeUpDayOfWeek bedDayOfWeek = user.getBedDayOfWeek();
         if (bedDayOfWeek != null) {

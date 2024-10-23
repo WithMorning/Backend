@@ -72,11 +72,17 @@ public class LoginController {
 
     }
 
-
-    @DeleteMapping("/account")
+    /**
+     * 회원탈퇴 API입니다.
+     * 현재는 애플로그인 회원탈퇴만 구현했습니다.
+     * 추후 Resource Server가 추가될 수도 있기에 {provider}로 받아옵니다.
+     * */
+    @DeleteMapping("/account/{provider}")
     @UesrOnly
-    public SuccessResponse<Void> deleteAccount(@Auth final Accessor accessor) {
-        loginService.deleteAccount(accessor.getUserId());
+    public SuccessResponse<Void> deleteAccount(
+        @PathVariable final String provider,
+        @Auth final Accessor accessor) {
+        loginService.deleteAccount(accessor.getUserId(), provider);
         return new SuccessResponse<>();
     }
 

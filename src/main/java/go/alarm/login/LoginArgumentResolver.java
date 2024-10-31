@@ -1,5 +1,6 @@
 package go.alarm.login;
 
+import static go.alarm.global.response.ResponseCode.EXPIRED_PERIOD_REFRESH_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_REFRESH_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_REQUEST;
 import static go.alarm.global.response.ResponseCode.INVALID_USER;
@@ -85,8 +86,13 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
     private String extractRefreshToken(final Long userId){
 
         RefreshToken refreshTokenObject = refreshTokenRepository.findByUserId(userId);
+        String refreshToken;
 
-        String refreshToken = refreshTokenObject.getRefreshToken();
+        if(refreshTokenObject == null){
+            throw new RefreshTokenException(EXPIRED_PERIOD_REFRESH_TOKEN);
+        }else {
+            refreshToken = refreshTokenObject.getRefreshToken();
+        }
 
         if (refreshToken == null || refreshToken.isEmpty()) { // 토큰이 null이거나 빈 문자열인지 확인
             throw new RefreshTokenException(NOT_FOUND_REFRESH_TOKEN);

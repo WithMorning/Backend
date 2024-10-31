@@ -1,7 +1,6 @@
 package go.alarm.group.domain;
 
 import go.alarm.global.BaseEntity;
-import go.alarm.group.domain.Group;
 import go.alarm.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

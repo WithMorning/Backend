@@ -6,6 +6,8 @@ import static go.alarm.global.response.ResponseCode.FAIL_TO_VALIDATE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_REFRESH_TOKEN;
 
 import go.alarm.group.domain.repository.UserGroupRepository;
+import go.alarm.login.domain.AppleRefreshToken;
+import go.alarm.login.domain.repository.AppleRefreshTokenRepository;
 import go.alarm.user.domain.User;
 import go.alarm.user.domain.repository.UserRepository;
 import go.alarm.global.response.exception.AuthException;
@@ -35,36 +37,61 @@ public class LoginServiceImpl implements LoginService{
     private final UserGroupRepository userGroupRepository;
     private final WakeUpDayOfWeekRepository wakeUpDayOfWeekRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AppleRefreshTokenRepository appleRefreshTokenRepository;
     private final OauthProviders oauthProviders;
     private final JwtProvider jwtProvider;
     private final BearerAuthorizationExtractor bearerExtractor;
 
 
     @Override
-    public UserTokens login(final String providerName, final String code) {
+    public UserTokens login(final String providerName, final String identityToken, final String code) {
         OauthProvider provider = oauthProviders.mapping(providerName);
-        OauthUserInfo oauthUserInfo = provider.getUserInfo(code);
+        OauthUserInfo oauthUserInfo = provider.getUserInfo(identityToken);
+
+        // 이 부분에 authorization code를 통해 리프레시 토큰을 저장하는 코드 추가해야 함!!!!
+        // 애플 회원탈퇴를 할 때 리프레시 토큰을 넘겨줘야 하기 때문
+        /**
+         * 이 부분에 authorization code를 통해 만료 기간이 없는 애플 refresh token을 받아서 우리서버 db에 저장해놓는다.
+         * iOS에서 회원탈퇴를 요청하면 우리서버에서는 유저정보를지우고 이때 저장되어있던 애플 refresh token을 가지고
+         * 애플회원탈퇴 API를 호출하고 iOS에게 회원탈퇴가 완료되었다고 알려준다.
+         *
+         * */
         User user = findOrCreateUser(
             oauthUserInfo.getSocialLoginId(),
             oauthUserInfo.getEmail()
         );
+
+        // 애플 로그인인 경우 refresh token 처리
+        if ("apple".equalsIgnoreCase(providerName) && code != null) {
+            // authorization code로 애플 refresh token 발급 요청
+            String appleRefreshToken = provider.getRefreshToken(code);
+
+            // 기존 애플 refresh token이 있다면 제거
+            AppleRefreshToken existingAppleToken = appleRefreshTokenRepository.findByUserId(user.getId());
+            if (existingAppleToken != null) {
+                appleRefreshTokenRepository.delete(existingAppleToken);
+            }
+
+            // 새로운 애플 refresh token 저장
+            AppleRefreshToken newAppleToken = LoginConverter.toAppleRefreshToken(
+                appleRefreshToken, user.getId());
+            appleRefreshTokenRepository.save(newAppleToken);
+        }
         
         RefreshToken refreshTokenObject = refreshTokenRepository.findByUserId(user.getId());
-        log.warn("서비스단(/login) refreshTokenObject >>" + refreshTokenObject);
 
         if (refreshTokenObject != null){ // 기존에 리프레시 토큰이 없을 때는 제외
             removeRefreshToken(refreshTokenObject.getRefreshToken()); // 기존에 존재하던 리프레시 토큰 제거
         }
 
+        // 앱 서버에서 자체적으로 토큰 엑세스, 리프레시 토큰 생성
         final UserTokens userTokens = jwtProvider.generateLoginToken(user.getId().toString());
-        // UserTokens에서 엑세스, 리프레쉬 토큰 가져와서 유저 필드에 저장
-        log.warn("서비스단(/login) 리프레시 토큰 >>" + userTokens.getRefreshToken());
-        log.warn("서비스단(/login) 엑세스 토큰 >>" + userTokens.getAccessToken());
 
-        RefreshToken savedRefreshToken = LoginConverter.toRefreshToken(
+        RefreshToken newRefreshToken = LoginConverter.toRefreshToken(
             userTokens.getRefreshToken(), user.getId());
-
-        refreshTokenRepository.save(savedRefreshToken); // 이후 유저 ID와 리프레시토큰을 리프레시토큰 레포에 저장
+        
+        refreshTokenRepository.save(newRefreshToken); // 이후 유저 ID와 리프레시토큰을 리프레시토큰 레포에 저장
+        
         return userTokens;
     }
 
@@ -104,11 +131,19 @@ public class LoginServiceImpl implements LoginService{
     }
 
     @Override
-    public void deleteAccount(final Long userId,final String providerName) {
+    public void deleteAccount(final Long userId, final String providerName) {
         User user = userRepository.findById(userId).get();
         OauthProvider provider = oauthProviders.mapping(providerName);
 
-        provider.revokeToken(user.getSocialLoginId());
+        AppleRefreshToken appleRefreshTokenObject = appleRefreshTokenRepository.findByUserId(userId);
+
+        String appleRefreshToken = appleRefreshTokenObject.getRefreshToken();
+
+        Boolean isRevokeToken = provider.revokeToken(userId, appleRefreshToken);
+
+        if (isRevokeToken){
+            appleRefreshTokenRepository.delete(appleRefreshTokenObject);
+        }
 
         WakeUpDayOfWeek bedDayOfWeek = user.getBedDayOfWeek();
         if (bedDayOfWeek != null) {

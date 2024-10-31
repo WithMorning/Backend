@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
 @AllArgsConstructor
-public class    AppleUserInfo implements OauthUserInfo {
+public class AppleUserInfo implements OauthUserInfo {
 
     @JsonProperty("sub")
     private String socialLoginId; // 애플에서 제공하는 고유한 사용자 ID,  JWT의 'sub' 클레임에서 제공됨

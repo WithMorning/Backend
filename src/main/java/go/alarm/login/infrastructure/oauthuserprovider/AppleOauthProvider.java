@@ -1,6 +1,7 @@
 package go.alarm.login.infrastructure.oauthuserprovider;
 
 
+import static go.alarm.global.response.ResponseCode.FAIL_CREATE_CLIENT_SECRET;
 import static go.alarm.global.response.ResponseCode.FAIL_GETTING_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_GET_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_REVOKE_APPLE_TOKEN;
@@ -16,14 +17,19 @@ import go.alarm.login.infrastructure.oauthuserinfo.AppleUserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +69,7 @@ public class AppleOauthProvider implements OauthProvider {
         @Value(PROPERTIES_PATH + "team.id}") final String teamId,
         @Value(PROPERTIES_PATH + "key.id}") final String keyId,
         @Value(PROPERTIES_PATH + "key.path}") final String keyPath,
-        @Value("${oauth2.provider.apple.redirect.url}") final String redirectUri
+        @Value(PROPERTIES_PATH + "redirect.url}") final String redirectUri
     ) {
         this.clientId = clientId; //  Apple Developer Console에서 확인할 수 있는 클라이언트 ID
         this.teamId = teamId; // Apple Developer 팀 ID
@@ -130,10 +136,10 @@ public class AppleOauthProvider implements OauthProvider {
                 return (String) response.getBody().get("refresh_token");
             }
 
-            log.error("Failed to get Apple refresh token. Response: {}", response);
+            //log.error("Failed to get Apple refresh token. Response: {}", response);
             throw new AuthException(FAIL_GET_APPLE_TOKEN);
         } catch (Exception e) {
-            log.error("Error while getting Apple refresh token", e);
+            //log.error("Error while getting Apple refresh token", e);
             throw new AuthException(FAIL_GETTING_APPLE_TOKEN);
         }
     }
@@ -182,39 +188,6 @@ public class AppleOauthProvider implements OauthProvider {
             throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
         }
     }
-    public void revokeToken(String socialLoginId) {
-        try {
-
-            String clientSecret = generateAppleClientSecret();
-
-            // Apple Revoke Token API 호출을 위한 파라미터
-            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-            params.add("client_id", clientId);
-            params.add("client_secret", clientSecret);
-            params.add("token", socialLoginId);
-
-            // API 호출
-            RestTemplate restTemplate = new RestTemplate();
-            String revokeUrl = "https://appleid.apple.com/auth/revoke";
-
-            ResponseEntity<String> response = restTemplate.postForEntity(
-                revokeUrl,
-                params,
-                String.class
-            );
-
-
-            if (response.getStatusCode() != HttpStatus.OK) {
-                throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
-            }
-        } catch (Exception e) {
-            // 예상치 못한 에러의 상세 내용 로깅
-            log.error("애플 토큰 삭제 중 예상치 못한 에러 발생", e);
-            // 표준화된 에러 응답 전달
-            throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
-        }
-    }
-
 
     /**
      *  Apple Client Secret 생성하는 메소드입니다. 이는 서버가 애플 서버에 API 요청을 할 때 자신을 인증하기 위한 용도로 JWT 형태로 생성합니다.
@@ -222,45 +195,47 @@ public class AppleOauthProvider implements OauthProvider {
      * */
     private String generateAppleClientSecret() {
         try {
-            // private key 파일 읽기
-            byte[] privateKeyBytes = Files.readAllBytes(Path.of(keyPath));
-
-            // PEM 형식의 헤더/푸터를 제거하고 공백을 제거하여 순수 키 내용만 추출
-            String privateKeyContent = new String(privateKeyBytes)
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
-                .replaceAll("\\s+", "");
-
-            // PKCS8 형식의 private key 생성
-            byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent); // Base64로 인코딩된 키를 디코드
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey); // PKCS8 형식의 키 스펙을 생성
-            KeyFactory keyFactory = KeyFactory.getInstance("EC"); // EC 알고리즘을 사용하는 KeyFactory를 생성
-            PrivateKey privateKey = keyFactory.generatePrivate(keySpec); // KeyFactory를 통해 실제 프라이빗 키 객체를 생성
-
-            // JWT 생성 시간과 만료 시간 설정 (만료시간은 생성 후 5분)
-            LocalDateTime now = LocalDateTime.now();
-            Date issuedAt = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
-            Date expirationTime = Date.from(
-                now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant()
-            );
-
-            // JWT 생성
-            return Jwts.builder()
-                .setHeaderParam("kid", keyId)
-                .setHeaderParam("alg", "ES256")       // 서명 알고리즘
-                .setIssuer(teamId)                          // 발급자 (Apple Developer Team ID)
-                .setIssuedAt(issuedAt)                      // 발급 시간
-                .setExpiration(expirationTime)              // 만료 시간
-                .setAudience("https://appleid.apple.com")   // 대상자
-                .setSubject(clientId)
-                .signWith(privateKey, SignatureAlgorithm.ES256) // ES256으로 서명
-                .compact();
-
+            PrivateKey privateKey = loadPrivateKey(); // 1. private key 로드
+            return buildJwtToken(privateKey); // 2. JWT 토큰 생성
         } catch (Exception e) {
-            //throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
-            log.warn("Apple Client Secret을 생성하던 도중에 에러 발생", e);
-            throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
+            throw new AuthException(FAIL_CREATE_CLIENT_SECRET);
         }
+    }
+
+    // 키 파일 로딩 및 변환 담당 메소드
+    private PrivateKey loadPrivateKey()
+        throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        // 1. private key 파일 읽기 및 전처리
+        String privateKeyContent = Files.readString(Path.of(keyPath))
+            .replace("-----BEGIN PRIVATE KEY-----", "") // PEM 헤더 제거
+            .replace("-----END PRIVATE KEY-----", "") // PEM 푸터 제거
+            .replaceAll("\\s+", ""); // 모든 공백 제거
+
+        // 2. key 변환 과정
+        byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
+        KeyFactory keyFactory = KeyFactory.getInstance("EC");
+        return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decodedKey));
+    }
+
+    // JWT 토큰 생성 담당 메소드
+    private String buildJwtToken(PrivateKey privateKey) {
+        Instant now = Instant.now();
+
+        return Jwts.builder()
+            // 1. 헤더 설정
+            .setHeaderParam("kid", keyId)
+            .setHeaderParam("alg", "ES256")
+
+            // 2. 페이로드 설정
+            .setIssuer(teamId)                       // 발급자 (Apple Team ID)
+            .setIssuedAt(Date.from(now))
+            .setExpiration(Date.from(now.plus(5, ChronoUnit.MINUTES)))
+            .setAudience("https://appleid.apple.com") // 대상자 (Apple)
+            .setSubject(clientId)                   // 주제 (Client ID)
+
+            // 3. 서명
+            .signWith(privateKey, SignatureAlgorithm.ES256)
+            .compact();
     }
 
     /**

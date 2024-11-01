@@ -130,10 +130,10 @@ public class AppleOauthProvider implements OauthProvider {
                 return (String) response.getBody().get("refresh_token");
             }
 
-            log.error("Failed to get Apple refresh token. Response: {}", response);
+            //log.error(String.valueOf(FAIL_GET_APPLE_TOKEN), response);
             throw new AuthException(FAIL_GET_APPLE_TOKEN);
         } catch (Exception e) {
-            log.error("Error while getting Apple refresh token", e);
+            //log.error("Error while getting Apple refresh token", e);
             throw new AuthException(FAIL_GETTING_APPLE_TOKEN);
         }
     }

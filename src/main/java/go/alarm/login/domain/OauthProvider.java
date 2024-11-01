@@ -9,5 +9,7 @@ public interface OauthProvider {
     boolean is(String name);
     OauthUserInfo getUserInfo(String code);
 
-    void revokeToken(String socialLoginId);
+    Boolean revokeToken(Long userId, String appleRefreshToken);
+
+    String getRefreshToken(String authorizationCode);
 }

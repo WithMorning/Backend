@@ -1,6 +1,8 @@
 package go.alarm.login.infrastructure.oauthuserprovider;
 
 
+import static go.alarm.global.response.ResponseCode.FAIL_GETTING_APPLE_TOKEN;
+import static go.alarm.global.response.ResponseCode.FAIL_GET_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_REVOKE_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_AUTHORIZATION_CODE;
 import static go.alarm.global.response.ResponseCode.NOT_SUPPORTED_OAUTH_SERVICE;
@@ -27,7 +29,10 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -50,18 +55,21 @@ public class AppleOauthProvider implements OauthProvider {
     private final String teamId;
     private final String keyId;
     private final String keyPath;
+    private final String redirectUri;
 
     private static final String APPLE_JWKS_URL = "https://appleid.apple.com/auth/keys";
     public AppleOauthProvider(
         @Value(PROPERTIES_PATH + "client.id}") final String clientId,
         @Value(PROPERTIES_PATH + "team.id}") final String teamId,
         @Value(PROPERTIES_PATH + "key.id}") final String keyId,
-        @Value(PROPERTIES_PATH + "key.path}") final String keyPath
+        @Value(PROPERTIES_PATH + "key.path}") final String keyPath,
+        @Value("${oauth2.provider.apple.redirect.url}") final String redirectUri
     ) {
         this.clientId = clientId; //  Apple Developer Console에서 확인할 수 있는 클라이언트 ID
         this.teamId = teamId; // Apple Developer 팀 ID
         this.keyId = keyId; // Apple Developer Console에서 생성한 private key의 ID
         this.keyPath = keyPath;
+        this.redirectUri = redirectUri;
     }
 
     @Override
@@ -76,7 +84,7 @@ public class AppleOauthProvider implements OauthProvider {
             // identityToken의 서명을 확인하기 위해 Apple의 공개키를 가져옴
 
             Claims claims = Jwts.parserBuilder()// 토큰의 무결성과 신뢰성을 검증
-                .setSigningKey(publicKey)// 앞서 획득한 공개키를 설정하여 토큰의 서명을 검증
+                .setSigningKey(publicKey)       // 앞서 획득한 공개키를 설정하여 토큰의 서명을 검증
                 .build()
                 .parseClaimsJws(identityToken)
                 .getBody();
@@ -91,6 +99,89 @@ public class AppleOauthProvider implements OauthProvider {
     }
 
     @Override
+    public String getRefreshToken(final String authorizationCode){
+        String tokenUrl = "https://appleid.apple.com/auth/token";
+
+        // Apple Login 필수 파라미터 설정
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", clientId);  // 애플 Developer에서 받은 Service ID
+        params.add("client_secret", generateAppleClientSecret());  // JWT 형식의 client secret
+        params.add("code", authorizationCode);
+        params.add("grant_type", "authorization_code");
+        params.add("redirect_uri", redirectUri);
+
+        // HTTP 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        // HTTP 요청 설정
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        try {
+            // RestTemplate으로 토큰 요청
+            ResponseEntity<Map> response = restTemplate.postForEntity(
+                tokenUrl,
+                request,
+                Map.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                // refresh_token 추출
+                return (String) response.getBody().get("refresh_token");
+            }
+
+            log.error("Failed to get Apple refresh token. Response: {}", response);
+            throw new AuthException(FAIL_GET_APPLE_TOKEN);
+        } catch (Exception e) {
+            log.error("Error while getting Apple refresh token", e);
+            throw new AuthException(FAIL_GETTING_APPLE_TOKEN);
+        }
+    }
+
+    @Override
+    public Boolean revokeToken(Long userId, String appleRefreshToken) {
+        /**
+         * 사용 과정을 순서대로 보면:
+         * 앱 서버가 Apple API를 호출하려고 함
+         * generateAppleClientSecret()메소드로 Client Secret JWT를 생성 (iss, iat, exp, aud, sub 정보 + private key로 서명)
+         * API 요청 시 이 JWT를 client_secret 파라미터로 전달
+         * Apple 서버는 JWT를 검증하고, 이 요청이 진짜 해당 앱의 서버에서 온 것인지 확인
+         * 검증이 성공하면 요청한 작업(토큰 취소 등)을 수행
+         * */
+
+        try {
+            String clientSecret = generateAppleClientSecret();
+
+            // Apple Revoke Token API 호출을 위한 파라미터
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("client_id", clientId);
+            params.add("client_secret", clientSecret);
+            params.add("token", appleRefreshToken);             // apple refresh token 사용
+            params.add("token_type_hint", "refresh_token");     // refresh token임을 명시
+
+            // API 호출
+            RestTemplate restTemplate = new RestTemplate();
+            String revokeUrl = "https://appleid.apple.com/auth/revoke";
+
+            ResponseEntity<String> response = restTemplate.postForEntity(
+                revokeUrl,
+                params,
+                String.class
+            );
+
+            if (response.getStatusCode() != HttpStatus.OK) {
+                log.error("애플 토큰 삭제 실패. status: {}, response: {}",
+                    response.getStatusCode(), response.getBody());
+                throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
+            }
+            log.info("애플 토큰 삭제 성공. userId: {}", userId);
+            return true;
+
+        } catch (Exception e) {
+            log.error("애플 토큰 삭제 중 예상치 못한 에러 발생. userId: {}", userId, e);
+            throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);
+        }
+    }
     public void revokeToken(String socialLoginId) {
         try {
 
@@ -111,14 +202,7 @@ public class AppleOauthProvider implements OauthProvider {
                 params,
                 String.class
             );
-            /**
-             * 사용 과정을 순서대로 보면:
-             * 앱 서버가 Apple API를 호출하려고 함
-             * generateAppleClientSecret()메소드로 Client Secret JWT를 생성 (iss, iat, exp, aud, sub 정보 + private key로 서명)
-             * API 요청 시 이 JWT를 client_secret 파라미터로 전달
-             * Apple 서버는 JWT를 검증하고, 이 요청이 진짜 해당 앱의 서버에서 온 것인지 확인
-             * 검증이 성공하면 요청한 작업(토큰 취소 등)을 수행
-             * */
+
 
             if (response.getStatusCode() != HttpStatus.OK) {
                 throw new AuthException(FAIL_REVOKE_APPLE_TOKEN);

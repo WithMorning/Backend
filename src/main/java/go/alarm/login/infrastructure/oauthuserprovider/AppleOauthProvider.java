@@ -2,7 +2,6 @@ package go.alarm.login.infrastructure.oauthuserprovider;
 
 
 import static go.alarm.global.response.ResponseCode.FAIL_CREATE_CLIENT_SECRET;
-import static go.alarm.global.response.ResponseCode.FAIL_GETTING_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_GET_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_REVOKE_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_AUTHORIZATION_CODE;
@@ -27,8 +26,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -140,7 +137,7 @@ public class AppleOauthProvider implements OauthProvider {
             throw new AuthException(FAIL_GET_APPLE_TOKEN);
         } catch (Exception e) {
             //log.error("Error while getting Apple refresh token", e);
-            throw new AuthException(FAIL_GETTING_APPLE_TOKEN);
+            throw new AuthException(FAIL_GET_APPLE_TOKEN, e);
         }
     }
 

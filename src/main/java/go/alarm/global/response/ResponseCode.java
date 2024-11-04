@@ -64,7 +64,6 @@ public enum ResponseCode {
     NOT_FOUND_REFRESH_TOKEN(false, 9106, "RefreshToken이 null이거나 빈 문자열입니다."),
     FAIL_REVOKE_APPLE_TOKEN(false, 9106, "애플 토큰 삭제를 실패했습니다."),
     FAIL_GET_APPLE_TOKEN(false, 9106, "애플 리프레시 토큰 발급을 실패했습니다."),
-    FAIL_GETTING_APPLE_TOKEN(false, 9106, "애플 리프레시 토큰 발급 도중 에러가 발생했습니다."),
     FAIL_CREATE_CLIENT_SECRET(false, 9106, "Apple Client Secret을 생성하던 도중에 에러가 발생했습니다."),
     INVALID_AUTHORITY(false, 9201, "해당 요청에 대한 접근 권한이 없습니다.");
 

@@ -40,6 +40,10 @@ public class LoginController {
         @RequestBody final LoginRequest request,
         final HttpServletResponse response
     ) {
+        log.warn("authorication Code >>> " + request.getCode());
+        log.warn("idenetity Tokne >>> " + request.getIdentityToken());
+
+
         final UserTokens userTokens = loginService.login(provider, request.getIdentityToken(),request.getCode());
         log.warn("컨트롤러단(/login) 리프레시 토큰 >>" + userTokens.getRefreshToken());
         log.warn("컨트롤러단(/login) 엑세스 토큰 >>" + userTokens.getAccessToken());

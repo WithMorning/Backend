@@ -47,6 +47,7 @@ public class LoginServiceImpl implements LoginService{
     public UserTokens login(final String providerName, final String identityToken, final String code) {
         OauthProvider provider = oauthProviders.mapping(providerName);
         OauthUserInfo oauthUserInfo = provider.getUserInfo(identityToken);
+        log.warn("oauthUserInfo.getEmail() >>>> " + oauthUserInfo.getEmail());
 
         // 이 부분에 authorization code를 통해 리프레시 토큰을 저장하는 코드 추가해야 함!!!!
         // 애플 회원탈퇴를 할 때 리프레시 토큰을 넘겨줘야 하기 때문

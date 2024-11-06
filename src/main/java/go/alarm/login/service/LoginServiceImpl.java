@@ -66,6 +66,7 @@ public class LoginServiceImpl implements LoginService{
         if ("apple".equalsIgnoreCase(providerName) && code != null) {
             // authorization code로 애플 refresh token 발급 요청
             String appleRefreshToken = provider.getRefreshToken(code);
+            log.warn("appleRefreshToken >>> "+ appleRefreshToken);
 
             // 기존 애플 refresh token이 있다면 제거
             AppleRefreshToken existingAppleToken = appleRefreshTokenRepository.findByUserId(user.getId());

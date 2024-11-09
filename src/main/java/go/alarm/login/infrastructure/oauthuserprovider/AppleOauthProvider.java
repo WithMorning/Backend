@@ -195,7 +195,7 @@ public class AppleOauthProvider implements OauthProvider {
             PrivateKey privateKey = loadPrivateKey(); // 1. private key 로드
             return buildJwtToken(privateKey); // 2. JWT 토큰 생성
         } catch (Exception e) {
-            throw new AuthException(FAIL_CREATE_CLIENT_SECRET);
+            throw new AuthException(FAIL_CREATE_CLIENT_SECRET, e);
         }
     }
 

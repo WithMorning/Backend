@@ -5,6 +5,8 @@ import static go.alarm.global.response.ResponseCode.FAIL_CREATE_CLIENT_SECRET;
 import static go.alarm.global.response.ResponseCode.FAIL_GET_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_REVOKE_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_AUTHORIZATION_CODE;
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_KEY_FILE;
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_REQUIRED_PARAM;
 import static go.alarm.global.response.ResponseCode.NOT_SUPPORTED_OAUTH_SERVICE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -192,6 +194,11 @@ public class AppleOauthProvider implements OauthProvider {
      * */
     private String generateAppleClientSecret() {
         try {
+            if (!Files.exists(Path.of(keyPath))) {
+                throw new AuthException(NOT_FOUND_KEY_FILE);
+            }
+
+
             PrivateKey privateKey = loadPrivateKey(); // 1. private key 로드
             return buildJwtToken(privateKey); // 2. JWT 토큰 생성
         } catch (Exception e) {
@@ -216,6 +223,11 @@ public class AppleOauthProvider implements OauthProvider {
 
     // JWT 토큰 생성 담당 메소드
     private String buildJwtToken(PrivateKey privateKey) {
+        // 필수 파라미터 검증
+        if (keyId == null || teamId == null || clientId == null) {
+            throw new AuthException(NOT_FOUND_REQUIRED_PARAM);
+        }
+
         Instant now = Instant.now();
 
         return Jwts.builder()

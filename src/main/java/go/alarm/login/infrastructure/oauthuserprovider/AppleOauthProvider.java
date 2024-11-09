@@ -248,7 +248,7 @@ public class AppleOauthProvider implements OauthProvider {
 
         // 2. key 변환 과정
         byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
-        KeyFactory keyFactory = KeyFactory.getInstance("EC");
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decodedKey));
     }
 

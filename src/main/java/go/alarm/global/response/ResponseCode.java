@@ -67,6 +67,9 @@ public enum ResponseCode {
     FAIL_CREATE_CLIENT_SECRET(false, 9106, "Apple Client Secret을 생성하던 도중에 에러가 발생했습니다."),
     NOT_FOUND_KEY_FILE(false, 9107, "프라이빗 키 파일을 찾을 수 없습니다."),
     NOT_FOUND_REQUIRED_PARAM(false, 9108, "필수 파라미터가 없습니다."),
+    NOT_FOUND_AUTHORIZATION_CODE(false, 9108, "Authorization code가 없거나 null입니다."),
+    NOT_FOUND_CLIENT_SECRET(false, 9109, "생성된 client secret이 없거나 null입니다."),
+    NOT_FOUND_REDIRECT_URI(false, 9110, "redirect uri가 없거나 null입니다."),
     INVALID_AUTHORITY(false, 9201, "해당 요청에 대한 접근 권한이 없습니다.");
 
     private final boolean isSuccess;

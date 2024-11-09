@@ -5,7 +5,10 @@ import static go.alarm.global.response.ResponseCode.FAIL_CREATE_CLIENT_SECRET;
 import static go.alarm.global.response.ResponseCode.FAIL_GET_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_REVOKE_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_AUTHORIZATION_CODE;
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_AUTHORIZATION_CODE;
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_CLIENT_SECRET;
 import static go.alarm.global.response.ResponseCode.NOT_FOUND_KEY_FILE;
+import static go.alarm.global.response.ResponseCode.NOT_FOUND_REFRESH_TOKEN;
 import static go.alarm.global.response.ResponseCode.NOT_FOUND_REQUIRED_PARAM;
 import static go.alarm.global.response.ResponseCode.NOT_SUPPORTED_OAUTH_SERVICE;
 
@@ -107,13 +110,33 @@ public class AppleOauthProvider implements OauthProvider {
     public String getRefreshToken(final String authorizationCode){
         String tokenUrl = "https://appleid.apple.com/auth/token";
 
+        // 파라미터 유효성 검사 추가
+        if (authorizationCode == null || authorizationCode.trim().isEmpty()) {
+            throw new AuthException(NOT_FOUND_AUTHORIZATION_CODE);
+        }
+
         // Apple Login 필수 파라미터 설정
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("client_id", clientId);  // 애플 Developer에서 받은 Service ID
+
+        params.add("client_id", clientId);  // 애플 Developer에서 받은 Bundle ID를 사용
+
+        // client_secret 생성 전 검증
+        String clientSecret = generateAppleClientSecret();
+        if (clientSecret == null || clientSecret.trim().isEmpty()) {
+            throw new AuthException(NOT_FOUND_CLIENT_SECRET);
+        }
         params.add("client_secret", generateAppleClientSecret());  // JWT 형식의 client secret
+
         params.add("code", authorizationCode);
         params.add("grant_type", "authorization_code");
-        params.add("redirect_uri", redirectUri);
+
+        // redirect_uri가 Apple Developer에 등록된 것과 정확히 일치하는지 확인
+        if (redirectUri != null && !redirectUri.trim().isEmpty()) {
+            params.add("redirect_uri", redirectUri);
+        }
+        else {
+            throw new AuthException(NOT_FOUND_CLIENT_SECRET);
+        }
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
@@ -131,8 +154,12 @@ public class AppleOauthProvider implements OauthProvider {
             );
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                // refresh_token 추출
-                return (String) response.getBody().get("refresh_token");
+                String refreshToken = (String) response.getBody().get("refresh_token");
+
+                if (refreshToken == null || refreshToken.trim().isEmpty()) {
+                    throw new AuthException(NOT_FOUND_REFRESH_TOKEN);
+                }
+                return refreshToken;
             }
 
             //log.error("Failed to get Apple refresh token. Response: {}", response);

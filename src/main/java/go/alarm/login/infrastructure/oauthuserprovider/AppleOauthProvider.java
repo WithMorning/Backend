@@ -49,6 +49,7 @@ import java.security.PublicKey;
 import java.util.Base64;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -164,7 +165,10 @@ public class AppleOauthProvider implements OauthProvider {
 
             //log.error("Failed to get Apple refresh token. Response: {}", response);
             throw new AuthException(FAIL_GET_APPLE_TOKEN);
-        } catch (Exception e) {
+        }catch (HttpClientErrorException e) {
+            throw new AuthException(FAIL_GET_APPLE_TOKEN, e);
+        }
+        catch (Exception e) {
             //log.error("Error while getting Apple refresh token", e);
             throw new AuthException(FAIL_GET_APPLE_TOKEN, e);
         }

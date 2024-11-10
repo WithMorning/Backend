@@ -22,6 +22,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,6 +38,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -241,34 +245,40 @@ public class AppleOauthProvider implements OauthProvider {
     private PrivateKey loadPrivateKey()
         throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        // 1. private key 파일 읽기 및 전처리
-        String privateKeyContent = Files.readString(Path.of(keyPath))
-            .replace("-----BEGIN PRIVATE KEY-----", "")
-            .replace("-----END PRIVATE KEY-----", "")
-            .replaceAll("\\s+", ""); // 모든 공백 제거
+        String privateKeyContent = Files.readString(Path.of(keyPath));
+        PEMParser pemParser = new PEMParser(new StringReader(privateKeyContent));
+        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+        Object keyPair = pemParser.readObject();
+        return converter.getPrivateKey((PrivateKeyInfo) keyPair);
 
-        //log.warn("privateKeyContent >>" + privateKeyContent); 여기는 출력 잘 됨.
-
-        // 2. Base64 디코딩
-        byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
-//        for (byte b : decodedKey) { 여기도 출력 잘 됨
-//            log.warn("decodedKey >> " + b);
+//        // 1. private key 파일 읽기 및 전처리
+//        String privateKeyContent = Files.readString(Path.of(keyPath))
+//            .replace("-----BEGIN PRIVATE KEY-----", "")
+//            .replace("-----END PRIVATE KEY-----", "")
+//            .replaceAll("\\s+", ""); // 모든 공백 제거
+//
+//        //log.warn("privateKeyContent >>" + privateKeyContent); 여기는 출력 잘 됨.
+//
+//        // 2. Base64 디코딩
+//        byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
+////        for (byte b : decodedKey) { 여기도 출력 잘 됨
+////            log.warn("decodedKey >> " + b);
+////        }
+//
+//        try {
+//            // 3. PKCS8 형식으로 키 생성
+//            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+//           // log.warn("keySpec >>" + keySpec); 여기도 출력 잘 됨
+//
+//            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+//            //log.warn("keyFactory >>" + keyFactory); 여기도 출력 잘 됨
+//            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+//            log.warn("privateKey >> "+ privateKey.toString());
+//
+//            return privateKey;
+//        } catch (InvalidKeySpecException e) {
+//            throw new InvalidKeySpecException("프라이빗 키가 잘못된 PKCS8 포멧입니다.", e);
 //        }
-
-        try {
-            // 3. PKCS8 형식으로 키 생성
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
-           // log.warn("keySpec >>" + keySpec); 여기도 출력 잘 됨
-
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            //log.warn("keyFactory >>" + keyFactory); 여기도 출력 잘 됨
-            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-            log.warn("privateKey >> "+ privateKey.toString());
-
-            return privateKey;
-        } catch (InvalidKeySpecException e) {
-            throw new InvalidKeySpecException("프라이빗 키가 잘못된 PKCS8 포멧입니다.", e);
-        }
     }
 
     // JWT 토큰 생성 담당 메소드

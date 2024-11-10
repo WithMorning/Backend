@@ -36,6 +36,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.asn1.ASN1EncodableVector;
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.DEROctetString;
+import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -237,21 +243,26 @@ public class AppleOauthProvider implements OauthProvider {
     }
 
     // 키 파일 로딩 및 변환 담당 메소드
-    private PrivateKey loadPrivateKey()
-        throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    private PrivateKey loadPrivateKey() throws Exception {
+        String privateKeyContent = Files.readString(Path.of(keyPath))
+            .replace("-----BEGIN RSA PRIVATE KEY-----", "")
+            .replace("-----END RSA PRIVATE KEY-----", "")
+            .replaceAll("\\s+", "");
 
-        try {
-            // 1. .p8 파일 읽기 (이미 PKCS#8 형식)
-            byte[] keyBytes = Files.readAllBytes(Path.of(keyPath));
+        byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
 
-            // 2. 바로 PrivateKey 객체 생성
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            return keyFactory.generatePrivate(keySpec);
+        // PKCS1을 PKCS8로 변환
+        ASN1EncodableVector v = new ASN1EncodableVector();
+        v.add(new ASN1Integer(0)); // Version
+        ASN1EncodableVector privateKeyInfo = new ASN1EncodableVector();
+        privateKeyInfo.add(new AlgorithmIdentifier(PKCSObjectIdentifiers.rsaEncryption));
+        privateKeyInfo.add(new DEROctetString(decodedKey));
+        v.add(new DERSequence(privateKeyInfo));
 
-        } catch (InvalidKeySpecException e) {
-            throw new InvalidKeySpecException("프라이빗 키가 잘못된 PKCS8 포멧입니다.", e);
-        }
+        byte[] pkcs8Bytes = new DERSequence(v).getEncoded();
+        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(pkcs8Bytes);
+        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+        return keyFactory.generatePrivate(keySpec);
     }
 
     // JWT 토큰 생성 담당 메소드

@@ -240,20 +240,15 @@ public class AppleOauthProvider implements OauthProvider {
     private PrivateKey loadPrivateKey()
         throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        // 1. private key 파일 읽기 및 전처리
-        String privateKeyContent = Files.readString(Path.of(keyPath))
-            .replace("-----BEGIN PRIVATE KEY-----", "") // PEM 헤더 제거
-            .replace("-----END PRIVATE KEY-----", "") // PEM 푸터 제거
-            .replaceAll("\\s+", ""); // 모든 공백 제거
-
-        // 2. key 변환 과정
-        byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
-
         try {
-            // 3. PKCS8 형식으로 키 생성
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+            // 1. .p8 파일 읽기 (이미 PKCS#8 형식)
+            byte[] keyBytes = Files.readAllBytes(Path.of(keyPath));
+
+            // 2. 바로 PrivateKey 객체 생성
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             return keyFactory.generatePrivate(keySpec);
+
         } catch (InvalidKeySpecException e) {
             throw new InvalidKeySpecException("프라이빗 키가 잘못된 PKCS8 포멧입니다.", e);
         }

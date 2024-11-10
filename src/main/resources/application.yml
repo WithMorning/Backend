@@ -47,7 +47,7 @@ oauth2:
         id: ${TEAM_ID}
       key:
         id: ${KEY_ID}
-        path: ./AuthKey_${KEY_ID}.p8
+        path: ./AuthKey_${KEY_ID}_key_pkcs8.pem
 
 # 알람
 fcm:

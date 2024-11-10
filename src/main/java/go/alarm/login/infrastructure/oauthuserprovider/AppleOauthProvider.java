@@ -251,19 +251,20 @@ public class AppleOauthProvider implements OauthProvider {
 
         // 2. Base64 디코딩
         byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
-        for (byte b : decodedKey) {
-            log.warn("decodedKey >> " + b);
-        }
+//        for (byte b : decodedKey) { 여기도 출력 잘 됨
+//            log.warn("decodedKey >> " + b);
+//        }
 
         try {
             // 3. PKCS8 형식으로 키 생성
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
-            log.warn("keySpec >>" + keySpec);
+           // log.warn("keySpec >>" + keySpec); 여기도 출력 잘 됨
 
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            log.warn("keyFactory >>" + keyFactory);
+            //log.warn("keyFactory >>" + keyFactory); 여기도 출력 잘 됨
+            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
 
-            return keyFactory.generatePrivate(keySpec);
+            return privateKey;
         } catch (InvalidKeySpecException e) {
             throw new InvalidKeySpecException("프라이빗 키가 잘못된 PKCS8 포멧입니다.", e);
         }

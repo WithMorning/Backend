@@ -32,6 +32,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -246,15 +247,22 @@ public class AppleOauthProvider implements OauthProvider {
             .replace("-----END PRIVATE KEY-----", "")
             .replaceAll("\\s+", ""); // 모든 공백 제거
 
-        log.warn("privateKeyContent >>" + privateKeyContent);
+        //log.warn("privateKeyContent >>" + privateKeyContent); 여기는 출력 잘 됨.
 
         // 2. Base64 디코딩
         byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
+        for (byte b : decodedKey) {
+            log.warn("decodedKey >> " + b);
+        }
 
         try {
             // 3. PKCS8 형식으로 키 생성
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+            log.warn("keySpec >>" + keySpec);
+
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            log.warn("keyFactory >>" + keyFactory);
+
             return keyFactory.generatePrivate(keySpec);
         } catch (InvalidKeySpecException e) {
             throw new InvalidKeySpecException("프라이빗 키가 잘못된 PKCS8 포멧입니다.", e);

@@ -246,6 +246,8 @@ public class AppleOauthProvider implements OauthProvider {
             .replace("-----END PRIVATE KEY-----", "")
             .replaceAll("\\s+", ""); // 모든 공백 제거
 
+        log.warn("privateKeyContent >>" + privateKeyContent);
+
         // 2. Base64 디코딩
         byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
 

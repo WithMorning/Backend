@@ -245,8 +245,6 @@ public class AppleOauthProvider implements OauthProvider {
     private PrivateKey loadPrivateKey()
         throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-
-
         // 1. private key 파일 읽기 및 전처리
         String privateKeyContent = Files.readString(Path.of(keyPath))
             .replace("-----BEGIN PRIVATE KEY-----", "") // PEM 헤더 제거
@@ -281,7 +279,7 @@ public class AppleOauthProvider implements OauthProvider {
             .setSubject(clientId)                   // 주제 (Client ID)
 
             // 3. 서명
-            .signWith(privateKey, SignatureAlgorithm.ES256)
+            .signWith(privateKey, SignatureAlgorithm.RS256)
             .compact();
     }
 

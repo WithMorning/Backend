@@ -228,11 +228,6 @@ public class AppleOauthProvider implements OauthProvider {
             if (!Files.exists(Path.of(keyPath))) {
                 throw new AuthException(NOT_FOUND_KEY_FILE);
             }
-            log.warn("clientId >> " + clientId);
-            log.warn("teamId >> " + teamId);
-            log.warn("keyId >> " + keyId);
-            log.warn("keyPath >> " + keyPath);
-            log.warn("redirectUri >> " + redirectUri);
 
             PrivateKey privateKey = loadPrivateKey(); // 1. private key 로드
             return buildJwtToken(privateKey); // 2. JWT 토큰 생성
@@ -253,8 +248,15 @@ public class AppleOauthProvider implements OauthProvider {
 
         // 2. key 변환 과정
         byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decodedKey));
+
+        try {
+            // 3. PKCS8 형식으로 키 생성
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            return keyFactory.generatePrivate(keySpec);
+        } catch (InvalidKeySpecException e) {
+            throw new InvalidKeySpecException("Invalid PKCS8 private key format", e);
+        }
     }
 
     // JWT 토큰 생성 담당 메소드

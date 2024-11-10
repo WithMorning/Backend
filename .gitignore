@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 .env
 firebase_service_key.json
-AuthKey_3N2GZNNVW2.p8
+/Authkey*
 
 #테스트
 src/main/resources/firebase_service_key.json

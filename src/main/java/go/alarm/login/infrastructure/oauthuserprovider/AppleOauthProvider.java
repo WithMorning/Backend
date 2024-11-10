@@ -263,6 +263,7 @@ public class AppleOauthProvider implements OauthProvider {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             //log.warn("keyFactory >>" + keyFactory); 여기도 출력 잘 됨
             PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
+            log.warn("privateKey >> "+ privateKey.toString());
 
             return privateKey;
         } catch (InvalidKeySpecException e) {

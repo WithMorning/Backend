@@ -166,6 +166,12 @@ public class AppleOauthProvider implements OauthProvider {
             //log.error("Failed to get Apple refresh token. Response: {}", response);
             throw new AuthException(FAIL_GET_APPLE_TOKEN);
         }catch (HttpClientErrorException e) {
+            log.warn("clientId >> " + clientId);
+            log.warn("teamId >> " + teamId);
+            log.warn("keyId >> " + keyId);
+            log.warn("keyPath >> " + keyPath);
+            log.warn("redirectUri >> " + redirectUri);
+
             throw new AuthException(FAIL_GET_APPLE_TOKEN, e);
         }
         catch (Exception e) {

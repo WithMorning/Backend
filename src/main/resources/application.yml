@@ -39,8 +39,6 @@ security:
 oauth2:
   provider:
     apple:
-      auth:
-        token-url: https://appleid.apple.com/auth/token
       redirect:
         url: ${REDIRECT_URL}
       client:

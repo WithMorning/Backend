@@ -166,12 +166,6 @@ public class AppleOauthProvider implements OauthProvider {
             //log.error("Failed to get Apple refresh token. Response: {}", response);
             throw new AuthException(FAIL_GET_APPLE_TOKEN);
         }catch (HttpClientErrorException e) {
-            log.warn("clientId >> " + clientId);
-            log.warn("teamId >> " + teamId);
-            log.warn("keyId >> " + keyId);
-            log.warn("keyPath >> " + keyPath);
-            log.warn("redirectUri >> " + redirectUri);
-
             throw new AuthException(FAIL_GET_APPLE_TOKEN, e);
         }
         catch (Exception e) {
@@ -246,6 +240,13 @@ public class AppleOauthProvider implements OauthProvider {
     // 키 파일 로딩 및 변환 담당 메소드
     private PrivateKey loadPrivateKey()
         throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        log.warn("clientId >> " + clientId);
+        log.warn("teamId >> " + teamId);
+        log.warn("keyId >> " + keyId);
+        log.warn("keyPath >> " + keyPath);
+        log.warn("redirectUri >> " + redirectUri);
+
+
         // 1. private key 파일 읽기 및 전처리
         String privateKeyContent = Files.readString(Path.of(keyPath))
             .replace("-----BEGIN PRIVATE KEY-----", "") // PEM 헤더 제거
@@ -270,7 +271,7 @@ public class AppleOauthProvider implements OauthProvider {
         return Jwts.builder()
             // 1. 헤더 설정
             .setHeaderParam("kid", keyId)
-            .setHeaderParam("alg", "ES256")
+            .setHeaderParam("alg", "RS256")
 
             // 2. 페이로드 설정
             .setIssuer(teamId)                       // 발급자 (Apple Team ID)

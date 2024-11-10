@@ -228,7 +228,11 @@ public class AppleOauthProvider implements OauthProvider {
             if (!Files.exists(Path.of(keyPath))) {
                 throw new AuthException(NOT_FOUND_KEY_FILE);
             }
-
+            log.warn("clientId >> " + clientId);
+            log.warn("teamId >> " + teamId);
+            log.warn("keyId >> " + keyId);
+            log.warn("keyPath >> " + keyPath);
+            log.warn("redirectUri >> " + redirectUri);
 
             PrivateKey privateKey = loadPrivateKey(); // 1. private key 로드
             return buildJwtToken(privateKey); // 2. JWT 토큰 생성
@@ -240,11 +244,7 @@ public class AppleOauthProvider implements OauthProvider {
     // 키 파일 로딩 및 변환 담당 메소드
     private PrivateKey loadPrivateKey()
         throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        log.warn("clientId >> " + clientId);
-        log.warn("teamId >> " + teamId);
-        log.warn("keyId >> " + keyId);
-        log.warn("keyPath >> " + keyPath);
-        log.warn("redirectUri >> " + redirectUri);
+
 
 
         // 1. private key 파일 읽기 및 전처리

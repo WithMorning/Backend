@@ -22,6 +22,7 @@ import go.alarm.login.infrastructure.JwtProvider;
 import go.alarm.login.presentation.LoginConverter;
 import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
 import go.alarm.wakeupdayofweek.domain.repository.WakeUpDayOfWeekRepository;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,8 @@ public class LoginServiceImpl implements LoginService{
 
 
     @Override
-    public UserTokens login(final String providerName, final String identityToken, final String code) {
+    public UserTokens login(final String providerName, final String identityToken, final String code)
+        throws IOException {
         OauthProvider provider = oauthProviders.mapping(providerName);
         OauthUserInfo oauthUserInfo = provider.getUserInfo(identityToken);
         log.warn("oauthUserInfo.getEmail() >>>> " + oauthUserInfo.getEmail());

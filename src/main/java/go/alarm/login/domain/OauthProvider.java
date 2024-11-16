@@ -1,5 +1,6 @@
 package go.alarm.login.domain;
 
+import java.io.IOException;
 import org.springframework.web.client.RestTemplate;
 
 public interface OauthProvider {
@@ -11,5 +12,5 @@ public interface OauthProvider {
 
     Boolean revokeToken(Long userId, String appleRefreshToken);
 
-    String getRefreshToken(String authorizationCode);
+    String getRefreshToken(String authorizationCode) throws IOException;
 }

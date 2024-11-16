@@ -30,8 +30,6 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	// Swagger
-	implementation 'io.springfox:springfox-swagger2:2.9.2'
-	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
 	// Lombok
@@ -60,14 +58,15 @@ dependencies {
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	implementation 'org.bouncycastle:bcprov-jdk18on:1.77'
-	implementation 'org.bouncycastle:bcpkix-jdk18on:1.77'
+	implementation 'org.bouncycastle:bcpkix-jdk15on:1.68'
+	implementation 'commons-io:commons-io:2.11.0'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-jar { // 이걸 넣어줘야 깃허브 액션을 통해 잘 빌드가 된다.
-	enabled = false
+bootJar {
+	mainClass = 'go.alarm.AlarmApplication'
 }

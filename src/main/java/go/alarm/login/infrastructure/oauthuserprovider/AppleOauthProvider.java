@@ -22,8 +22,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
@@ -32,16 +34,21 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -79,7 +86,7 @@ public class AppleOauthProvider implements OauthProvider {
         @Value(PROPERTIES_PATH + "key.path}") final String keyPath,
         @Value(PROPERTIES_PATH + "redirect.url}") final String redirectUri
     ) {
-        this.clientId = clientId; //  Apple Developer Console에서 확인할 수 있는 클라이언트 ID
+        this.clientId = clientId; //  Apple Developer Console에서 확인할 수 있는 identifier
         this.teamId = teamId; // Apple Developer 팀 ID
         this.keyId = keyId; // Apple Developer Console에서 생성한 private key의 ID
         this.keyPath = keyPath;
@@ -113,7 +120,7 @@ public class AppleOauthProvider implements OauthProvider {
     }
 
     @Override
-    public String getRefreshToken(final String authorizationCode){
+    public String getRefreshToken(final String authorizationCode) throws IOException {
         String tokenUrl = "https://appleid.apple.com/auth/token";
 
         // 파라미터 유효성 검사 추가
@@ -228,83 +235,42 @@ public class AppleOauthProvider implements OauthProvider {
      *  Apple Client Secret 생성하는 메소드입니다. 이는 서버가 애플 서버에 API 요청을 할 때 자신을 인증하기 위한 용도로 JWT 형태로 생성합니다.
      *  Client Secret은 서버가 자신을 인증하는 "신분증" 같은 역할을 한다고 보면 됩니다.
      * */
-    private String generateAppleClientSecret() {
-        try {
-            if (!Files.exists(Path.of(keyPath))) {
-                throw new AuthException(NOT_FOUND_KEY_FILE);
-            }
+    private String generateAppleClientSecret() throws IOException {
+        Date expirationDate = Date.from(LocalDateTime.now()
+            .plusDays(5)
+            .atZone(ZoneId.systemDefault())
+            .toInstant());
 
-            PrivateKey privateKey = loadPrivateKey(); // 1. private key 로드
-            return buildJwtToken(privateKey); // 2. JWT 토큰 생성
-        } catch (Exception e) {
-            throw new AuthException(FAIL_CREATE_CLIENT_SECRET, e);
-        }
+        Map<String, Object> jwtHeader = new HashMap<>();
+        jwtHeader.put("kid", keyId);
+        jwtHeader.put("alg", "ES256");
+
+        return Jwts.builder()
+            .setHeaderParams(jwtHeader)
+            .setIssuer(teamId)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(expirationDate)
+            .setAudience("https://appleid.apple.com")
+            .setSubject(clientId)
+            .signWith(getPrivateKey())
+            .compact();
     }
 
     // 키 파일 로딩 및 변환 담당 메소드
-    private PrivateKey loadPrivateKey()
-        throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    private PrivateKey getPrivateKey() throws IOException {
+        Resource resource = new ClassPathResource(keyPath);
+        InputStream inputStream = resource.getInputStream();
 
-        String privateKeyContent = Files.readString(Path.of(keyPath));
-        PEMParser pemParser = new PEMParser(new StringReader(privateKeyContent));
-        JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
-        Object keyPair = pemParser.readObject();
-        return converter.getPrivateKey((PrivateKeyInfo) keyPair);
+        try {
+            String privateKeyContent = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+            PEMParser pemParser = new PEMParser(new StringReader(privateKeyContent));
+            PrivateKeyInfo privateKeyInfo = (PrivateKeyInfo) pemParser.readObject();
 
-//        // 1. private key 파일 읽기 및 전처리
-//        String privateKeyContent = Files.readString(Path.of(keyPath))
-//            .replace("-----BEGIN PRIVATE KEY-----", "")
-//            .replace("-----END PRIVATE KEY-----", "")
-//            .replaceAll("\\s+", ""); // 모든 공백 제거
-//
-//        //log.warn("privateKeyContent >>" + privateKeyContent); 여기는 출력 잘 됨.
-//
-//        // 2. Base64 디코딩
-//        byte[] decodedKey = Base64.getDecoder().decode(privateKeyContent);
-////        for (byte b : decodedKey) { 여기도 출력 잘 됨
-////            log.warn("decodedKey >> " + b);
-////        }
-//
-//        try {
-//            // 3. PKCS8 형식으로 키 생성
-//            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(decodedKey);
-//           // log.warn("keySpec >>" + keySpec); 여기도 출력 잘 됨
-//
-//            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-//            //log.warn("keyFactory >>" + keyFactory); 여기도 출력 잘 됨
-//            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);
-//            log.warn("privateKey >> "+ privateKey.toString());
-//
-//            return privateKey;
-//        } catch (InvalidKeySpecException e) {
-//            throw new InvalidKeySpecException("프라이빗 키가 잘못된 PKCS8 포멧입니다.", e);
-//        }
-    }
-
-    // JWT 토큰 생성 담당 메소드
-    private String buildJwtToken(PrivateKey privateKey) {
-        // 필수 파라미터 검증
-        if (keyId == null || teamId == null || clientId == null) {
-            throw new AuthException(NOT_FOUND_REQUIRED_PARAM);
+            return new JcaPEMKeyConverter()
+                .getPrivateKey(privateKeyInfo);
+        } finally {
+            inputStream.close();
         }
-
-        Instant now = Instant.now();
-
-        return Jwts.builder()
-            // 1. 헤더 설정
-            .setHeaderParam("kid", keyId)
-            .setHeaderParam("alg", "RS256")
-
-            // 2. 페이로드 설정
-            .setIssuer(teamId)                       // 발급자 (Apple Team ID)
-            .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plus(5, ChronoUnit.MINUTES)))
-            .setAudience("https://appleid.apple.com") // 대상자 (Apple)
-            .setSubject(clientId)                   // 주제 (Client ID)
-
-            // 3. 서명
-            .signWith(privateKey, SignatureAlgorithm.RS256)
-            .compact();
     }
 
     /**

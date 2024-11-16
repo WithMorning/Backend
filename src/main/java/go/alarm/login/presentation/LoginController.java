@@ -11,6 +11,7 @@ import go.alarm.login.dto.LoginTokensResponse;
 import go.alarm.login.service.LoginService;
 import go.alarm.login.dto.LoginRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -39,7 +40,7 @@ public class LoginController {
         @PathVariable final String provider,
         @RequestBody final LoginRequest request,
         final HttpServletResponse response
-    ) {
+    ) throws IOException {
         log.warn("authorication Code >>> " + request.getCode());
         log.warn("idenetity Tokne >>> " + request.getIdentityToken());
 

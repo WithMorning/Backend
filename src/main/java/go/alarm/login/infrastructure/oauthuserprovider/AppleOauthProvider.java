@@ -1,15 +1,12 @@
 package go.alarm.login.infrastructure.oauthuserprovider;
 
 
-import static go.alarm.global.response.ResponseCode.FAIL_CREATE_CLIENT_SECRET;
 import static go.alarm.global.response.ResponseCode.FAIL_GET_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.FAIL_REVOKE_APPLE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_AUTHORIZATION_CODE;
 import static go.alarm.global.response.ResponseCode.NOT_FOUND_AUTHORIZATION_CODE;
 import static go.alarm.global.response.ResponseCode.NOT_FOUND_CLIENT_SECRET;
-import static go.alarm.global.response.ResponseCode.NOT_FOUND_KEY_FILE;
 import static go.alarm.global.response.ResponseCode.NOT_FOUND_REFRESH_TOKEN;
-import static go.alarm.global.response.ResponseCode.NOT_FOUND_REQUIRED_PARAM;
 import static go.alarm.global.response.ResponseCode.NOT_SUPPORTED_OAUTH_SERVICE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,23 +17,17 @@ import go.alarm.login.domain.OauthUserInfo;
 import go.alarm.login.infrastructure.oauthuserinfo.AppleUserInfo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -258,18 +249,14 @@ public class AppleOauthProvider implements OauthProvider {
 
     // 키 파일 로딩 및 변환 담당 메소드
     private PrivateKey getPrivateKey() throws IOException {
-        Resource resource = new ClassPathResource(keyPath);
-        InputStream inputStream = resource.getInputStream();
-
-        try {
+        File keyFile = new File(keyPath);
+        try (FileInputStream inputStream = new FileInputStream(keyFile)) {
             String privateKeyContent = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
             PEMParser pemParser = new PEMParser(new StringReader(privateKeyContent));
             PrivateKeyInfo privateKeyInfo = (PrivateKeyInfo) pemParser.readObject();
 
             return new JcaPEMKeyConverter()
                 .getPrivateKey(privateKeyInfo);
-        } finally {
-            inputStream.close();
         }
     }
 

@@ -17,6 +17,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,13 @@ public class FCMServiceImpl implements FCMService{
             for (User user : users) {
                 if (isToday(user, dayOfToday) && user.getIsAllowBedTimeAlarm()) {
                     try {
+                        List<UserGroup> userGroups = userGroupRepository.findAllByUserOrderByCreatedAtDesc(user);
+
+                        for (UserGroup userGroup : userGroups) {
+                            log.warn("userGroup.group.name >>> "  + userGroup.getGroup().getName());
+                            userGroup.setWakeup(false);
+                        }
+
                         sendNotification(
                             user.getFcmToken(),
                             "취침 알람",

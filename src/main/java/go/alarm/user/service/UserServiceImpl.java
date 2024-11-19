@@ -20,6 +20,8 @@ import go.alarm.wakeupdayofweek.domain.repository.WakeUpDayOfWeekRepository;
 import go.alarm.user.domain.repository.UserRepository;
 import go.alarm.wakeupdayofweek.presentation.WakeUpDayOfWeekConverter;
 import go.alarm.user.dto.request.UserBedTimeRequest;
+import jakarta.persistence.EntityNotFoundException;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -179,10 +181,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void setWakeStatus(Long userId, Long groupId) {
-        User user = userRepository.findById(userId).get();
-        Group group = groupRepository.findById(groupId).get();
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. ID: " + userId));
 
-        UserGroup userGroup = userGroupRepository.findByUserAndGroup(user, group);
+        Group group = groupRepository.findById(groupId)
+            .orElseThrow(() -> new EntityNotFoundException("그룹을 찾을 수 없습니다. ID: " + groupId));
+
+        UserGroup userGroup = Optional.ofNullable(userGroupRepository.findByUserAndGroup(user, group))
+            .orElseThrow(() -> new EntityNotFoundException("UserGroup을 찾을 수 없습니다."));
 
         userGroup.setWakeup(true);
     }

@@ -126,6 +126,9 @@ public class UserController {
         @PathVariable(name = "groupId") Long groupId,
         @RequestBody @Valid DisturbBanModeRequest request) {
 
+        log.warn("groupID >>>>> " + groupId);
+        log.warn("request " + request.getIsDisturbBanMode());
+
         userService.setDisturbBanMode(accessor.getUserId(), groupId, request.getIsDisturbBanMode());
 
         return new SuccessResponse<>();
@@ -163,7 +166,7 @@ public class UserController {
 
     @PatchMapping("/{groupId}/phone-agree")
     @UesrOnly
-    @Operation(summary = "콬 찌르기 API", description = "특정 유저를 콕 찌릅니다.")
+    @Operation(summary = "전화번호 공개 여부 변경 API", description = "특정 그룹에 대한 전화번호 공개 여부를 변경합니다.")
     @ApiResponses({
         @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "OK, 성공입니다.")
     })

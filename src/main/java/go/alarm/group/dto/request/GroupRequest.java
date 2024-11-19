@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class GroupRequest {
 
     @NotBlank(message = "알람 그룹의 이름을 입력해주세요.")
-    @Size(max = 15, message = "알람 그룹의 이름은 15자를 초과할 수 없습니다.")
+    @Size(max = 40, message = "알람 그룹의 이름은 40자를 초과할 수 없습니다.")
     private String name;
 
     @NotNull(message = "알람 그룹의 기상 시간을 입력해주세요.")

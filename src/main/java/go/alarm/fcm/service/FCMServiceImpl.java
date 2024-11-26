@@ -55,8 +55,9 @@ public class FCMServiceImpl implements FCMService{
                                 sendNotification(
                                     user.getFcmToken(),
                                     "기상 알람",
-                                    "기상 알랍입니다. 현재 시각: " + now,
-                                    "DefaultSound.wav"
+                                    "얼른 일어나서 다른 메이트들을 깨워주세요!",
+                                    "wakeupalarm.wav",
+                                    group.getId()
                                 );
                             } catch (FirebaseMessagingException e) {
                                 log.warn("유저" + user.getNickname() + "에게 기상 알람 전송을 실패했습니다.");
@@ -93,8 +94,9 @@ public class FCMServiceImpl implements FCMService{
                         sendNotification(
                             user.getFcmToken(),
                             "취침 알람",
-                            "취침 알람입니다. 현재 시각: " + now,
-                            "FirstSound.wav"
+                            "\uD83D\uDECF\uFE0F오늘 하루를 마무리 할 시간입니다. 차분한 마음으로 잠자리에 들어볼까요? \uD83D\uDCA4",
+                                "default",
+                            0L // 0 이면 무시하면 됨
                         );
                     } catch (FirebaseMessagingException e) {
                         log.warn("유저" + user.getNickname() + "에게 취침 알람 전송을 실패했습니다.");
@@ -118,7 +120,8 @@ public class FCMServiceImpl implements FCMService{
                 user.getFcmToken(),
                 "Test Alarm",
                 "It's just Test. Don't Worry",
-                "SecondSound.wav"
+                "SecondSound.wav",
+                0L // 0 이면 무시하면 됨
             );
         } catch (FirebaseMessagingException e) {
             // 로그 기록 또는 에러 처리
@@ -143,8 +146,9 @@ public class FCMServiceImpl implements FCMService{
             sendNotification(
                 receiver.getFcmToken(),
                 "콕 찌르기",
-                sender.getNickname() + "이/가" + receiver.getNickname() + "을/를" + "콕 찔렀어요!! 현재 시각: " + now,
-                "ThirdSound.wav"
+                "\uD83D\uDC4B 일어나세요!!" + sender.getNickname() + "님이 얼른 일어나길 바라고 있어요!!",
+                "pricksound.wav",
+                0L // 0 이면 무시하면 됨
             );
         } catch (FirebaseMessagingException e) {
             log.warn("유저" + receiver.getNickname() + "에게 콕 찌르기를 실패했습니다.");
@@ -156,7 +160,7 @@ public class FCMServiceImpl implements FCMService{
     /**
      * FCM으로 알림을 보내줍니다.
      */
-    private void sendNotification(String token, String title, String body, String sound) throws FirebaseMessagingException {
+    private void sendNotification(String token, String title, String body, String sound, Long groupId) throws FirebaseMessagingException {
 
         ApnsConfig apnsConfig = ApnsConfigBuilder.buildApnsConfig(sound);
 
@@ -167,6 +171,7 @@ public class FCMServiceImpl implements FCMService{
                 .setBody(body)
                 .build())
             .setApnsConfig(apnsConfig)
+            .putData("groupId", String.valueOf(groupId))  // 그룹 ID를 데이터 페이로드에 추가
             .build();
 
         firebaseMessaging.send(message);

@@ -32,7 +32,7 @@ spring:
 security:
   jwt:
     secret-key: ${JWT_SECRET}
-    access-expiration-time: 604800000 # 7일
+    access-expiration-time: 10800000 # 7일
     refresh-expiration-time: 604800000  # 7일
     
 # 소셜 로그인   

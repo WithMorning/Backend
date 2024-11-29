@@ -22,4 +22,6 @@ public interface UserService {
 
     void setPhoneAgree(Long userId, Long groupId, Boolean isAgree);
 
+    void setSleepStatus();
+
 }

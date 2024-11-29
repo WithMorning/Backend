@@ -1,6 +1,7 @@
 package go.alarm.global.config;
 
 import go.alarm.fcm.service.FCMService;
+import go.alarm.user.service.UserService;
 import java.time.LocalTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +13,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Slf4j
 public class SchedulerConfig {
     private final FCMService fcmService;
+    private final UserService userService;
 
-    public SchedulerConfig(FCMService fcmService) {
+    public SchedulerConfig(FCMService fcmService, UserService userService) {
         this.fcmService = fcmService;
+        this.userService = userService;
     }
 
     /*
@@ -29,6 +32,11 @@ public class SchedulerConfig {
         log.warn("현재 시각:" + LocalTime.now());
         fcmService.sendAlarms();
         fcmService.sendBedTimeAlarms();
+    }
+
+    @Scheduled(cron = "0 59 23 * * *")
+    public void setSleepStatus() {
+        userService.setSleepStatus();
     }
 
 }

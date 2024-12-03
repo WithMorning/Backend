@@ -21,6 +21,7 @@ import go.alarm.user.domain.repository.UserRepository;
 import go.alarm.wakeupdayofweek.presentation.WakeUpDayOfWeekConverter;
 import go.alarm.user.dto.request.UserBedTimeRequest;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
@@ -201,5 +202,14 @@ public class UserServiceImpl implements UserService {
         UserGroup userGroup = userGroupRepository.findByUserAndGroup(user, group);
 
         userGroup.setAgree(isAgree);
+    }
+
+    @Override
+    public void setSleepStatus() {
+        List<UserGroup> userGroupList = userGroupRepository.findAll();
+
+        for (UserGroup userGroup : userGroupList) {
+            userGroup.setWakeup(false);
+        }
     }
 }

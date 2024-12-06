@@ -75,7 +75,7 @@ public class GroupConverter {
             .user(user)
             .phone(user.getPhone())
             .isAgree(isAgree)
-            .isWakeup(Boolean.FALSE)
+            .isWakeup(Boolean.TRUE)
             .isDisturbBanMode(Boolean.FALSE)
             .build();
     }

@@ -30,7 +30,7 @@ public class SchedulerConfig {
     @Scheduled(cron = "0 * * * * *")
     public void scheduleAlarms() {
         log.warn("현재 시각:" + LocalTime.now());
-        fcmService.sendAlarms();
+        //fcmService.sendAlarms();
         fcmService.sendBedTimeAlarms();
     }
 

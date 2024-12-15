@@ -5,6 +5,7 @@ import static go.alarm.global.response.ResponseCode.EXCEED_USER_SIZE;
 import static go.alarm.global.response.ResponseCode.NOT_FOUND_JOIN_CODE;
 import static go.alarm.global.response.ResponseCode.NOT_GROUP_HOST;
 
+import go.alarm.fcm.service.FCMService;
 import go.alarm.global.response.exception.BadRequestException;
 import go.alarm.group.domain.Group;
 import go.alarm.group.domain.UserGroup;
@@ -31,6 +32,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
+    private final FCMService fcmService;
 
     @Override
     public Group createGroup(Long userId, GroupRequest request) {
@@ -62,11 +64,14 @@ public class GroupServiceImpl implements GroupService {
         updateDayOfWeek(group.getWakeUpDayOfWeek(), request.getDayOfWeekList());
         group.setName(request.getName());
         group.setMemo(request.getMemo());
+        //방해금지모드 + 방장 제외 팀원들에게 알람이 수정되었다는 푸시 알림 보내줌
+        // 목적은 앱 진입 유도 -> 이래야만 기상알람 시간 or 요일 or 전부 다 바뀐게 갱신이 됨)
+        fcmService.sendTriggerAlarms(group);
 
         return group;
     }
 
-    public WakeUpDayOfWeek updateDayOfWeek(WakeUpDayOfWeek dayOfWeek, List<String> dayOfWeekList){
+    private WakeUpDayOfWeek updateDayOfWeek(WakeUpDayOfWeek dayOfWeek, List<String> dayOfWeekList){
 
         dayOfWeek.resetDayOfWeek(); // 기존 기상 요일 리셋
 

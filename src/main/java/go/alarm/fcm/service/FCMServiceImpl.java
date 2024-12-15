@@ -16,8 +16,8 @@ import go.alarm.wakeupdayofweek.domain.WakeUpDayOfWeek;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -140,8 +140,6 @@ public class FCMServiceImpl implements FCMService{
         User sender = userRepository.findById(senderId).get();
         User receiver = userRepository.findById(receiverId).get();
 
-        LocalTime now = LocalTime.now().withNano(0);
-
         try {
             sendNotification(
                 receiver.getFcmToken(),
@@ -153,6 +151,34 @@ public class FCMServiceImpl implements FCMService{
         } catch (FirebaseMessagingException e) {
             log.warn("유저" + receiver.getNickname() + "에게 콕 찌르기를 실패했습니다.");
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendTriggerAlarms(Group group) {
+        List<UserGroup> userGroups = userGroupRepository.findAllByGroup(group);
+
+        // 방장을 식별 (가장 낮은 Id를 가진 UserGroup)
+        UserGroup leaderUserGroup = userGroups.stream()
+            .min(Comparator.comparingLong(UserGroup::getId))
+            .orElse(null);
+
+        for (UserGroup userGroup : userGroups) {
+            if (!userGroup.getIsDisturbBanMode() && !userGroup.equals(leaderUserGroup)) {
+                User user = userGroup.getUser();
+                try {
+                    sendNotification(
+                        user.getFcmToken(),
+                        "수정 알림",
+                        "수정 알림입니다.",
+                        "wakeupalarm.wav",
+                        group.getId()
+                    );
+                } catch (FirebaseMessagingException e) {
+                    log.warn("수정 알림 전송을 실패했습니다.");
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

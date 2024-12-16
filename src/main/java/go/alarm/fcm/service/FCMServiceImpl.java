@@ -171,7 +171,7 @@ public class FCMServiceImpl implements FCMService{
                         user.getFcmToken(),
                         "수정 알림",
                         "수정 알림입니다.",
-                        "wakeupalarm.wav",
+                        "default",
                         group.getId()
                     );
                 } catch (FirebaseMessagingException e) {

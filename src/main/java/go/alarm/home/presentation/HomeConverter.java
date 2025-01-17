@@ -36,11 +36,13 @@ public class HomeConverter {
     }
 
     public static HomeResponse.UserDTO userDTO(User user, UserGroup userGroup) {
+        System.out.print("@@@@@@@@@@@@@@" + userGroup.getIsHost());
         return HomeResponse.UserDTO.builder()
             .userId(user.getId())
             .imageURL(user.getImageURL())
             .nickname(user.getNickname())
             .isWakeup(userGroup.getIsWakeup())
+            .isHost(userGroup.getIsHost())
             .isAgree(userGroup.getIsAgree())
             .isDisturbBanMode(userGroup.getIsDisturbBanMode())
             .phone(user.getPhone())

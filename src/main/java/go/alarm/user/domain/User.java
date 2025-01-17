@@ -67,9 +67,6 @@ public class User {
     @Column
     private LocalTime bedTime;
 
-    @Column
-    private Boolean isHost;
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;

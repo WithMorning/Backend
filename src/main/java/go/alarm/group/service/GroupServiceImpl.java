@@ -41,7 +41,7 @@ public class GroupServiceImpl implements GroupService {
         WakeUpDayOfWeek dayOfWeek = WakeUpDayOfWeekConverter.toDayOfWeek(request.getDayOfWeekList()); // 기상 요일 설정
         group.setDayOfWeek(dayOfWeek);
 
-        UserGroup userGroup = GroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree()); // 유저 그룹 생성
+        UserGroup userGroup = GroupConverter.toUserGroup(userRepository.findById(userId).get(), request.getIsAgree(), true); // 유저 그룹 생성
         userGroup.setGroup(group); // userGroup을 userGroupRepository.save로 저장해야 하나..?
         // 아니다. setGroup을 들어가보면 group.~~.add로 userGroup객체를 넣어준다.
 
@@ -129,7 +129,7 @@ public class GroupServiceImpl implements GroupService {
             throw new BadRequestException(EXCEED_USER_SIZE);
         }
 
-        UserGroup userGroup = GroupConverter.toUserGroup(user, request.getIsAgree());
+        UserGroup userGroup = GroupConverter.toUserGroup(user, request.getIsAgree(), false);
         userGroup.setGroup(group);
 
         return userGroup;
@@ -141,6 +141,12 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findById(groupId).get();
         User user = userRepository.findById(userId).get();
         UserGroup userGroup = userGroupRepository.findByUserAndGroup(user,group);
+
+        if(group.getUserGroupList().size() > 1){
+            List<UserGroup> userGroupList = group.getUserGroupList();
+            Long newHostId = userGroupList.get(1).getUser().getId();
+            userGroupRepository.changeHost(userGroup.getId(), newHostId);// 방장 제외 다른 유저의 id를 넣어야 함
+        }
 
         userGroupRepository.delete(userGroup);
     }

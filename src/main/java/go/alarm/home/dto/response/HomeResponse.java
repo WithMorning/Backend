@@ -38,6 +38,7 @@ public class HomeResponse {
         private String imageURL;
         private String nickname;
         private Boolean isWakeup;
+        private Boolean isHost;
         private Boolean isAgree;
         private Boolean isDisturbBanMode;
         private String phone;

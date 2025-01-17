@@ -40,6 +40,8 @@ public class UserGroup extends BaseEntity { // UserGroup이라는 클래스명�
 
     private Boolean isWakeup;
 
+    private Boolean isHost;
+
     private Boolean isAgree; // 전화번호 사용 동의 여부
 
     private Boolean isDisturbBanMode; // 방해금지모드 여부 >> True:방해금지모드 on, False:방해금지모드 off

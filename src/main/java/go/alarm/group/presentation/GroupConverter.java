@@ -69,13 +69,14 @@ public class GroupConverter {
     /**
      * 유저-알람그룹 엔티티를 생성하여 반환해줍니다.
      * */
-    public static UserGroup toUserGroup(User user, Boolean isAgree){
+    public static UserGroup toUserGroup(User user, Boolean isAgree, Boolean isHost){
 
         return UserGroup.builder()
             .user(user)
             .phone(user.getPhone())
             .isAgree(isAgree)
             .isWakeup(Boolean.TRUE)
+            .isHost(isHost)
             .isDisturbBanMode(Boolean.FALSE)
             .build();
     }

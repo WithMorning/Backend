@@ -32,6 +32,7 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
 
     void deleteByUserId(Long userId);
 
+    @Modifying
     @Query("""
             UPDATE UserGroup ug
             SET ug.isHost = true

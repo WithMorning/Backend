@@ -38,7 +38,7 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
             SET ug.isHost = true
             WHERE ug.id = :userGroupId AND ug.user.id = :userId
             """)
-    void changeHost(Long userGroupId, Long userId);
+    void changeHost(@Param("userGroupId") Long userGroupId, @Param("userId") Long userId);
 
 
 

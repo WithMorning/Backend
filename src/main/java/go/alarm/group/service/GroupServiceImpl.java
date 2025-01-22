@@ -99,7 +99,7 @@ public class GroupServiceImpl implements GroupService {
     public void deleteGroup(Long userId, Long groupId) {
 
         Group group = groupRepository.findById(groupId).get();
-        User host = group.getUserGroupList().get(0).getUser(); // 이 부분 테스트 해봐야 함!!!!
+        User host = group.getUserGroupList().get(0).getUser();
 
         if(userId == host.getId()){
             groupRepository.deleteById(groupId);
@@ -141,12 +141,6 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findById(groupId).get();
         User user = userRepository.findById(userId).get();
         UserGroup userGroup = userGroupRepository.findByUserAndGroup(user,group);
-
-        if(group.getUserGroupList().size() > 1){
-            List<UserGroup> userGroupList = group.getUserGroupList();
-            Long newHostId = userGroupList.get(1).getUser().getId();
-            userGroupRepository.changeHost(userGroup.getId(), newHostId);// 방장 제외 다른 유저의 id를 넣어야 함
-        }
 
         userGroupRepository.delete(userGroup);
     }

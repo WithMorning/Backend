@@ -169,8 +169,8 @@ public class FCMServiceImpl implements FCMService{
                 try {
                     sendNotification(
                         user.getFcmToken(),
-                        "수정 알림",
-                        "수정 알림입니다.",
+                        "알람이 수정되었어요.",
+                        "앱에 진입하여 변동사항을 확인해 주세요!",
                         "default",
                         group.getId()
                     );

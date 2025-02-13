@@ -99,12 +99,16 @@ public class GroupServiceImpl implements GroupService {
     public void deleteGroup(Long userId, Long groupId) {
 
         Group group = groupRepository.findById(groupId).get();
-        User host = group.getUserGroupList().get(0).getUser();
-
-        if(userId == host.getId()){
-            groupRepository.deleteById(groupId);
+        Long hostId = 0L;
+        for(UserGroup userGroup: group.getUserGroupList()){
+            if(userGroup.getIsHost()){
+                hostId = userGroup.getUser().getId();
+            }
         }
-        else {
+
+        if(userId.equals(hostId)){
+            groupRepository.deleteById(groupId);
+        } else {
             throw new BadRequestException(NOT_GROUP_HOST);
         }
 

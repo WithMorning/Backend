@@ -32,5 +32,5 @@ jobs:
       - name: Build with Gradle
         #run: ./gradlew clean build -x test
         # -x test 테스트
-        run: ./gradlew bootRun
+        run: ./gradlew clean build -x test
         shell: bash

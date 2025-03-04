@@ -49,11 +49,6 @@ public class LoginServiceImpl implements LoginService{
         throws IOException {
         OauthProvider provider = oauthProviders.mapping(providerName);
         OauthUserInfo oauthUserInfo = provider.getUserInfo(identityToken);
-        log.warn("oauthUserInfo.getEmail() >>>> " + oauthUserInfo.getEmail());
-        log.warn("서비스단(login) authorication Code >>> " + code);
-
-        // 이 부분에 authorization code를 통해 리프레시 토큰을 저장하는 코드 추가해야 함!!!!
-        // 애플 회원탈퇴를 할 때 리프레시 토큰을 넘겨줘야 하기 때문
         /**
          * 이 부분에 authorization code를 통해 만료 기간이 없는 애플 refresh token을 받아서 우리서버 db에 저장해놓는다.
          * iOS에서 회원탈퇴를 요청하면 우리서버에서는 유저정보를지우고 이때 저장되어있던 애플 refresh token을 가지고
@@ -69,7 +64,6 @@ public class LoginServiceImpl implements LoginService{
         if ("apple".equalsIgnoreCase(providerName) && code != null) {
             // authorization code로 애플 refresh token 발급 요청
             String appleRefreshToken = provider.getRefreshToken(code);
-            log.warn("appleRefreshToken >>> "+ appleRefreshToken);
 
             // 기존 애플 refresh token이 있다면 제거
             AppleRefreshToken existingAppleToken = appleRefreshTokenRepository.findByUserId(user.getId());
@@ -94,6 +88,13 @@ public class LoginServiceImpl implements LoginService{
 
         RefreshToken newRefreshToken = LoginConverter.toRefreshToken(
             userTokens.getRefreshToken(), user.getId());
+
+        Boolean isNewUser = true;
+        if(user.getPhone() != null){
+            isNewUser = false;
+        }
+        // 새로 가입한 유저인지 isNewUser 값 추가
+        userTokens.setIsNewUser(isNewUser);
         
         refreshTokenRepository.save(newRefreshToken); // 이후 유저 ID와 리프레시토큰을 리프레시토큰 레포에 저장
         

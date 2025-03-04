@@ -12,4 +12,13 @@ public class UserTokens {
 
     private final String refreshToken;
     private final String accessToken;
+    private Boolean isNewUser;
+
+    public Boolean getIsNewUser() {
+        return isNewUser;
+    }
+
+    public void setIsNewUser(Boolean isNewUser) {
+        this.isNewUser = isNewUser;
+    }
 }

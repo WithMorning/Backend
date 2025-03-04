@@ -41,15 +41,8 @@ public class LoginController {
         @RequestBody final LoginRequest request,
         final HttpServletResponse response
     ) throws IOException {
-        log.warn("authorication Code >>> " + request.getCode());
-        log.warn("idenetity Tokne >>> " + request.getIdentityToken());
-
-
         final UserTokens userTokens = loginService.login(provider, request.getIdentityToken(),request.getCode());
-        log.warn("컨트롤러단(/login) 리프레시 토큰 >>" + userTokens.getRefreshToken());
-        log.warn("컨트롤러단(/login) 엑세스 토큰 >>" + userTokens.getAccessToken());
-
-        return new SuccessResponse<>(new LoginTokensResponse(userTokens.getAccessToken(), userTokens.getRefreshToken()));
+        return new SuccessResponse<>(new LoginTokensResponse(userTokens.getAccessToken(), userTokens.getRefreshToken(), userTokens.getIsNewUser()));
     }
 
 
@@ -59,8 +52,6 @@ public class LoginController {
         @RequestBody final RefreshTokenRequest request,
         @RequestHeader("Authorization") final String authorizationHeader // Authorization 헤더 값 (Bearer 토큰을 포함한 엑세스 토큰)
     ) {
-        log.warn("컨트롤러단(/accesstoken) 리프레시 토큰 >>" + request.getRefreshToken());
-        log.warn("컨트롤러단(/accesstoken) 엑세스 토큰 >>" + authorizationHeader);
         final String renewalAccessToken = loginService.renewalAccessToken(request.getRefreshToken(), authorizationHeader);
         return new SuccessResponse<>(new LoginTokensResponse(renewalAccessToken));
     }

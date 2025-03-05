@@ -1,6 +1,7 @@
 package go.alarm.group.domain.repository;
 
 import go.alarm.group.domain.Group;
+import jakarta.transaction.Transactional;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +21,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             WHERE group.id = :groupId
             """)
     void softDeleteById(@Param("groupId") final Long groupId);
+
+    @Transactional
+    @Modifying // executeUpdate, executeDelete 를 사용하기 위해 필요함.
+    @Query("delete from Group g where g in (select ug.group from UserGroup ug where ug.user.id = :userId and ug.isHost = true)")
+    void deleteGroupsCreatedByUserId(@Param("userId") Long userId);
 
 }

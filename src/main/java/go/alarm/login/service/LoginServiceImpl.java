@@ -5,6 +5,7 @@ package go.alarm.login.service;
 import static go.alarm.global.response.ResponseCode.FAIL_TO_VALIDATE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_REFRESH_TOKEN;
 
+import go.alarm.group.domain.repository.GroupRepository;
 import go.alarm.group.domain.repository.UserGroupRepository;
 import go.alarm.login.domain.AppleRefreshToken;
 import go.alarm.login.domain.repository.AppleRefreshTokenRepository;
@@ -36,6 +37,7 @@ public class LoginServiceImpl implements LoginService{
 
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
+    private final GroupRepository groupRepository;
     private final WakeUpDayOfWeekRepository wakeUpDayOfWeekRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AppleRefreshTokenRepository appleRefreshTokenRepository;
@@ -159,7 +161,9 @@ public class LoginServiceImpl implements LoginService{
 
         userRepository.deleteById(userId);
         userGroupRepository.deleteByUserId(userId);
+        groupRepository.deleteGroupsCreatedByUserId(userId);
         refreshTokenRepository.deleteByUserId(userId);
+
 
     }
 

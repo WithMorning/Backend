@@ -42,4 +42,5 @@ public interface UserGroupRepository extends JpaRepository<UserGroup, Long> {
 
 
 
+
 }

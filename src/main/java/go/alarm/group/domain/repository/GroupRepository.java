@@ -25,12 +25,10 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
     @Modifying
     @Transactional
     @Query("""
-            DELETE FROM alarm_group g 
-            WHERE g IN (
-                SELECT ug.group 
-                FROM UserGroup ug 
-                WHERE ug.user.id = :userId AND ug.isHost = true
-            )
+            SELECT g 
+            FROM alarm_group g 
+            JOIN g.userGroupList ug 
+            WHERE ug.user.id = :userId AND ug.isHost = true
             """)
-    void deleteGroupsCreatedByUser(@Param("userId") final Long userId);
+    List<Group> findGroupsCreatedByUser(@Param("userId") final Long userId);
 }

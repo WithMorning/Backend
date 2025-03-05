@@ -5,6 +5,8 @@ package go.alarm.login.service;
 import static go.alarm.global.response.ResponseCode.FAIL_TO_VALIDATE_TOKEN;
 import static go.alarm.global.response.ResponseCode.INVALID_REFRESH_TOKEN;
 
+import java.util.*;
+import go.alarm.group.domain.Group;
 import go.alarm.group.domain.repository.GroupRepository;
 import go.alarm.group.domain.repository.UserGroupRepository;
 import go.alarm.login.domain.AppleRefreshToken;
@@ -161,7 +163,12 @@ public class LoginServiceImpl implements LoginService{
 
         userRepository.deleteById(userId);
         userGroupRepository.deleteByUserId(userId);
-        groupRepository.deleteGroupsCreatedByUser(userId);
+
+        List<Group> groups = groupRepository.findGroupsCreatedByUser(userId);
+        for (Group group : groups) {
+            log.warn("groupId ->" + group.getId());
+            groupRepository.delete(group); // 이거 왜 안됨?
+        }
         refreshTokenRepository.deleteByUserId(userId);
 
 

@@ -22,9 +22,15 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             """)
     void softDeleteById(@Param("groupId") final Long groupId);
 
+    @Modifying
     @Transactional
-    @Modifying // executeUpdate, executeDelete 를 사용하기 위해 필요함.
-    @Query("delete from Group g where g in (select ug.group from UserGroup ug where ug.user.id = :userId and ug.isHost = true)")
-    void deleteGroupsCreatedByUserId(@Param("userId") Long userId);
-
+    @Query("""
+            DELETE FROM alarm_group g 
+            WHERE g IN (
+                SELECT ug.group 
+                FROM UserGroup ug 
+                WHERE ug.user.id = :userId AND ug.isHost = true
+            )
+            """)
+    void deleteGroupsCreatedByUser(@Param("userId") final Long userId);
 }

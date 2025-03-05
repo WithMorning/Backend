@@ -161,7 +161,7 @@ public class LoginServiceImpl implements LoginService{
 
         userRepository.deleteById(userId);
         userGroupRepository.deleteByUserId(userId);
-        groupRepository.deleteGroupsCreatedByUserId(userId);
+        groupRepository.deleteGroupsCreatedByUser(userId);
         refreshTokenRepository.deleteByUserId(userId);
 
 

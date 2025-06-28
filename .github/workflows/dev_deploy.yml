@@ -74,8 +74,8 @@ jobs:
             EOF
             
             # 2. Auth key, firebase key 생성
-            echo "${{ secrets.FIREBASE_KEY_JSON }}" > firebase_service_key.json
-            echo "${{ secrets.AUTH_KEY_P8 }}" > AuthKey_${{ secrets.APPLE_KEY_ID }}.p8
+            echo "${{ secrets.FIREBASE_KEY_JSON }}" > firebase-service-account.json
+            echo "${{ secrets.AUTH_KEY_P8 }}" > authkey.p8
 
             # 2. Docker Compose 실행
             docker-compose down

@@ -4,7 +4,7 @@ services:
   # Spring Boot 애플리케이션 서비스
   app:
     build: . # 현재 디렉토리의 Dockerfile을 사용하여 이미지를 빌드합니다.
-    container_name: withmorning-app # 컨테이너 이름을 지정합니다.
+    container_name: withmorning-app
     ports:
       - "8080:8080" # 호스트의 8080 포트를 컨테이너의 8080 포트와 연결합니다.
     depends_on:
@@ -36,10 +36,9 @@ services:
       - COOLSMS_SECRET=${COOLSMS_SECRET}
       - FROM_NUMBER=${FROM_NUMBER}
     volumes:
-      # EC2 호스트의 파일을 컨테이너 내부의 경로로 연결합니다.
-      - ./firebase_service_key.json:/firebase_service_key.json
-      # AuthKey의 KEY_ID는 환경변수나 Secrets에서 가져와야 합니다.
-      - ./AuthKey_${APPLE_KEY_ID}.p8:/AuthKey_${APPLE_KEY_ID}.p8
+      # 이제 변수 없이 고정된 경로를 사용합니다.
+      - ./firebase-service-account.json:/firebase-service-account.json
+      - ./authkey.p8:/authkey.p8 # 파일 이름을 authkey.p8로 단순화
 
   # Redis 서비스
   redis:

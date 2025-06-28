@@ -1,5 +1,6 @@
 package go.alarm.global.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -9,7 +10,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfig {
-    private String redisHost = "localhost";
+
+    @Value("${spring.redis.host}") // Value 어노테이션으로 변경
+    private String redisHost;
     private int redisPort = 6379;
 
     @Bean

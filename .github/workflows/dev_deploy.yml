@@ -77,8 +77,10 @@ jobs:
             # 2. Auth key, firebase key 생성
             echo "${{ secrets.FIREBASE_KEY_JSON }}" > firebase-service-account.json
             echo "${{ secrets.AUTH_KEY_P8 }}" > authkey.p8
+            
+            # 4. .env 파일의 변수들을 현재 셸 환경으로 로드 (가장 중요!)
+            export $(grep -v '^#' .env | xargs)
 
             # 2. Docker Compose 실행
             docker-compose down
-            docker pull ${{ secrets.DOCKER_USERNAME }}/withmorning:latest
             docker-compose up -d

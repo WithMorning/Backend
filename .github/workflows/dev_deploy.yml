@@ -58,6 +58,7 @@ jobs:
             # 1. EC2 서버에 .env 파일을 새로 생성합니다.
             #    GitHub Secrets의 값을 가져와 파일에 한 줄씩 씁니다.
             cat << EOF > .env
+            DOCKER_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/withmorning:latest
             DB_URL=${{ secrets.DB_URL }}
             DB_USER=${{ secrets.DB_USER }}
             DB_PASS=${{ secrets.DB_PASS }}

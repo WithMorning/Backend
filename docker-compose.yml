@@ -3,6 +3,7 @@ version: '3.8' # Docker Compose 파일 버전
 services:
   # Spring Boot 애플리케이션 서비스
   app:
+    image: ${DOCKER_IMAGE_NAME}
     container_name: withmorning-app
     ports:
       - "8080:8080" # 호스트의 8080 포트를 컨테이너의 8080 포트와 연결합니다.

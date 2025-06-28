@@ -53,7 +53,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
             # 0. docker compose 파일 가져오기
-            curl -o docker-compose.yml https://raw.githubusercontent.com/Muokok/withmorning/develop/backend/docker-compose.yml
+            curl -o docker-compose.yml https://raw.githubusercontent.com/WithMorning/Backend/refs/heads/develop/docker-compose.yml
 
             # 1. EC2 서버에 .env 파일을 새로 생성합니다.
             #    GitHub Secrets의 값을 가져와 파일에 한 줄씩 씁니다.

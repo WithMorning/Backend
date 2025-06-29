@@ -24,12 +24,10 @@ jobs:
       # 3) Gradle 실행 권한 부여
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
-        working-directory: backend
 
       # 4) Gradle 빌드
       - name: Build with Gradle
         run: ./gradlew clean build
-        working-directory: backend
 
       # 4) Docker Hub 로그인
       - name: Login to Docker Hub

@@ -10,7 +10,7 @@ import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 @Configuration
@@ -21,7 +21,7 @@ public class FCMConfig {
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
 
-        Resource resource = new ClassPathResource(firebaseKeyPath.replace("file:", " "));
+        Resource resource = new FileSystemResource(firebaseKeyPath);
         InputStream serviceAccount = resource.getInputStream();
 
         FirebaseOptions options = FirebaseOptions.builder()

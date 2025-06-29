@@ -17,7 +17,7 @@ import org.springframework.core.io.Resource;
 public class FCMConfig {
     @Value("${fcm.service-account-file}")
     private String firebaseKeyPath;
-dssd
+
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
 

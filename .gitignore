@@ -5,11 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 .env
-firebase_service_key.json
+firebase-service-account.json
 /Authkey*
 
-#테스트
-src/main/resources/firebase_service_key.json
 
 ### STS ###
 .apt_generated

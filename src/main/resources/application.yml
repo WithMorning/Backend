@@ -51,7 +51,7 @@ oauth2:
 
 # 알람
 fcm:
-  service-account-file: file:./firebase-service-account.json
+  service-account-file: ./firebase-service-account.json
 
 # S3
 aws:

@@ -60,11 +60,13 @@ jobs:
       # 7) Docker Compose 빌드 및 푸시
       - name: Build and push with Docker Compose
         env:
-          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/withmorning:latest
+          # DOCKER_IMAGE_NAME을 'latest' 대신 Git Commit SHA로 설정
+          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/withmorning:${{ github.sha }}
         run: |
           echo "Building and pushing: $DOCKER_IMAGE_NAME"
           docker compose -f docker-compose.yml build app
           docker compose -f docker-compose.yml push app
+   
 
       # 9) docker-compose-dev.yml 파일을 EC2로 복사
       - name: Copy docker-compose.yml to EC2
@@ -88,7 +90,7 @@ jobs:
           
             #    GitHub Secrets의 값을 가져와 파일에 한 줄씩 씁니다.
             cat << EOF > .env
-            DOCKER_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/withmorning:latest
+            DOCKER_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/withmorning:${{ github.sha }}
             DB_URL=${{ secrets.DB_URL }}
             DB_USER=${{ secrets.DB_USER }}
             DB_PASS=${{ secrets.DB_PASS }}

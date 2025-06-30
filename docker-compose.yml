@@ -37,8 +37,8 @@ services:
       - FROM_NUMBER=${FROM_NUMBER}
     volumes:
       # 이제 변수 없이 고정된 경로를 사용합니다.
-      - ./firebase-service-account.json:/firebase-service-account.json
-      - ./authkey.p8:/authkey.p8 # 파일 이름을 authkey.p8로 단순화
+      - ./firebase-service-account.json:./firebase-service-account.json
+      - ./authkey.p8:./authkey.p8 # 파일 이름을 authkey.p8로 단순화
 
   # Redis 서비스
   redis:

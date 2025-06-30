@@ -3,11 +3,6 @@ name: Java CI with Docker
 on:
   push:
     branches: [ develop ] # develop 브랜치에 push될 때 실행
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-      - '.gitignore'
-
 
 permissions:
   contents: read
@@ -18,17 +13,6 @@ jobs:
     steps:
       # 1) 워크플로우 실행 전 기본적으로 체크아웃 필요
       - uses: actions/checkout@v3
-
-      # Gradle 의존성에 대한 캐싱 추가 (매 빌드마다 의존성을 다시 다운로드하게 되어 빌드 시간이 길어지는 걸 방지)
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
 
       # 2) JDK 17 버전 설치
       - name: Set up JDK 17
@@ -41,11 +25,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Make .env file
-        run: |
-          # .env 파일 생성 및 환경 변수 추가
-          echo "${{ secrets.ENV }}" > .env 
-
       # 4) Gradle 빌드
       - name: Build with Gradle
         run: ./gradlew clean build
@@ -57,27 +36,13 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 7) Docker Compose 빌드 및 푸시
-      - name: Build and push with Docker Compose
-        env:
-          # DOCKER_IMAGE_NAME을 'latest' 대신 Git Commit SHA로 설정
-          DOCKER_IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/withmorning:${{ github.sha }}
-        run: |
-          echo "Building and pushing: $DOCKER_IMAGE_NAME"
-          docker compose -f docker-compose.yml build app
-          docker compose -f docker-compose.yml push app
-   
-
-      # 9) docker-compose-dev.yml 파일을 EC2로 복사
-      - name: Copy docker-compose.yml to EC2
-        uses: appleboy/scp-action@v0.1.7 # scp-action을 사용하여 파일을 EC2로 복사
+      # 5) Docker 이미지 빌드 및 푸시
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
         with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: "docker-compose.yml"  # Runner의 현재 작업 디렉토리에 있는 파일
-          target: "/home/ubuntu/"  # EC2 인스턴스의 대상 디렉토리 (파일이 복사될 위치)
-
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/withmorning:latest # Docker Hub에 올릴 이미지 태그
 
       # 6) EC2에 배포
       - name: Deploy to EC2
@@ -87,10 +52,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-          
+            # 0. docker compose 파일 가져오기
+            curl -o docker-compose.yml https://raw.githubusercontent.com/WithMorning/Backend/refs/heads/develop/docker-compose.yml
+            # 1. EC2 서버에 .env 파일을 새로 생성합니다.
             #    GitHub Secrets의 값을 가져와 파일에 한 줄씩 씁니다.
             cat << EOF > .env
-            DOCKER_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/withmorning:${{ github.sha }}
+            DOCKER_IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/withmorning:latest
             DB_URL=${{ secrets.DB_URL }}
             DB_USER=${{ secrets.DB_USER }}
             DB_PASS=${{ secrets.DB_PASS }}
@@ -106,20 +73,12 @@ jobs:
             FROM_NUMBER=${{ secrets.FROM_NUMBER }}
             EOF
             
-            # 4. .env 파일의 변수들을 현재 셸 환경으로 로드 (가장 중요!)
-            export $(grep -v '^#' .env | xargs)
-            
-            # 1. Docker Hub 로그인
-            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-
             # 2. Auth key, firebase key 생성
             echo "${{ secrets.FIREBASE_SERVICE_KEY }}" > firebase-service-account.json
             echo "${{ secrets.AUTH_KEY_P8 }}" > authkey.p8
             
-
+            # 4. .env 파일의 변수들을 현재 셸 환경으로 로드 (가장 중요!)
+            export $(grep -v '^#' .env | xargs)
             # 2. Docker Compose 실행
-            docker compose pull
-            docker compose down
-            docker compose up -d
-            
-            docker image prune -af
+            docker-compose down
+            docker-compose up -d

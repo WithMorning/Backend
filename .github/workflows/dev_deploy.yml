@@ -40,6 +40,16 @@ jobs:
           target: "/home/${{ secrets.EC2_USERNAME }}/" # EC2 인스턴스의 홈 디렉토리
           strip_components: 2 # JAR 파일만 복사하기 위해 상위 경로(build/libs/) 제거
 
+      # docker-compose-dev.yml 파일을 EC2로 복사
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@v0.1.7 # scp-action을 사용하여 파일을 EC2로 복사
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          source: "docker-compose.yml"  # Runner의 현재 작업 디렉토리에 있는 파일
+          target: "/home/ubuntu/"  # EC2 인스턴스의 대상 디렉토리 (파일이 복사될 위치)
+
       # 6. EC2에 배포 및 애플리케이션 실행
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master

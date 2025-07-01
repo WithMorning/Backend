@@ -77,9 +77,13 @@ jobs:
             EOF
 
             # 2. 인증 키 파일 생성 (경로 문제 해결)
-            # 애플리케이션 실행 위치에 키 파일을 생성하여 경로 문제를 방지합니다.
-            echo "${{ secrets.FIREBASE_SERVICE_KEY }}" > firebase-service-account.json
-            echo "${{ secrets.AUTH_KEY_P8 }}" > authkey.p8
+            cat << EOF > firebase-service-account.json
+            ${{ secrets.FIREBASE_SERVICE_KEY }}
+            EOF
+            
+            cat << EOF > authkey.p8
+            ${{ secrets.AUTH_KEY_P8 }}
+            EOF
 
             # 3. 기존에 실행 중이던 애플리케이션 프로세스 종료
             PID=$(ps -ef | grep java | grep *.jar | awk '{print $2}')

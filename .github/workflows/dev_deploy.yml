@@ -99,6 +99,8 @@ jobs:
             JAR_FILE=$(ls /home/${{ secrets.EC2_USERNAME }}/*.jar | grep -v -- '-plain.jar' | head -n 1)
             
             # ✅ 'java -jar' 명령어에 직접 Redis 호스트 정보를 추가합니다.
-            nohup /usr/bin/java -jar --spring.redis.host=localhost $JAR_FILE > app.log 2>&1 &
-            
+            chmod +x /home/ubuntu/alarm-0.0.1-SNAPSHOT.jar
+                            chmod +x /home/ubuntu/.env
+                            cd /home/ubuntu
+                            sudo nohup java -jar alarm-0.0.1-SNAPSHOT.jar & 
             echo "애플리케이션을 성공적으로 시작했습니다."
